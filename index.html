@@ -1,14 +1,246 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Christian Villanueva – Hardware Reliability</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.7;
+      color: #1e293b;
+      background: 
+        linear-gradient(to bottom, rgba(248, 250, 252, 0.50), rgba(248, 250, 252, 0.50)),
+        url('./assets/photos/SF-Skyline.jpg') center/cover no-repeat fixed;
+      min-height: 100vh;
+      padding: 0;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(14, 165, 233, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.06) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
+      background: white;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: white;
+      padding: 5rem 3rem 4rem;
+      position: relative;
+      border-bottom: 4px solid #0ea5e9;
+      text-align: center;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #0ea5e9 0%, #3b82f6 50%, #0ea5e9 100%);
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      letter-spacing: -0.5px;
+      color: white;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: #cbd5e1;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+
+    .content {
+      padding: 3rem;
+    }
+
+    .intro {
+      text-align: center;
+      margin-bottom: 3rem;
+      color: #475569;
+      font-size: 1.1rem;
+      line-height: 1.8;
+    }
+
+    .projects-header {
+      color: #0f172a;
+      font-size: 1.75rem;
+      margin-bottom: 2rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid #e2e8f0;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .project-card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      border-left: 4px solid #0ea5e9;
+    }
+
+    .project-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      border-left-color: #0284c7;
+    }
+
+    .project-card a {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      padding: 2rem;
+    }
+
+    .project-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.3px;
+    }
+
+    .project-description {
+      color: #475569;
+      line-height: 1.7;
+      font-size: 1rem;
+    }
+
+    .project-tag {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: rgba(14, 165, 233, 0.1);
+      color: #0284c7;
+      border-radius: 4px;
+      font-size: 0.813rem;
+      font-weight: 600;
+      margin-top: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: #64748b;
+      font-size: 0.9rem;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+
+      header {
+        padding: 3rem 2rem 2.5rem;
+      }
+
+      h1 {
+        font-size: 2.2rem;
+      }
+
+      .subtitle {
+        font-size: 1rem;
+      }
+
+      .content {
+        padding: 2rem 1.5rem;
+      }
+
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    ::selection {
+      background: #0ea5e9;
+      color: white;
+    }
+  </style>
 </head>
 <body>
-  <h1>Christian Villanueva Computer Engineer Portfolio</h1>
-  <ul>
-    <li><a href="projects/qxq-fixture.html">QxQ Test Fixture Integration</a></li>
-    <li><a href="projects/proxmox-reliability.html">Home Lab Deployment</a></li>
-    <li><a href="projects/Test.html">Test</a></li>
-  </ul>
+  <div class="container">
+    <header>
+      <h1>Christian Villanueva</h1>
+      <p class="subtitle">Computer Engineer – Hardware Reliability & Systems Integration</p>
+    </header>
+
+    <div class="content">
+      <div class="intro">
+        <p>Portfolio of hardware reliability engineering, test automation, and infrastructure projects.</p>
+      </div>
+
+      <h2 class="projects-header">Projects</h2>
+
+      <ul class="projects-grid">
+        <li class="project-card">
+          <a href="projects/qxq-fixture.html">
+            <div class="project-title">QxQ Test Fixture Integration</div>
+            <p class="project-description">
+              Hardware test automation and fixture integration for reliability validation and quality assurance.
+            </p>
+            <span class="project-tag">Test Automation</span>
+          </a>
+        </li>
+
+        <li class="project-card">
+          <a href="projects/Home-Infrastructure.html">
+            <div class="project-title">Infrastructure Reliability Case Study</div>
+            <p class="project-description">
+              Design, bring-up, failure analysis, and recovery across network, compute, and storage layers.
+            </p>
+            <span class="project-tag">Systems Engineering</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <footer>
+      <p>© 2026 Christian Villanueva</p>
+    </footer>
+  </div>
 </body>
 </html>
