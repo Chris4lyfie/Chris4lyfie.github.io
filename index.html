@@ -19,11 +19,7 @@
         linear-gradient(to bottom, rgba(248, 250, 252, 0.50), rgba(248, 250, 252, 0.50)),
         url('./assets/photos/SF-Skyline.jpg') center/cover no-repeat fixed;
       min-height: 100vh;
-      padding: 0;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      overflow-x: hidden;
     }
 
     body::before {
@@ -40,71 +36,182 @@
       z-index: 0;
     }
 
-    .container {
-      max-width: 900px;
-      margin: 2rem auto;
-      background: white;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    .layout {
+      display: flex;
+      min-height: 100vh;
       position: relative;
       z-index: 1;
     }
 
-    header {
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    /* Sidebar */
+    .sidebar {
+      width: 280px;
+      background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
       color: white;
-      padding: 5rem 3rem 4rem;
-      position: relative;
-      border-bottom: 4px solid #0ea5e9;
+      padding: 3rem 0;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .sidebar-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .profile-section {
       text-align: center;
+      padding: 0 2rem;
     }
 
-    header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, #0ea5e9 0%, #3b82f6 50%, #0ea5e9 100%);
-    }
-
-    h1 {
-      font-size: 3rem;
-      font-weight: 700;
+    .profile-pic {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #0ea5e9;
       margin-bottom: 1rem;
-      letter-spacing: -0.5px;
-      color: white;
     }
 
-    .subtitle {
-      font-size: 1.2rem;
+    .profile-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.3px;
+    }
+
+    .profile-title {
+      font-size: 0.9rem;
       color: #cbd5e1;
-      font-weight: 400;
       line-height: 1.6;
     }
 
-    .content {
-      padding: 3rem;
+    .profile-location {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+      color: #94a3b8;
+      font-size: 0.85rem;
     }
 
-    .intro {
-      text-align: center;
-      margin-bottom: 3rem;
+    .profile-location svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+    }
+
+    /* Navigation */
+    .nav-menu {
+      list-style: none;
+      width: 100%;
+      padding: 0 1.5rem;
+    }
+
+    .nav-menu li {
+      margin-bottom: 0.5rem;
+    }
+
+    .nav-menu a {
+      display: block;
+      padding: 0.75rem 1.25rem;
+      color: #cbd5e1;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .nav-menu a:hover {
+      background: rgba(14, 165, 233, 0.1);
+      color: #0ea5e9;
+    }
+
+    .nav-menu a.active {
+      background: rgba(14, 165, 233, 0.15);
+      color: #0ea5e9;
+      border-left: 3px solid #0ea5e9;
+    }
+
+    /* Social Links */
+    .social-links {
+      display: flex;
+      gap: 0.75rem;
+      padding: 0 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .social-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #cbd5e1;
+      transition: all 0.2s ease;
+      border-radius: 50%;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .social-icon:hover {
+      color: #0ea5e9;
+      background: rgba(14, 165, 233, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .social-icon svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    /* Main Content Area */
+    .main-content {
+      flex: 1;
+      margin-left: 280px;
+      background: white;
+      min-height: 100vh;
+    }
+
+    .content-section {
+      display: none;
+      padding: 3rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .content-section.active {
+      display: block;
+    }
+
+    .section-header {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 2rem;
+      letter-spacing: -0.5px;
+    }
+
+    /* About Section */
+    .about-content {
       color: #475569;
       font-size: 1.1rem;
       line-height: 1.8;
     }
 
-    .projects-header {
-      color: #0f172a;
-      font-size: 1.75rem;
-      margin-bottom: 2rem;
-      padding-bottom: 0.75rem;
-      border-bottom: 2px solid #e2e8f0;
-      font-weight: 700;
-      letter-spacing: -0.3px;
+    .about-content p {
+      margin-bottom: 1.5rem;
     }
 
+    /* Projects Section */
     .projects-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -161,33 +268,59 @@
       letter-spacing: 0.3px;
     }
 
-    footer {
-      text-align: center;
-      padding: 2rem;
-      color: #64748b;
-      font-size: 0.9rem;
-      border-top: 1px solid #e2e8f0;
+    /* Resume Section */
+    .resume-embed {
+      width: 100%;
+      height: 800px;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
     }
 
+    /* Mobile Menu Toggle */
+    .mobile-menu-toggle {
+      display: none;
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      z-index: 1000;
+      background: #0f172a;
+      color: white;
+      border: none;
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Mobile Styles */
     @media (max-width: 768px) {
-      body {
-        padding: 1rem;
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 999;
       }
 
-      header {
-        padding: 3rem 2rem 2.5rem;
+      .sidebar.active {
+        transform: translateX(0);
       }
 
-      h1 {
-        font-size: 2.2rem;
+      .main-content {
+        margin-left: 0;
       }
 
-      .subtitle {
-        font-size: 1rem;
+      .mobile-menu-toggle {
+        display: block;
       }
 
-      .content {
+      .content-section {
         padding: 2rem 1.5rem;
+        padding-top: 5rem;
+      }
+
+      .section-header {
+        font-size: 2rem;
       }
 
       .projects-grid {
@@ -202,45 +335,149 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>Christian Villanueva</h1>
-      <p class="subtitle">Computer Engineer – Hardware Reliability & Systems Integration</p>
-    </header>
+  <button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
 
-    <div class="content">
-      <div class="intro">
-        <p>Portfolio of hardware reliability engineering, test automation, and infrastructure projects.</p>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-content">
+        <div class="profile-section">
+          <img src="./assets/photos/Christian.png" alt="Christian Villanueva" class="profile-pic">
+          <h1 class="profile-name">Christian Villanueva</h1>
+          <p class="profile-title">Computer Engineering Student</p>
+          <div class="profile-location">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+            </svg>
+            San Jose, California
+          </div>
+        </div>
+
+        <nav>
+          <ul class="nav-menu">
+            <li><a href="#about" onclick="showSection('about')">About Me</a></li>
+            <li><a href="#projects" class="active" onclick="showSection('projects')">My Projects</a></li>
+            <li><a href="#resume" onclick="showSection('resume')">Resume</a></li>
+          </ul>
+        </nav>
+
+        <div class="social-links">
+          <a href="https://www.linkedin.com/in/itiancv/" target="_blank" class="social-icon" title="LinkedIn">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+            </svg>
+          </a>
+          <a href="https://github.com/Chris4lyfie" target="_blank" class="social-icon" title="GitHub">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+            </svg>
+          </a>
+          <a href="mailto:Chris4lyfie@yahoo.com" class="social-icon" title="Email">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+            </svg>
+          </a>
+          <a href="https://www.instagram.com/itiancv/?hl=en" target="_blank" class="social-icon" title="Instagram">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+            </svg>
+          </a>
+        </div>
       </div>
+    </aside>
 
-      <h2 class="projects-header">Projects</h2>
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- About Section -->
+      <section id="about" class="content-section">
+        <h2 class="section-header">About Me</h2>
+        <div class="about-content">
+          <p>
+            Welcome! I'm Christian Villanueva, a Computer Engineer specializing in hardware reliability and systems integration.
+          </p>
+          <p>
+            My work focuses on building robust test infrastructure, ensuring hardware reliability through rigorous validation,
+            and designing fault-tolerant systems. I have experience with test fixture integration, network infrastructure design,
+            and reliability engineering practices.
+          </p>
+          <p>
+            This portfolio showcases my projects in hardware test automation, infrastructure reliability, and systems engineering.
+          </p>
+        </div>
+      </section>
 
-      <ul class="projects-grid">
-        <li class="project-card">
-          <a href="projects/QxQ.html">
-            <div class="project-title">QxQ Test Fixture Integration</div>
-            <p class="project-description">
-              Hardware test automation and fixture integration for reliability validation and quality assurance.
-            </p>
-            <span class="project-tag">Test Automation</span>
-          </a>
-        </li>
+      <!-- Projects Section -->
+      <section id="projects" class="content-section active">
+        <h2 class="section-header">My Projects</h2>
+        <ul class="projects-grid">
+          <li class="project-card">
+            <a href="projects/QxQ.html">
+              <div class="project-title">QxQ Test Fixture Integration</div>
+              <p class="project-description">
+                Hardware test automation and fixture integration for reliability validation and quality assurance.
+              </p>
+              <span class="project-tag">Test Automation</span>
+            </a>
+          </li>
 
-        <li class="project-card">
-          <a href="projects/Home-Infrastructure.html">
-            <div class="project-title">Infrastructure Reliability Case Study</div>
-            <p class="project-description">
-              Design, bring-up, failure analysis, and recovery across network, compute, and storage layers.
-            </p>
-            <span class="project-tag">Systems Engineering</span>
-          </a>
-        </li>
-      </ul>
-    </div>
+          <li class="project-card">
+            <a href="projects/Home-Infrastructure.html">
+              <div class="project-title">Infrastructure Reliability Case Study</div>
+              <p class="project-description">
+                Design, bring-up, failure analysis, and recovery across network, compute, and storage layers.
+              </p>
+              <span class="project-tag">Systems Engineering</span>
+            </a>
+          </li>
+        </ul>
+      </section>
 
-    <footer>
-      <p>© 2026 Christian Villanueva</p>
-    </footer>
+      <!-- Resume Section -->
+      <section id="resume" class="content-section">
+        <h2 class="section-header">Resume</h2>
+        <iframe src="./assets/resume.pdf" class="resume-embed" title="Resume"></iframe>
+      </section>
+    </main>
   </div>
+
+  <script>
+    function showSection(sectionId) {
+      // Hide all sections
+      document.querySelectorAll('.content-section').forEach(section => {
+        section.classList.remove('active');
+      });
+      
+      // Show selected section
+      document.getElementById(sectionId).classList.add('active');
+      
+      // Update active nav link
+      document.querySelectorAll('.nav-menu a').forEach(link => {
+        link.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      // Close mobile menu
+      if (window.innerWidth <= 768) {
+        document.getElementById('sidebar').classList.remove('active');
+      }
+    }
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('active');
+    }
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', function(event) {
+      const sidebar = document.getElementById('sidebar');
+      const toggle = document.querySelector('.mobile-menu-toggle');
+      
+      if (window.innerWidth <= 768 && 
+          !sidebar.contains(event.target) && 
+          !toggle.contains(event.target) &&
+          sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+      }
+    });
+  </script>
 </body>
 </html>
