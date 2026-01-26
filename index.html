@@ -200,6 +200,55 @@
       letter-spacing: -0.5px;
     }
 
+    /* Home Section */
+    .home-content {
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
+    .home-greeting {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 1rem;
+      letter-spacing: -0.5px;
+    }
+
+    .home-subtitle {
+      font-size: 1.5rem;
+      color: #475569;
+      margin-bottom: 3rem;
+      font-weight: 400;
+    }
+
+    .home-description {
+      font-size: 1.1rem;
+      color: #64748b;
+      line-height: 1.8;
+      max-width: 700px;
+      margin: 0 auto 3rem;
+    }
+
+    .home-cta {
+      display: inline-block;
+      padding: 1rem 2rem;
+      background: #0ea5e9;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .home-cta:hover {
+      background: #0284c7;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+    }
+
     /* About Section */
     .about-content {
       color: #475569;
@@ -355,9 +404,10 @@
 
         <nav>
           <ul class="nav-menu">
-            <li><a href="#about" class="active" onclick="showSection('about')">About Me</a></li>
+            <li><a href="#home" class="active" onclick="showSection('home')">Home</a></li>
             <li><a href="#projects" onclick="showSection('projects')">My Projects</a></li>
             <li><a href="#resume" onclick="showSection('resume')">Resume</a></li>
+            <li><a href="#about" onclick="showSection('about')">About Me</a></li>
           </ul>
         </nav>
 
@@ -388,8 +438,21 @@
 
     <!-- Main Content -->
     <main class="main-content">
+      <!-- Home Section -->
+      <section id="home" class="content-section active">
+        <div class="home-content">
+          <h2 class="home-greeting">Hi, I'm Christian Villanueva</h2>
+          <p class="home-subtitle">Computer Engineering Student</p>
+          <p class="home-description">
+            Specializing in hardware reliability and systems integration. I build robust test infrastructure, 
+            design fault-tolerant systems, and ensure hardware reliability through rigorous validation.
+          </p>
+          <button class="home-cta" onclick="showSection('projects')">View My Projects</button>
+        </div>
+      </section>
+
       <!-- About Section -->
-      <section id="about" class="content-section active">
+      <section id="about" class="content-section">
         <h2 class="section-header">About Me</h2>
         <div class="about-content">
           <p>
