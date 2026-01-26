@@ -11,6 +11,10 @@
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       line-height: 1.7;
@@ -59,21 +63,12 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2rem;
+      gap: 3rem;
     }
 
     .profile-section {
       text-align: center;
       padding: 0 2rem;
-    }
-
-    .profile-pic {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid #0ea5e9;
-      margin-bottom: 1rem;
     }
 
     .profile-name {
@@ -178,32 +173,35 @@
       flex: 1;
       margin-left: 280px;
       background: white;
-      min-height: 100vh;
     }
 
     .content-section {
-      display: none;
-      padding: 3rem;
+      min-height: 100vh;
+      padding: 1rem 2rem;
       max-width: 1000px;
       margin: 0 auto;
-    }
-
-    .content-section.active {
-      display: block;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .section-header {
       font-size: 2.5rem;
       font-weight: 700;
       color: #0f172a;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
       letter-spacing: -0.5px;
     }
 
     /* Home Section */
     .home-content {
-      text-align: center;
-      padding: 4rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 3rem;
+    }
+
+    .home-text {
+      flex: 1;
     }
 
     .home-greeting {
@@ -217,7 +215,7 @@
     .home-subtitle {
       font-size: 1.5rem;
       color: #475569;
-      margin-bottom: 3rem;
+      margin-bottom: 2rem;
       font-weight: 400;
     }
 
@@ -225,8 +223,7 @@
       font-size: 1.1rem;
       color: #64748b;
       line-height: 1.8;
-      max-width: 700px;
-      margin: 0 auto 3rem;
+      margin-bottom: 2rem;
     }
 
     .home-cta {
@@ -247,6 +244,15 @@
       background: #0284c7;
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+    }
+
+    .profile-pic-home {
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #0ea5e9;
+      box-shadow: 0 8px 24px rgba(14, 165, 233, 0.2);
     }
 
     /* About Section */
@@ -271,22 +277,20 @@
     .project-card {
       background: white;
       border: 1px solid #e2e8f0;
-      border-radius: 4px;
+      border-radius: 12px;
       overflow: hidden;
       transition: all 0.3s ease;
       border-left: 4px solid #0ea5e9;
+      position: relative;
     }
 
     .project-card:hover {
       transform: translateY(-4px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
       border-left-color: #0284c7;
     }
 
-    .project-card a {
-      text-decoration: none;
-      color: inherit;
-      display: block;
+    .project-card-content {
       padding: 2rem;
     }
 
@@ -302,6 +306,7 @@
       color: #475569;
       line-height: 1.7;
       font-size: 1rem;
+      margin-bottom: 1rem;
     }
 
     .project-tag {
@@ -312,17 +317,252 @@
       border-radius: 4px;
       font-size: 0.813rem;
       font-weight: 600;
-      margin-top: 1rem;
       text-transform: uppercase;
       letter-spacing: 0.3px;
     }
 
-    /* Resume Section */
-    .resume-embed {
-      width: 100%;
-      height: 800px;
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      padding: 0.6rem 1.2rem;
+      background: #0ea5e9;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    .project-link:hover {
+      background: #0284c7;
+      transform: translateX(4px);
+    }
+
+    .project-link svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    /* Experience Timeline Section */
+    .timeline-container {
+      position: relative;
+      padding: 2rem 0;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .timeline-line {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 2rem;
+      width: 3px;
+      background: #e2e8f0;
+      border-radius: 2px;
+      z-index: 1;
+      bottom: 0;
+    }
+
+    .timeline-line-progress {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 2rem;
+      width: 3px;
+      height: 0;
+      background: linear-gradient(180deg, #0ea5e9 0%, #0284c7 100%);
+      transition: height 0.3s ease-out;
+      border-radius: 2px;
+      z-index: 2;
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 4rem;
+    }
+
+    /* Left side - Work Experience */
+    .timeline-item.left {
+      padding-right: calc(50% + 3rem);
+      text-align: right;
+    }
+
+    .timeline-item.left .timeline-content {
+      margin-left: auto;
+    }
+
+    .timeline-item.left .timeline-dot {
+      right: calc(50% - 9px);
+      left: auto;
+    }
+
+    .timeline-item.left .timeline-date-badge {
+      left: calc(50% + 2rem);
+      right: auto;
+    }
+
+    /* Right side - Education */
+    .timeline-item.right {
+      padding-left: calc(50% + 3rem);
+      text-align: left;
+    }
+
+    .timeline-item.right .timeline-dot {
+      left: calc(50% - 9px);
+    }
+
+    .timeline-item.right .timeline-date-badge {
+      right: calc(50% + 2rem);
+      left: auto;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      top: 0.5rem;
+      width: 18px;
+      height: 18px;
+      background: #0ea5e9;
+      border: 4px solid #0ea5e9;
+      border-radius: 50%;
+      box-shadow: 0 0 0 6px rgba(14, 165, 233, 0.15);
+      z-index: 3;
+    }
+
+    .timeline-date-badge {
+      position: absolute;
+      top: 0.3rem;
+      background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+      color: white;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(14, 165, 233, 0.3);
+    }
+
+    .timeline-content {
+      background: white;
       border: 1px solid #e2e8f0;
-      border-radius: 4px;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .timeline-item:hover .timeline-content {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .experience-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.3px;
+    }
+
+    .experience-company {
+      font-size: 1rem;
+      color: #0ea5e9;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .experience-date {
+      display: none;
+    }
+
+    /* Contact Form Section */
+    .contact-form {
+      max-width: 600px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      color: #0f172a;
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: all 0.2s ease;
+      background: white;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #0ea5e9;
+      box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 150px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 1rem 2rem;
+      background: #0ea5e9;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .submit-btn:hover {
+      background: #0284c7;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .experience-description {
+      color: #475569;
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+
+    .experience-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .skill-tag {
+      padding: 0.3rem 0.75rem;
+      background: rgba(14, 165, 233, 0.1);
+      color: #0284c7;
+      border-radius: 6px;
+      font-size: 0.813rem;
+      font-weight: 500;
     }
 
     /* Mobile Menu Toggle */
@@ -372,8 +612,67 @@
         font-size: 2rem;
       }
 
-      .projects-grid {
-        grid-template-columns: 1fr;
+      .home-content {
+        flex-direction: column-reverse;
+        text-align: center;
+      }
+
+      .profile-pic-home {
+        width: 200px;
+        height: 200px;
+      }
+
+      .home-greeting {
+        font-size: 2rem;
+      }
+
+      .home-subtitle {
+        font-size: 1.2rem;
+      }
+
+      .timeline-container {
+        padding: 2rem 1rem;
+      }
+
+      .timeline-item.left,
+      .timeline-item.right {
+        padding-left: 2.5rem;
+        padding-right: 0;
+        text-align: left;
+      }
+
+      .timeline-line,
+      .timeline-line-progress {
+        left: 8px;
+        transform: none;
+      }
+
+      .timeline-item.left .timeline-dot,
+      .timeline-item.right .timeline-dot {
+        left: 0;
+        right: auto;
+      }
+
+      .timeline-item.left .timeline-date-badge,
+      .timeline-item.right .timeline-date-badge {
+        position: relative;
+        left: 0;
+        right: auto;
+        margin-bottom: 0.5rem;
+        display: inline-block;
+      }
+
+      .timeline-item.left .timeline-content,
+      .timeline-item.right .timeline-content {
+        margin-left: 0;
+      }
+
+      .timeline-container {
+        padding-left: 2rem;
+      }
+
+      .timeline-dot {
+        left: -2.4rem;
       }
     }
 
@@ -391,7 +690,6 @@
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-content">
         <div class="profile-section">
-          <img src="./assets/photos/Christian.png" alt="Christian Villanueva" class="profile-pic">
           <h1 class="profile-name">Christian Villanueva</h1>
           <p class="profile-title">Computer Engineering Student</p>
           <div class="profile-location">
@@ -404,10 +702,11 @@
 
         <nav>
           <ul class="nav-menu">
-            <li><a href="#home" class="active" onclick="showSection('home')">Home</a></li>
-            <li><a href="#projects" onclick="showSection('projects')">My Projects</a></li>
-            <li><a href="#resume" onclick="showSection('resume')">Resume</a></li>
-            <li><a href="#about" onclick="showSection('about')">About Me</a></li>
+            <li><a href="#home" class="nav-link">Home</a></li>
+            <li><a href="#experience" class="nav-link">Experience</a></li>
+            <li><a href="#projects" class="nav-link">Projects</a></li>
+            <li><a href="#about" class="nav-link">About Me</a></li>
+            <li><a href="#contact" class="nav-link">Contact</a></li>
           </ul>
         </nav>
 
@@ -439,16 +738,147 @@
     <!-- Main Content -->
     <main class="main-content">
       <!-- Home Section -->
-      <section id="home" class="content-section active">
+      <section id="home" class="content-section">
         <div class="home-content">
-          <h2 class="home-greeting">Hi, I'm Christian Villanueva</h2>
-          <p class="home-subtitle">Computer Engineering Student</p>
-          <p class="home-description">
-            Specializing in hardware reliability and systems integration. I build robust test infrastructure, 
-            design fault-tolerant systems, and ensure hardware reliability through rigorous validation.
-          </p>
-          <button class="home-cta" onclick="showSection('projects')">View My Projects</button>
+          <div class="home-text">
+            <h2 class="home-greeting">Hi, I'm Christian Villanueva</h2>
+            <p class="home-subtitle">Computer Engineering Student</p>
+            <p class="home-description">
+              Specializing in hardware reliability and systems integration. I build robust test infrastructure, 
+              design fault-tolerant systems, and ensure hardware reliability through rigorous validation.
+            </p>
+            <a href="#projects" class="home-cta">View My Projects</a>
+          </div>
+          <img src="./assets/photos/Christian.png" alt="Christian Villanueva" class="profile-pic-home">
         </div>
+      </section>
+
+      <!-- Experience Section -->
+      <section id="experience" class="content-section">
+        <h2 class="section-header">Experience</h2>
+        <div class="timeline-container">
+          <div class="timeline-line"></div>
+          <div class="timeline-line-progress" id="timelineLine"></div>
+
+          <!-- WORK EXPERIENCE ITEM 1 - LEFT SIDE -->
+          <div class="timeline-item left" data-index="0">
+            <div class="timeline-date-badge">2025 - Present</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <h3 class="experience-title">Hardware Test Engineering Technician</h3>
+              <div class="experience-company">QxQ Inc., Fremont, CA</div>
+              <div class="experience-date">July 2025 - Present</div>
+              <p class="experience-description">
+                Current role focusing on hardware test automation and fixture integration for reliability validation and quality assurance.
+              </p>
+              <div class="experience-skills">
+                <span class="skill-tag">Test Automation</span>
+                <span class="skill-tag">Hardware Validation</span>
+                <span class="skill-tag">Fixture Integration</span>
+                <span class="skill-tag">Quality Assurance</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- EDUCATION ITEM 1 - RIGHT SIDE -->
+          <div class="timeline-item right" data-index="1">
+            <div class="timeline-date-badge">2024 - 2026</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <h3 class="experience-title">Bachelor of Science in Computer Engineering</h3>
+              <div class="experience-company">San Jose State University, San Jose, CA</div>
+              <div class="experience-date">Fall 2024 - Fall 2026</div>
+              <p class="experience-description">
+                Pursuing a Bachelor's degree with focus on hardware reliability and systems integration.
+              </p>
+              <div class="experience-skills">
+                <span class="skill-tag">Computer Engineering</span>
+                <span class="skill-tag">Systems Design</span>
+                <span class="skill-tag">Hardware Systems</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- WORK EXPERIENCE ITEM 2 - LEFT SIDE -->
+          <div class="timeline-item left" data-index="2">
+            <div class="timeline-date-badge">2022 - 2024</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <h3 class="experience-title">Information Systems Technical Assistant</h3>
+              <div class="experience-company">West Valley Mission Community College District, Santa Clara, CA</div>
+              <div class="experience-date">July 2022 - August 2024</div>
+              <p class="experience-description">
+                Provided technical support and maintained information systems infrastructure across the district.
+              </p>
+              <div class="experience-skills">
+                <span class="skill-tag">IT Support</span>
+                <span class="skill-tag">Systems Administration</span>
+                <span class="skill-tag">Infrastructure</span>
+                <span class="skill-tag">Technical Support</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- EDUCATION ITEM 2 - RIGHT SIDE -->
+          <div class="timeline-item right" data-index="3">
+            <div class="timeline-date-badge">2022 - 2024</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <h3 class="experience-title">Associate of Science</h3>
+              <div class="experience-company">Mission College, Santa Clara, CA</div>
+              <div class="experience-date">Summer 2022 - Spring 2024</div>
+              <p class="experience-description">
+                Completed foundational coursework in computer science and engineering.
+              </p>
+              <div class="experience-skills">
+                <span class="skill-tag">Computer Science</span>
+                <span class="skill-tag">Programming</span>
+                <span class="skill-tag">Mathematics</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Projects Section -->
+      <section id="projects" class="content-section">
+        <h2 class="section-header">Projects</h2>
+        <ul class="projects-grid">
+          <li class="project-card">
+            <div class="project-card-content">
+              <div class="project-title">QxQ Test Fixture Integration</div>
+              <p class="project-description">
+                Hardware test automation and fixture integration for reliability validation and quality assurance.
+              </p>
+              <span class="project-tag">Test Automation</span>
+              <br>
+              <a href="projects/QxQ.html" class="project-link">
+                View Project
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                </svg>
+              </a>
+            </div>
+          </li>
+
+          <li class="project-card">
+            <div class="project-card-content">
+              <div class="project-title">Infrastructure Reliability Case Study</div>
+              <p class="project-description">
+                Design, bring-up, failure analysis, and recovery across network, compute, and storage layers.
+              </p>
+              <span class="project-tag">Systems Engineering</span>
+              <br>
+              <a href="projects/Home-Infrastructure.html" class="project-link">
+                View Project
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                </svg>
+              </a>
+            </div>
+          </li>
+        </ul>
       </section>
 
       <!-- About Section -->
@@ -469,78 +899,40 @@
         </div>
       </section>
 
-      <!-- Projects Section -->
-      <section id="projects" class="content-section">
-        <h2 class="section-header">My Projects</h2>
-        <ul class="projects-grid">
-          <li class="project-card">
-            <a href="projects/QxQ.html">
-              <div class="project-title">QxQ Test Fixture Integration</div>
-              <p class="project-description">
-                Hardware test automation and fixture integration for reliability validation and quality assurance.
-              </p>
-              <span class="project-tag">Test Automation</span>
-            </a>
-          </li>
-
-          <li class="project-card">
-            <a href="projects/Home-Infrastructure.html">
-              <div class="project-title">Infrastructure Reliability Case Study</div>
-              <p class="project-description">
-                Design, bring-up, failure analysis, and recovery across network, compute, and storage layers.
-              </p>
-              <span class="project-tag">Systems Engineering</span>
-            </a>
-          </li>
-        </ul>
-      </section>
-
-      <!-- Resume Section -->
-      <section id="resume" class="content-section">
-        <h2 class="section-header">Resume</h2>
-        <iframe src="./assets/Resume.pdf" class="resume-embed" title="Resume"></iframe>
+      <!-- Contact Section -->
+      <section id="contact" class="content-section">
+        <h2 class="section-header">Get In Touch</h2>
+        <form class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required placeholder="Your name">
+          </div>
+          
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required placeholder="your.email@example.com">
+          </div>
+          
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject" required placeholder="What's this about?">
+          </div>
+          
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" required placeholder="Your message here..."></textarea>
+          </div>
+          
+          <button type="submit" class="submit-btn">Send Message</button>
+        </form>
       </section>
     </main>
   </div>
 
   <script>
-    function showSection(sectionId) {
-      // Hide all sections
-      document.querySelectorAll('.content-section').forEach(section => {
-        section.classList.remove('active');
-      });
-      
-      // Show selected section
-      document.getElementById(sectionId).classList.add('active');
-      
-      // Update active nav link
-      document.querySelectorAll('.nav-menu a').forEach(link => {
-        link.classList.remove('active');
-      });
-      event.target.classList.add('active');
-      
-      // Close mobile menu
-      if (window.innerWidth <= 768) {
-        document.getElementById('sidebar').classList.remove('active');
-      }
-    }
-
     function toggleSidebar() {
       document.getElementById('sidebar').classList.toggle('active');
     }
 
-    // Close sidebar when clicking outside on mobile
-    document.addEventListener('click', function(event) {
-      const sidebar = document.getElementById('sidebar');
-      const toggle = document.querySelector('.mobile-menu-toggle');
-      
-      if (window.innerWidth <= 768 && 
-          !sidebar.contains(event.target) && 
-          !toggle.contains(event.target) &&
-          sidebar.classList.contains('active')) {
-        sidebar.classList.remove('active');
-      }
-    });
-  </script>
-</body>
-</html>
+    // Update active nav link on scroll
+    const sections = document.querySelectorAll('.content-section
