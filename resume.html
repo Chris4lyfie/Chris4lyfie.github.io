@@ -305,12 +305,29 @@
     .item-title a {
       color: #f59e0b;
       text-decoration: none;
-      transition: color 0.2s ease;
+      transition: all 0.3s ease;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .item-title a::after {
+      content: '→';
+      opacity: 0;
+      transform: translateX(-10px);
+      transition: all 0.3s ease;
+      font-weight: 700;
     }
 
     .item-title a:hover {
       color: #d97706;
-      text-decoration: underline;
+      transform: translateX(4px);
+    }
+
+    .item-title a:hover::after {
+      opacity: 1;
+      transform: translateX(0);
     }
 
     .item-date {
