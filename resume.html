@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume - Christian Villanueva</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.7;
+      color: #1e293b;
+      background: 
+        linear-gradient(to bottom, rgba(248, 250, 252, 0.50), rgba(248, 250, 252, 0.50)),
+        url('./assets/photos/SF-Skyline.jpg') center/cover no-repeat fixed;
+      min-height: 100vh;
+      padding: 0;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(14, 165, 233, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.06) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: white;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: white;
+      padding: 4rem 3rem 3rem;
+      position: relative;
+      border-bottom: 4px solid #0ea5e9;
+      text-align: center;
+    }
+
+    .back-link {
+      position: absolute;
+      top: 1.5rem;
+      left: 2rem;
+      color: #cbd5e1;
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s ease;
+    }
+
+    .back-link:hover {
+      color: #0ea5e9;
+    }
+
+    .back-link svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    .download-link {
+      position: absolute;
+      top: 1.5rem;
+      right: 2rem;
+      color: #cbd5e1;
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      background: rgba(14, 165, 233, 0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      border: 1px solid rgba(14, 165, 233, 0.3);
+    }
+
+    .download-link:hover {
+      color: #0ea5e9;
+      background: rgba(14, 165, 233, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .download-link svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #0ea5e9 0%, #3b82f6 50%, #0ea5e9 100%);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.5px;
+      color: white;
+    }
+
+    .subtitle {
+      font-size: 1.05rem;
+      color: #cbd5e1;
+      font-weight: 400;
+      line-height: 1.6;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .contact-info {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      font-size: 0.9rem;
+      color: #94a3b8;
+      margin-top: 1.5rem;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .contact-item svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    .contact-item a {
+      color: #94a3b8;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .contact-item a:hover {
+      color: #0ea5e9;
+    }
+
+    .content {
+      padding: 3rem;
+    }
+
+    .note {
+      background: #eff6ff;
+      border-left: 4px solid #0ea5e9;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      border-radius: 0 4px 4px 0;
+      border-right: 1px solid rgba(14, 165, 233, 0.2);
+      border-top: 1px solid rgba(14, 165, 233, 0.1);
+      border-bottom: 1px solid rgba(14, 165, 233, 0.1);
+    }
+
+    .note p {
+      margin: 0;
+    }
+
+    h2 {
+      color: #0f172a;
+      font-size: 1.75rem;
+      margin: 3rem 0 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid #e2e8f0;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .content > h2:first-of-type {
+      margin-top: 0;
+    }
+
+    h3 {
+      color: #1e293b;
+      font-size: 1.25rem;
+      margin: 2rem 0 1rem;
+      font-weight: 600;
+    }
+
+    p {
+      margin-bottom: 1.2rem;
+      color: #475569;
+      font-size: 1rem;
+      line-height: 1.8;
+    }
+
+    strong, .label {
+      color: #1e293b;
+      font-weight: 600;
+    }
+
+    ul {
+      margin: 1.2rem 0 1.5rem 0;
+      list-style: none;
+    }
+
+    ul li {
+      position: relative;
+      padding-left: 2rem;
+      margin-bottom: 0.8rem;
+      color: #475569;
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    ul li:before {
+      content: "▪";
+      position: absolute;
+      left: 0.5rem;
+      color: #0ea5e9;
+      font-size: 1.2rem;
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .meta div {
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+      padding: 1rem 1.25rem;
+      background: #f8fafc;
+    }
+
+    .experience-item,
+    .education-item {
+      margin-bottom: 2.5rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .experience-item:last-child,
+    .education-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .item-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #0f172a;
+      flex: 1;
+    }
+
+    .item-title a {
+      color: #0ea5e9;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .item-title a:hover {
+      color: #0284c7;
+      text-decoration: underline;
+    }
+
+    .item-date {
+      font-size: 0.9rem;
+      color: #64748b;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .item-company {
+      font-size: 1rem;
+      color: #0ea5e9;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .skill-category {
+      background: #f8fafc;
+      padding: 1.25rem;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .skill-category-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .skill-tag {
+      padding: 0.4rem 0.75rem;
+      background: rgba(14, 165, 233, 0.1);
+      color: #0284c7;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      border: 1px solid rgba(14, 165, 233, 0.2);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: #64748b;
+      font-size: 0.9rem;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    @media (min-width: 860px) {
+      .meta {
+        grid-template-columns: 1fr 1fr;
+      }
+      .skills-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 3rem 2rem 2.5rem;
+      }
+
+      .back-link {
+        position: static;
+        margin-bottom: 1rem;
+      }
+
+      .download-link {
+        position: static;
+        margin-bottom: 1rem;
+        justify-content: center;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .subtitle {
+        font-size: 1rem;
+      }
+
+      .content {
+        padding: 2rem 1.5rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      .note {
+        padding: 1.25rem;
+      }
+
+      .contact-info {
+        gap: 1rem;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .item-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .item-date {
+        white-space: normal;
+      }
+    }
+
+    ::selection {
+      background: #0ea5e9;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <a href="index.html" class="back-link">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+        </svg>
+        Back to Portfolio
+      </a>
+      <a href="./assets/Resume.pdf" class="download-link" download="Christian_Villanueva_Resume.pdf">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+        </svg>
+        Download PDF
+      </a>
+      <h1>Christian Villanueva</h1>
+      <p class="subtitle">Computer Engineering Student</p>
+      <div class="contact-info">
+        <div class="contact-item">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+          </svg>
+          San Jose, CA
+        </div>
+        <div class="contact-item">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+          </svg>
+          <a href="mailto:Chris4lyfie@yahoo.com">Chris4lyfie@yahoo.com</a>
+        </div>
+        <div class="contact-item">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+          </svg>
+          <a href="https://www.linkedin.com/in/itiancv/" target="_blank">linkedin.com/in/itiancv</a>
+        </div>
+        <div class="contact-item">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+          </svg>
+          <a href="https://github.com/Chris4lyfie" target="_blank">github.com/Chris4lyfie</a>
+        </div>
+      </div>
+    </header>
+
+    <div class="content">
+      
+      <!-- Professional Summary -->
+      <section>
+        <h2>Professional Summary</h2>
+        <p>
+          Computer Engineering student with hands-on experience in hardware test automation, systems integration, and infrastructure management. Skilled in building and troubleshooting complex technical systems through iterative experimentation and documentation. Strong foundation in embedded systems, networking, and low-level configuration with a focus on understanding system failures and implementing robust solutions.
+        </p>
+      </section>
+
+      <!-- Education -->
+      <section>
+        <h2>Education</h2>
+        
+        <div class="education-item">
+          <div class="item-header">
+            <div class="item-title">Bachelor of Science in Computer Engineering</div>
+            <div class="item-date">Fall 2024 - Fall 2026</div>
+          </div>
+          <div class="item-company">San Jose State University, San Jose, CA</div>
+          <p>
+            Pursuing a Bachelor's degree with focus on embedded systems, systems integration, and hardware-software interface design.
+          </p>
+        </div>
+
+        <div class="education-item">
+          <div class="item-header">
+            <div class="item-title">Associate of Science</div>
+            <div class="item-date">Summer 2022 - Spring 2024</div>
+          </div>
+          <div class="item-company">Mission College, Santa Clara, CA</div>
+          <p>
+            Completed foundational coursework in computer science, programming, and mathematics with emphasis on practical application and system-level understanding.
+          </p>
+        </div>
+      </section>
+
+      <!-- Professional Experience -->
+      <section>
+        <h2>Professional Experience</h2>
+        
+        <div class="experience-item">
+          <div class="item-header">
+            <div class="item-title">Hardware Test Engineering Technician</div>
+            <div class="item-date">July 2025 - Present</div>
+          </div>
+          <div class="item-company">QxQ Inc., Fremont, CA</div>
+          <ul>
+            <li>Develop and implement automated test procedures for hardware validation and reliability assessment</li>
+            <li>Integrate custom test fixtures with measurement equipment and data acquisition systems</li>
+            <li>Design test sequences for quality assurance and failure mode analysis</li>
+            <li>Document testing procedures, results, and troubleshooting methodologies for engineering teams</li>
+            <li>Collaborate with hardware and firmware teams to identify and resolve system-level issues</li>
+          </ul>
+        </div>
+
+        <div class="experience-item">
+          <div class="item-header">
+            <div class="item-title">Information Systems Technical Assistant</div>
+            <div class="item-date">July 2022 - August 2024</div>
+          </div>
+          <div class="item-company">West Valley Mission Community College District, Santa Clara, CA</div>
+          <ul>
+            <li>Provided technical support and system administration for district-wide information systems infrastructure</li>
+            <li>Troubleshot hardware, software, and network issues across campus facilities</li>
+            <li>Maintained and configured workstations, servers, and networking equipment</li>
+            <li>Documented technical procedures and created knowledge base articles for common issues</li>
+            <li>Assisted with infrastructure upgrades and technology deployment projects</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Technical Skills -->
+      <section>
+        <h2>Technical Skills</h2>
+        <div class="skills-grid">
+          <div class="skill-category">
+            <div class="skill-category-title">Hardware & Testing</div>
+            <div class="skill-tags">
+              <span class="skill-tag">Test Automation</span>
+              <span class="skill-tag">Hardware Validation</span>
+              <span class="skill-tag">Fixture Integration</span>
+              <span class="skill-tag">Embedded Systems</span>
+              <span class="skill-tag">PCB Testing</span>
+            </div>
+          </div>
+
+          <div class="skill-category">
+            <div class="skill-category-title">Systems & Infrastructure</div>
+            <div class="skill-tags">
+              <span class="skill-tag">Linux/Unix</span>
+              <span class="skill-tag">Networking</span>
+              <span class="skill-tag">System Administration</span>
+              <span class="skill-tag">Infrastructure Design</span>
+              <span class="skill-tag">Virtualization</span>
+            </div>
+          </div>
+
+          <div class="skill-category">
+            <div class="skill-category-title">Programming & Tools</div>
+            <div class="skill-tags">
+              <span class="skill-tag">Python</span>
+              <span class="skill-tag">C/C++</span>
+              <span class="skill-tag">Bash/Shell</span>
+              <span class="skill-tag">Git</span>
+              <span class="skill-tag">Documentation</span>
+            </div>
+          </div>
+
+          <div class="skill-category">
+            <div class="skill-category-title">Engineering Practices</div>
+            <div class="skill-tags">
+              <span class="skill-tag">Debugging</span>
+              <span class="skill-tag">Root Cause Analysis</span>
+              <span class="skill-tag">Technical Writing</span>
+              <span class="skill-tag">Quality Assurance</span>
+              <span class="skill-tag">Problem Solving</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Projects -->
+      <section>
+        <h2>Notable Projects</h2>
+        
+        <div class="experience-item">
+          <div class="item-title"><a href="projects/QxQ.html">QxQ Test Fixture Integration</a></div>
+          <p>
+            Developed automated hardware test framework integrating custom fixtures with measurement equipment for reliability validation. Implemented test sequences for quality assurance and failure analysis workflows.
+          </p>
+        </div>
+
+        <div class="experience-item">
+          <div class="item-title"><a href="projects/Home-Infrastructure.html">Infrastructure Reliability Case Study</a></div>
+          <p>
+            Designed and deployed home lab infrastructure spanning network, compute, and storage layers. Documented system bring-up, failure scenarios, and recovery procedures as a practical case study in systems engineering and infrastructure reliability.
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      <p>© 2026 Christian Villanueva</p>
+    </footer>
+  </div>
+</body>
+</html>
