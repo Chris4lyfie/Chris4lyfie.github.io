@@ -11,34 +11,22 @@
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       line-height: 1.7;
-      color: #1e293b;
+      color: #292524;
       background: 
-        linear-gradient(to bottom, rgba(248, 250, 252, 0.50), rgba(248, 250, 252, 0.50)),
+        linear-gradient(to bottom, rgba(250, 250, 249, 0.50), rgba(250, 250, 249, 0.50)),
         url('./assets/photos/SF-Skyline.jpg') center/cover no-repeat fixed;
       min-height: 100vh;
-      padding: 0;
-      position: relative;
-    }
-
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: 
-        radial-gradient(circle at 20% 50%, rgba(14, 165, 233, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.06) 0%, transparent 50%);
-      pointer-events: none;
-      z-index: 0;
     }
 
     .container {
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 0 auto;
       background: white;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -46,12 +34,63 @@
       z-index: 1;
     }
 
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(251, 191, 36, 0.15) 0%, transparent 25%),
+        radial-gradient(circle at 45% 15%, rgba(245, 158, 11, 0.12) 0%, transparent 20%),
+        radial-gradient(circle at 25% 25%, rgba(217, 119, 6, 0.08) 0%, transparent 15%),
+        radial-gradient(circle at 80% 20%, rgba(251, 191, 36, 0.15) 0%, transparent 30%),
+        radial-gradient(circle at 90% 35%, rgba(245, 158, 11, 0.1) 0%, transparent 20%),
+        radial-gradient(circle at 85% 28%, rgba(217, 119, 6, 0.08) 0%, transparent 18%),
+        radial-gradient(circle at 15% 70%, rgba(251, 191, 36, 0.12) 0%, transparent 28%),
+        radial-gradient(circle at 25% 85%, rgba(245, 158, 11, 0.1) 0%, transparent 22%),
+        radial-gradient(circle at 20% 78%, rgba(217, 119, 6, 0.07) 0%, transparent 16%),
+        radial-gradient(circle at 75% 75%, rgba(251, 191, 36, 0.14) 0%, transparent 32%),
+        radial-gradient(circle at 85% 82%, rgba(245, 158, 11, 0.11) 0%, transparent 24%),
+        radial-gradient(circle at 78% 78%, rgba(217, 119, 6, 0.08) 0%, transparent 19%),
+        radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.08) 0%, transparent 35%),
+        radial-gradient(circle at 55% 48%, rgba(245, 158, 11, 0.06) 0%, transparent 25%),
+        radial-gradient(circle at 48% 52%, rgba(217, 119, 6, 0.05) 0%, transparent 20%);
+      pointer-events: none;
+      opacity: 0.7;
+      z-index: 0;
+    }
+
+    .container::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(circle at 35% 40%, rgba(251, 191, 36, 0.08) 0%, transparent 15%),
+        radial-gradient(circle at 32% 38%, rgba(245, 158, 11, 0.06) 0%, transparent 12%),
+        radial-gradient(circle at 65% 55%, rgba(217, 119, 6, 0.09) 0%, transparent 18%),
+        radial-gradient(circle at 68% 52%, rgba(251, 191, 36, 0.07) 0%, transparent 14%),
+        radial-gradient(circle at 40% 85%, rgba(245, 158, 11, 0.08) 0%, transparent 16%),
+        radial-gradient(circle at 60% 25%, rgba(217, 119, 6, 0.07) 0%, transparent 13%),
+        radial-gradient(circle at 10% 50%, rgba(251, 191, 36, 0.1) 0%, transparent 20%),
+        radial-gradient(circle at 92% 60%, rgba(245, 158, 11, 0.09) 0%, transparent 17%);
+      pointer-events: none;
+      opacity: 0.5;
+      z-index: 0;
+    }
+
+    /* Header */
     header {
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      background: #292524;
       color: white;
       padding: 4rem 3rem 3rem;
       position: relative;
-      border-bottom: 4px solid #0ea5e9;
+      border-bottom: 4px solid #f59e0b;
+      z-index: 10;
       text-align: center;
     }
 
@@ -59,18 +98,19 @@
       position: absolute;
       top: 1.5rem;
       left: 2rem;
-      color: #cbd5e1;
+      color: #d6d3d1;
       text-decoration: none;
       font-size: 0.95rem;
       font-weight: 500;
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      transition: color 0.2s ease;
+      transition: all 0.2s ease;
     }
 
     .back-link:hover {
-      color: #0ea5e9;
+      color: #fbbf24;
+      transform: translateX(-4px);
     }
 
     .back-link svg {
@@ -83,7 +123,7 @@
       position: absolute;
       top: 1.5rem;
       right: 2rem;
-      color: #cbd5e1;
+      color: #d6d3d1;
       text-decoration: none;
       font-size: 0.95rem;
       font-weight: 500;
@@ -91,15 +131,15 @@
       align-items: center;
       gap: 0.5rem;
       transition: all 0.2s ease;
-      background: rgba(14, 165, 233, 0.1);
+      background: rgba(245, 158, 11, 0.15);
       padding: 0.5rem 1rem;
       border-radius: 6px;
-      border: 1px solid rgba(14, 165, 233, 0.3);
+      border: 1px solid rgba(245, 158, 11, 0.3);
     }
 
     .download-link:hover {
-      color: #0ea5e9;
-      background: rgba(14, 165, 233, 0.2);
+      color: #fbbf24;
+      background: rgba(245, 158, 11, 0.25);
       transform: translateY(-2px);
     }
 
@@ -107,16 +147,6 @@
       width: 16px;
       height: 16px;
       fill: currentColor;
-    }
-
-    header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, #0ea5e9 0%, #3b82f6 50%, #0ea5e9 100%);
     }
 
     h1 {
@@ -128,8 +158,8 @@
     }
 
     .subtitle {
-      font-size: 1.05rem;
-      color: #cbd5e1;
+      font-size: 1.1rem;
+      color: #d6d3d1;
       font-weight: 400;
       line-height: 1.6;
       max-width: 800px;
@@ -142,7 +172,7 @@
       gap: 2rem;
       flex-wrap: wrap;
       font-size: 0.9rem;
-      color: #94a3b8;
+      color: #a8a29e;
       margin-top: 1.5rem;
     }
 
@@ -159,50 +189,51 @@
     }
 
     .contact-item a {
-      color: #94a3b8;
+      color: #a8a29e;
       text-decoration: none;
       transition: color 0.2s ease;
     }
 
     .contact-item a:hover {
-      color: #0ea5e9;
+      color: #fbbf24;
     }
 
+    /* Content */
     .content {
       padding: 3rem;
-    }
-
-    .note {
-      background: #eff6ff;
-      border-left: 4px solid #0ea5e9;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      border-radius: 0 4px 4px 0;
-      border-right: 1px solid rgba(14, 165, 233, 0.2);
-      border-top: 1px solid rgba(14, 165, 233, 0.1);
-      border-bottom: 1px solid rgba(14, 165, 233, 0.1);
-    }
-
-    .note p {
-      margin: 0;
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
     }
 
     h2 {
-      color: #0f172a;
+      color: #292524;
       font-size: 1.75rem;
       margin: 3rem 0 1.5rem;
       padding-bottom: 0.75rem;
-      border-bottom: 2px solid #e2e8f0;
+      border-bottom: 2px solid #f59e0b;
       font-weight: 700;
       letter-spacing: -0.3px;
+      position: relative;
     }
 
-    .content > h2:first-of-type {
+    h2::before {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 80px;
+      height: 2px;
+      background: #d97706;
+    }
+
+    .content > section:first-child h2 {
       margin-top: 0;
     }
 
     h3 {
-      color: #1e293b;
+      color: #292524;
       font-size: 1.25rem;
       margin: 2rem 0 1rem;
       font-weight: 600;
@@ -210,13 +241,13 @@
 
     p {
       margin-bottom: 1.2rem;
-      color: #475569;
+      color: #57534e;
       font-size: 1rem;
       line-height: 1.8;
     }
 
-    strong, .label {
-      color: #1e293b;
+    strong {
+      color: #292524;
       font-weight: 600;
     }
 
@@ -229,7 +260,7 @@
       position: relative;
       padding-left: 2rem;
       margin-bottom: 0.8rem;
-      color: #475569;
+      color: #57534e;
       font-size: 1rem;
       line-height: 1.7;
     }
@@ -238,29 +269,15 @@
       content: "▪";
       position: absolute;
       left: 0.5rem;
-      color: #0ea5e9;
+      color: #f59e0b;
       font-size: 1.2rem;
-    }
-
-    .meta {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1rem;
-      margin: 1.5rem 0;
-    }
-
-    .meta div {
-      border: 1px solid #e2e8f0;
-      border-radius: 4px;
-      padding: 1rem 1.25rem;
-      background: #f8fafc;
     }
 
     .experience-item,
     .education-item {
       margin-bottom: 2.5rem;
       padding-bottom: 2rem;
-      border-bottom: 1px solid #e2e8f0;
+      border-bottom: 1px solid #fde68a;
     }
 
     .experience-item:last-child,
@@ -281,31 +298,31 @@
     .item-title {
       font-size: 1.25rem;
       font-weight: 700;
-      color: #0f172a;
+      color: #292524;
       flex: 1;
     }
 
     .item-title a {
-      color: #0ea5e9;
+      color: #f59e0b;
       text-decoration: none;
       transition: color 0.2s ease;
     }
 
     .item-title a:hover {
-      color: #0284c7;
+      color: #d97706;
       text-decoration: underline;
     }
 
     .item-date {
       font-size: 0.9rem;
-      color: #64748b;
+      color: #78716c;
       font-weight: 600;
       white-space: nowrap;
     }
 
     .item-company {
       font-size: 1rem;
-      color: #0ea5e9;
+      color: #f59e0b;
       font-weight: 600;
       margin-bottom: 0.75rem;
     }
@@ -318,16 +335,16 @@
     }
 
     .skill-category {
-      background: #f8fafc;
+      background: #fffbeb;
       padding: 1.25rem;
       border-radius: 8px;
-      border: 1px solid #e2e8f0;
+      border: 1px solid #fde68a;
     }
 
     .skill-category-title {
       font-size: 0.95rem;
       font-weight: 700;
-      color: #0f172a;
+      color: #292524;
       margin-bottom: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -341,26 +358,27 @@
 
     .skill-tag {
       padding: 0.4rem 0.75rem;
-      background: rgba(14, 165, 233, 0.1);
-      color: #0284c7;
+      background: rgba(245, 158, 11, 0.1);
+      color: #d97706;
       border-radius: 6px;
       font-size: 0.85rem;
       font-weight: 500;
-      border: 1px solid rgba(14, 165, 233, 0.2);
+      border: 1px solid rgba(245, 158, 11, 0.3);
     }
 
+    /* Footer */
     footer {
+      background: #292524;
+      color: #d6d3d1;
       text-align: center;
-      padding: 2rem;
-      color: #64748b;
-      font-size: 0.9rem;
-      border-top: 1px solid #e2e8f0;
+      padding: 2rem 3rem;
+      border-top: 4px solid #f59e0b;
+      position: relative;
+      z-index: 10;
     }
 
+    /* Mobile Styles */
     @media (min-width: 860px) {
-      .meta {
-        grid-template-columns: 1fr 1fr;
-      }
       .skills-grid {
         grid-template-columns: 1fr 1fr;
       }
@@ -368,12 +386,13 @@
 
     @media (max-width: 768px) {
       header {
-        padding: 3rem 2rem 2.5rem;
+        padding: 3rem 1.5rem 2rem;
       }
 
       .back-link {
         position: static;
         margin-bottom: 1rem;
+        justify-content: center;
       }
 
       .download-link {
@@ -398,10 +417,6 @@
         font-size: 1.5rem;
       }
 
-      .note {
-        padding: 1.25rem;
-      }
-
       .contact-info {
         gap: 1rem;
         flex-direction: column;
@@ -419,12 +434,26 @@
     }
 
     ::selection {
-      background: #0ea5e9;
-      color: white;
+      background: #fbbf24;
+      color: #292524;
+    }
+
+    /* Scroll Progress Indicator */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
+      width: 0%;
+      z-index: 1000;
+      transition: width 0.1s ease;
     }
   </style>
 </head>
 <body>
+  <div class="progress-bar" id="progressBar"></div>
+
   <div class="container">
     <header>
       <a href="index.html" class="back-link">
@@ -612,8 +641,18 @@
     </div>
 
     <footer>
-      <p>© 2026 Christian Villanueva</p>
+      <p>&copy; 2026 Christian Villanueva. All rights reserved.</p>
     </footer>
   </div>
+
+  <script>
+    // Scroll progress bar
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.getElementById('progressBar').style.width = scrolled + '%';
+    });
+  </script>
 </body>
 </html>
