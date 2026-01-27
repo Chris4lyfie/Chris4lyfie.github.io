@@ -18,26 +18,10 @@
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       line-height: 1.7;
-      color: #1e293b;
-      background: 
-        linear-gradient(to bottom, rgba(248, 250, 252, 0.50), rgba(248, 250, 252, 0.50)),
-        url('./assets/photos/SF-Skyline.jpg') center/cover no-repeat fixed;
+      color: #292524;
+      background: #fafaf9;
       min-height: 100vh;
       overflow-x: hidden;
-    }
-
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: 
-        radial-gradient(circle at 20% 50%, rgba(14, 165, 233, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.06) 0%, transparent 50%);
-      pointer-events: none;
-      z-index: 0;
     }
 
     .layout {
@@ -50,13 +34,13 @@
     /* Sidebar */
     .sidebar {
       width: 280px;
-      background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+      background: #292524;
       color: white;
       padding: 3rem 0;
       position: fixed;
       height: 100vh;
       overflow-y: auto;
-      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     .sidebar-content {
@@ -81,7 +65,7 @@
 
     .profile-title {
       font-size: 0.9rem;
-      color: #cbd5e1;
+      color: #d6d3d1;
       line-height: 1.6;
     }
 
@@ -91,7 +75,7 @@
       justify-content: center;
       gap: 0.5rem;
       margin-top: 0.5rem;
-      color: #94a3b8;
+      color: #a8a29e;
       font-size: 0.85rem;
     }
 
@@ -113,9 +97,11 @@
     }
 
     .nav-menu a {
-      display: block;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
       padding: 0.75rem 1.25rem;
-      color: #cbd5e1;
+      color: #d6d3d1;
       text-decoration: none;
       border-radius: 8px;
       transition: all 0.2s ease;
@@ -123,15 +109,22 @@
       font-size: 0.95rem;
     }
 
+    .nav-menu a svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+      flex-shrink: 0;
+    }
+
     .nav-menu a:hover {
-      background: rgba(14, 165, 233, 0.1);
-      color: #0ea5e9;
+      background: rgba(245, 158, 11, 0.1);
+      color: #fbbf24;
     }
 
     .nav-menu a.active {
-      background: rgba(14, 165, 233, 0.15);
-      color: #0ea5e9;
-      border-left: 3px solid #0ea5e9;
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border-left: 3px solid #f59e0b;
     }
 
     /* Social Links */
@@ -149,7 +142,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #cbd5e1;
+      color: #d6d3d1;
       transition: all 0.2s ease;
       border-radius: 50%;
       text-decoration: none;
@@ -157,8 +150,8 @@
     }
 
     .social-icon:hover {
-      color: #0ea5e9;
-      background: rgba(14, 165, 233, 0.15);
+      color: #fbbf24;
+      background: rgba(245, 158, 11, 0.15);
       transform: translateY(-2px);
     }
 
@@ -172,7 +165,56 @@
     .main-content {
       flex: 1;
       margin-left: 280px;
-      background: white;
+      background: #ffffff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .main-content::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(251, 191, 36, 0.15) 0%, transparent 25%),
+        radial-gradient(circle at 45% 15%, rgba(245, 158, 11, 0.12) 0%, transparent 20%),
+        radial-gradient(circle at 25% 25%, rgba(217, 119, 6, 0.08) 0%, transparent 15%),
+        radial-gradient(circle at 80% 20%, rgba(251, 191, 36, 0.15) 0%, transparent 30%),
+        radial-gradient(circle at 90% 35%, rgba(245, 158, 11, 0.1) 0%, transparent 20%),
+        radial-gradient(circle at 85% 28%, rgba(217, 119, 6, 0.08) 0%, transparent 18%),
+        radial-gradient(circle at 15% 70%, rgba(251, 191, 36, 0.12) 0%, transparent 28%),
+        radial-gradient(circle at 25% 85%, rgba(245, 158, 11, 0.1) 0%, transparent 22%),
+        radial-gradient(circle at 20% 78%, rgba(217, 119, 6, 0.07) 0%, transparent 16%),
+        radial-gradient(circle at 75% 75%, rgba(251, 191, 36, 0.14) 0%, transparent 32%),
+        radial-gradient(circle at 85% 82%, rgba(245, 158, 11, 0.11) 0%, transparent 24%),
+        radial-gradient(circle at 78% 78%, rgba(217, 119, 6, 0.08) 0%, transparent 19%),
+        radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.08) 0%, transparent 35%),
+        radial-gradient(circle at 55% 48%, rgba(245, 158, 11, 0.06) 0%, transparent 25%),
+        radial-gradient(circle at 48% 52%, rgba(217, 119, 6, 0.05) 0%, transparent 20%);
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .main-content::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(circle at 35% 40%, rgba(251, 191, 36, 0.08) 0%, transparent 15%),
+        radial-gradient(circle at 32% 38%, rgba(245, 158, 11, 0.06) 0%, transparent 12%),
+        radial-gradient(circle at 65% 55%, rgba(217, 119, 6, 0.09) 0%, transparent 18%),
+        radial-gradient(circle at 68% 52%, rgba(251, 191, 36, 0.07) 0%, transparent 14%),
+        radial-gradient(circle at 40% 85%, rgba(245, 158, 11, 0.08) 0%, transparent 16%),
+        radial-gradient(circle at 60% 25%, rgba(217, 119, 6, 0.07) 0%, transparent 13%),
+        radial-gradient(circle at 10% 50%, rgba(251, 191, 36, 0.1) 0%, transparent 20%),
+        radial-gradient(circle at 92% 60%, rgba(245, 158, 11, 0.09) 0%, transparent 17%);
+      pointer-events: none;
+      opacity: 0.5;
     }
 
     .content-section {
@@ -183,12 +225,14 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+      position: relative;
+      z-index: 1;
     }
 
     .section-header {
       font-size: 2.5rem;
       font-weight: 700;
-      color: #0f172a;
+      color: #292524;
       margin-bottom: 1rem;
       letter-spacing: -0.5px;
     }
@@ -207,21 +251,21 @@
     .home-greeting {
       font-size: 3rem;
       font-weight: 700;
-      color: #0f172a;
+      color: #292524;
       margin-bottom: 1rem;
       letter-spacing: -0.5px;
     }
 
     .home-subtitle {
       font-size: 1.5rem;
-      color: #475569;
+      color: #57534e;
       margin-bottom: 2rem;
       font-weight: 400;
     }
 
     .home-description {
       font-size: 1.1rem;
-      color: #64748b;
+      color: #78716c;
       line-height: 1.8;
       margin-bottom: 2rem;
     }
@@ -229,7 +273,7 @@
     .home-cta {
       display: inline-block;
       padding: 1rem 2rem;
-      background: #0ea5e9;
+      background: #f59e0b;
       color: white;
       text-decoration: none;
       border-radius: 8px;
@@ -241,9 +285,9 @@
     }
 
     .home-cta:hover {
-      background: #0284c7;
+      background: #d97706;
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
     }
 
     .profile-pic-home {
@@ -251,13 +295,13 @@
       height: 280px;
       border-radius: 50%;
       object-fit: cover;
-      border: 4px solid #0ea5e9;
-      box-shadow: 0 8px 24px rgba(14, 165, 233, 0.2);
+      border: 4px solid #f59e0b;
+      box-shadow: 0 8px 24px rgba(245, 158, 11, 0.2);
     }
 
     /* About Section */
     .about-content {
-      color: #475569;
+      color: #57534e;
       font-size: 1.1rem;
       line-height: 1.8;
     }
@@ -309,7 +353,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(to bottom, rgba(15, 23, 42, 0.3) 0%, rgba(15, 23, 42, 0.9) 100%);
+      background: linear-gradient(to bottom, rgba(41, 37, 36, 0.3) 0%, rgba(41, 37, 36, 0.9) 100%);
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
@@ -336,7 +380,7 @@
     }
 
     .project-description {
-      color: #e2e8f0;
+      color: #e7e5e4;
       line-height: 1.6;
       font-size: 0.95rem;
       margin-bottom: 0;
@@ -346,15 +390,15 @@
     .project-tag {
       display: inline-block;
       padding: 0.25rem 0.75rem;
-      background: rgba(14, 165, 233, 0.2);
-      color: #7dd3fc;
+      background: rgba(245, 158, 11, 0.2);
+      color: #fde68a;
       border-radius: 6px;
       font-size: 0.813rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.3px;
       margin-bottom: 0;
-      border: 1px solid rgba(14, 165, 233, 0.3);
+      border: 1px solid rgba(245, 158, 11, 0.3);
       width: fit-content;
     }
 
@@ -363,7 +407,7 @@
       align-items: center;
       gap: 0.5rem;
       padding: 0.6rem 1.2rem;
-      background: #0ea5e9;
+      background: #f59e0b;
       color: white;
       text-decoration: none;
       border-radius: 8px;
@@ -374,7 +418,7 @@
     }
 
     .project-link:hover {
-      background: #0284c7;
+      background: #d97706;
       transform: translateX(4px);
     }
 
@@ -398,9 +442,9 @@
       transform: translateX(-50%);
       top: 2rem;
       width: 3px;
-      background: #e2e8f0;
+      background: #e7e5e4;
       border-radius: 2px;
-      z-index: 1;
+      z-index: 0;
       bottom: 0;
     }
 
@@ -411,15 +455,30 @@
       top: 2rem;
       width: 3px;
       height: 0;
-      background: linear-gradient(180deg, #0ea5e9 0%, #0284c7 100%);
+      background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
       transition: height 0.3s ease-out;
       border-radius: 2px;
-      z-index: 2;
+      z-index: 0;
     }
 
     .timeline-item {
       position: relative;
       margin-bottom: 2.5rem;
+      opacity: 0;
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .timeline-item.left {
+      transform: translateX(-100px);
+    }
+
+    .timeline-item.right {
+      transform: translateX(100px);
+    }
+
+    .timeline-item.visible {
+      opacity: 1;
+      transform: translateX(0);
     }
 
     /* Left side - Work Experience */
@@ -462,29 +521,45 @@
       top: 0.5rem;
       width: 18px;
       height: 18px;
-      background: #0ea5e9;
-      border: 4px solid #0ea5e9;
+      background: #f59e0b;
+      border: 4px solid #f59e0b;
       border-radius: 50%;
-      box-shadow: 0 0 0 6px rgba(14, 165, 233, 0.15);
-      z-index: 3;
+      box-shadow: 0 0 0 6px rgba(245, 158, 11, 0.15);
+      z-index: 10;
+      transition: all 0.3s ease;
+    }
+
+    .timeline-item:hover .timeline-dot {
+      transform: scale(1.3);
+      box-shadow: 0 0 0 8px rgba(245, 158, 11, 0.25);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        box-shadow: 0 0 0 8px rgba(245, 158, 11, 0.25);
+      }
+      50% {
+        box-shadow: 0 0 0 12px rgba(245, 158, 11, 0.1);
+      }
     }
 
     .timeline-date-badge {
       position: absolute;
       top: 0.3rem;
-      background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
       color: white;
       padding: 0.4rem 0.8rem;
       border-radius: 6px;
       font-size: 0.75rem;
       font-weight: 600;
       white-space: nowrap;
-      box-shadow: 0 2px 8px rgba(14, 165, 233, 0.3);
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
     }
 
     .timeline-content {
       background: white;
-      border: 1px solid #e2e8f0;
+      border: 1px solid #e7e5e4;
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
       transition: all 0.3s ease;
@@ -493,6 +568,12 @@
       display: flex;
       flex-direction: column;
       min-height: 400px;
+      cursor: pointer;
+    }
+
+    .timeline-content:hover {
+      border-color: #f59e0b;
+      box-shadow: 0 4px 16px rgba(245, 158, 11, 0.2);
     }
 
     .timeline-image {
@@ -503,6 +584,7 @@
       border-radius: 12px 12px 0 0;
       margin: 0;
       flex-shrink: 0;
+      overflow: hidden;
     }
 
     .timeline-text-content {
@@ -541,14 +623,14 @@
     .experience-title {
       font-size: 1.3rem;
       font-weight: 700;
-      color: #0f172a;
+      color: #292524;
       margin-bottom: 0.5rem;
       letter-spacing: -0.3px;
     }
 
     .experience-company {
       font-size: 1rem;
-      color: #0ea5e9;
+      color: #f59e0b;
       font-weight: 600;
       margin-bottom: 0.25rem;
     }
@@ -571,7 +653,7 @@
     .form-group label {
       display: block;
       font-weight: 600;
-      color: #0f172a;
+      color: #292524;
       margin-bottom: 0.5rem;
       font-size: 0.95rem;
     }
@@ -580,7 +662,7 @@
     .form-group textarea {
       width: 100%;
       padding: 0.75rem 1rem;
-      border: 2px solid #e2e8f0;
+      border: 2px solid #e7e5e4;
       border-radius: 8px;
       font-size: 1rem;
       font-family: inherit;
@@ -591,8 +673,8 @@
     .form-group input:focus,
     .form-group textarea:focus {
       outline: none;
-      border-color: #0ea5e9;
-      box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+      border-color: #f59e0b;
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
     }
 
     .form-group textarea {
@@ -603,7 +685,7 @@
     .submit-btn {
       width: 100%;
       padding: 1rem 2rem;
-      background: #0ea5e9;
+      background: #f59e0b;
       color: white;
       border: none;
       border-radius: 8px;
@@ -614,9 +696,9 @@
     }
 
     .submit-btn:hover {
-      background: #0284c7;
+      background: #d97706;
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
     }
 
     .submit-btn:active {
@@ -624,7 +706,7 @@
     }
 
     .experience-description {
-      color: #475569;
+      color: #57534e;
       line-height: 1.7;
       margin-bottom: 1rem;
     }
@@ -637,8 +719,8 @@
 
     .skill-tag {
       padding: 0.3rem 0.75rem;
-      background: rgba(14, 165, 233, 0.1);
-      color: #0284c7;
+      background: rgba(245, 158, 11, 0.1);
+      color: #d97706;
       border-radius: 6px;
       font-size: 0.813rem;
       font-weight: 500;
@@ -651,7 +733,7 @@
       top: 1rem;
       left: 1rem;
       z-index: 1000;
-      background: #0f172a;
+      background: #292524;
       color: white;
       border: none;
       width: 48px;
@@ -756,8 +838,8 @@
     }
 
     ::selection {
-      background: #0ea5e9;
-      color: white;
+      background: #fbbf24;
+      color: #292524;
     }
   </style>
 </head>
@@ -781,12 +863,54 @@
 
         <nav>
           <ul class="nav-menu">
-            <li><a href="#home" class="nav-link">Home</a></li>
-            <li><a href="#experience" class="nav-link">Experience</a></li>
-            <li><a href="#projects" class="nav-link">Projects</a></li>
-            <li><a href="#about" class="nav-link">About Me</a></li>
-            <li><a href="resume.html" class="nav-link">Resume</a></li>
-            <li><a href="#contact" class="nav-link">Contact</a></li>
+            <li>
+              <a href="#home" class="nav-link">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg>
+                Home
+              </a>
+            </li>
+            <li>
+              <a href="#experience" class="nav-link">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/>
+                </svg>
+                Experience
+              </a>
+            </li>
+            <li>
+              <a href="#projects" class="nav-link">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                </svg>
+                Projects
+              </a>
+            </li>
+            <li>
+              <a href="#about" class="nav-link">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                About Me
+              </a>
+            </li>
+            <li>
+              <a href="resume.html" class="nav-link">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                </svg>
+                Resume
+              </a>
+            </li>
+            <li>
+              <a href="#contact" class="nav-link">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                </svg>
+                Contact
+              </a>
+            </li>
           </ul>
         </nav>
 
@@ -1083,6 +1207,31 @@ I'm currently focused on developing strong fundamentals in systems engineering, 
         }
       });
     });
+
+    // Animate timeline items on scroll
+    const timelineItems = document.querySelectorAll('.timeline-item');
+    
+    function checkTimelineItems() {
+      timelineItems.forEach((item, index) => {
+        const rect = item.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+        
+        // Trigger animation when item is 70% visible in viewport
+        if (rect.top < windowHeight * 0.8) {
+          // Add staggered delay for sequential appearance
+          setTimeout(() => {
+            item.classList.add('visible');
+          }, index * 150); // 150ms delay between each item
+        }
+      });
+    }
+
+    // Check on scroll and on load
+    window.addEventListener('scroll', checkTimelineItems);
+    window.addEventListener('load', checkTimelineItems);
+    
+    // Initial check
+    checkTimelineItems();
   </script>
 </body>
 </html>

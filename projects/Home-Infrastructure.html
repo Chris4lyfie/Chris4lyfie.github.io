@@ -439,37 +439,60 @@
       <div class="section-card architectural-change">
         <div class="section-header">Architecture Decision Record</div>
         <div class="section-content">
-          <h2>Architectural Change: TrueNAS VM to Bare Metal</h2>
+          <h2>Architectural Change: Collapse Switching Layers and Upgrade Core to High-Speed PoE</h2>
 
-          <p>
-            TrueNAS was initially deployed as a virtual machine under Proxmox to evaluate SATA
-            passthrough feasibility. This design introduced unacceptable reliability risks.
-          </p>
+          <p><strong>Context:</strong> The network is being simplified to reduce power draw, reduce failure modes, and reduce physical devices while keeping VLAN segmentation. The prior design used multiple managed switches with split responsibility (management vs all other VLANs). That approach increased configuration surface area and amplified lockout risk during trunk/VLAN changes.</p>
 
-          <p><strong>Identified Risks:</strong></p>
+          <p><strong>Current State:</strong></p>
           <ul>
-            <li>Data availability tied to hypervisor uptime</li>
-            <li>Resource contention during concurrent workloads</li>
-            <li>Inability to perform SMART monitoring within a VM</li>
-            <li>Risk of catastrophic data loss from accidental VM deletion</li>
+            <li>Router: TP-Link ER605v2 (VLANs terminate here; inter-VLAN routing/firewalling at router)</li>
+            <li>Switching: single L2 managed switch (Netgear GS308E v4), gigabit, non-PoE</li>
+            <li>VLAN model: Management (10), Home (20), Guest (30), DMZ (40), IoT (50)</li>
+            <li>Wireless: one AP connected via wired uplink; multiple hidden SSIDs mapped to VLANs (all except DMZ)</li>
+            <li>Wired-critical endpoints: NAS, Proxmox server, Pi-hole, AP</li>
+            <li>Physical constraint: router and core switch are in separate rooms connected by a ~100 ft Ethernet run</li>
           </ul>
 
-          <p>
-            The system was migrated to a dedicated bare-metal server to isolate storage from
-            compute workloads.
-          </p>
+          <p><strong>Problem / Motivation:</strong> Operational instability has repeatedly come from trunk/VLAN misconfiguration and firmware resets, causing management lockouts and broad connectivity loss. The primary reliability goal is to reduce the number of devices and the number of trunk/tagging decision points while preserving a hard recovery path.</p>
 
-          <p><strong>Reliability Improvements:</strong></p>
+          <p><strong>Decision:</strong> Replace the current gigabit non-PoE core switch with a single "core access" switch that provides:</p>
           <ul>
-            <li>Eliminated resource contention from application workloads</li>
-            <li>Restored direct disk health monitoring</li>
-            <li>Decoupled data integrity from hypervisor stability</li>
+            <li>PoE for the AP</li>
+            <li>2.5GbE to the AP (to match AP capabilities)</li>
+            <li>10GbE capability for NAS and Proxmox (either via native 10G ports or SFP+), while retaining the ER605v2 as the VLAN termination and policy point</li>
+            <li>A simplified VLAN approach: one core switch, one trunk to the router, minimal trunks elsewhere</li>
           </ul>
 
-          <p>
-            Migration introduced physical risks during drive transfer and validation on older hardware,
-            which were mitigated through careful sequencing and verification of pools and datasets.
-          </p>
+          <p><strong>Options Considered:</strong></p>
+          <ul>
+            <li><strong>Keep GS308E v4 and add an injector/PoE midspan + separate 10G switch later:</strong> Pros: incremental cost, minimal immediate change. Cons: more devices, more inter-switch trunks, more failure modes, more configuration drift</li>
+            <li><strong>Two-tier core (10G aggregation switch + separate PoE access switch):</strong> Pros: clean separation, scalability. Cons: reintroduces multi-switch trunking and the exact lockout class that has caused outages</li>
+            <li><strong>Single upgraded core switch (chosen):</strong> Pros: fewer devices, fewer trunks, fewer VLAN-tagging surfaces, lower operational risk. Cons: single point of failure at the switch; requires careful cutover since no spare router exists</li>
+          </ul>
+
+          <p><strong>Reliability Risks and Mitigations:</strong></p>
+          <ul>
+            <li><strong>Risk:</strong> Repeat management lockout during trunk/VLAN changes. <strong>Mitigation:</strong> dedicate a management-only access port on both the router and the switch; never modify these ports during changes</li>
+            <li><strong>Risk:</strong> Firmware reset wipes VLAN/trunk settings on new switch. <strong>Mitigation:</strong> export/backup config after baseline; enforce a post-update verification checklist before relying on it</li>
+            <li><strong>Risk:</strong> Single-core switch failure impacts everything. <strong>Mitigation:</strong> keep spare switch staged for emergency "flat network" recovery; keep router reachable on an untagged fallback port</li>
+            <li><strong>Risk:</strong> Long 100 ft run becomes a single critical uplink. <strong>Mitigation:</strong> treat router↔core uplink as a controlled trunk with no other duties; label and document; avoid frequent changes</li>
+          </ul>
+
+          <p><strong>Resulting Reliability Improvements:</strong></p>
+          <ul>
+            <li>Reduced device count and trunk complexity, directly targeting prior lockout modes</li>
+            <li>PoE and higher-speed uplinks remove the need for extra devices (injectors, secondary switches)</li>
+            <li>Centralized L2 behavior in one switch while keeping L3/policy at the router maintains clear fault boundaries</li>
+            <li>Dedicated management ports create a persistent recovery path even under VLAN/trunk failure</li>
+          </ul>
+
+          <p><strong>Guardrails:</strong></p>
+          <ul>
+            <li>One router port permanently reserved as management-only access to VLAN 10</li>
+            <li>One switch port permanently reserved as management-only access to VLAN 10</li>
+            <li>Router↔core trunk is treated as critical infrastructure: changes only with documented procedure and immediate verification</li>
+            <li>Pi-hole access rules remain explicit per VLAN (DNS allowed; nothing else by default)</li>
+          </ul>
         </div>
       </div>
 
