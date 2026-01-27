@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QxQ Test Fixture Integration</title>
+  <title>Test Fixture Integration and Bring-Up | Christian Villanueva</title>
   <style>
     * {
       margin: 0;
@@ -11,34 +11,22 @@
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       line-height: 1.7;
-      color: #1e293b;
+      color: #292524;
       background: 
-        linear-gradient(to bottom, rgba(248, 250, 252, 0.50), rgba(248, 250, 252, 0.50)),
+        linear-gradient(to bottom, rgba(250, 250, 249, 0.50), rgba(250, 250, 249, 0.50)),
         url('../assets/photos/SF-Skyline.jpg') center/cover no-repeat fixed;
       min-height: 100vh;
-      padding: 0;
-      position: relative;
-    }
-
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: 
-        radial-gradient(circle at 20% 50%, rgba(14, 165, 233, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.06) 0%, transparent 50%);
-      pointer-events: none;
-      z-index: 0;
     }
 
     .container {
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 0 auto;
       background: white;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -46,31 +34,82 @@
       z-index: 1;
     }
 
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(251, 191, 36, 0.15) 0%, transparent 25%),
+        radial-gradient(circle at 45% 15%, rgba(245, 158, 11, 0.12) 0%, transparent 20%),
+        radial-gradient(circle at 25% 25%, rgba(217, 119, 6, 0.08) 0%, transparent 15%),
+        radial-gradient(circle at 80% 20%, rgba(251, 191, 36, 0.15) 0%, transparent 30%),
+        radial-gradient(circle at 90% 35%, rgba(245, 158, 11, 0.1) 0%, transparent 20%),
+        radial-gradient(circle at 85% 28%, rgba(217, 119, 6, 0.08) 0%, transparent 18%),
+        radial-gradient(circle at 15% 70%, rgba(251, 191, 36, 0.12) 0%, transparent 28%),
+        radial-gradient(circle at 25% 85%, rgba(245, 158, 11, 0.1) 0%, transparent 22%),
+        radial-gradient(circle at 20% 78%, rgba(217, 119, 6, 0.07) 0%, transparent 16%),
+        radial-gradient(circle at 75% 75%, rgba(251, 191, 36, 0.14) 0%, transparent 32%),
+        radial-gradient(circle at 85% 82%, rgba(245, 158, 11, 0.11) 0%, transparent 24%),
+        radial-gradient(circle at 78% 78%, rgba(217, 119, 6, 0.08) 0%, transparent 19%),
+        radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.08) 0%, transparent 35%),
+        radial-gradient(circle at 55% 48%, rgba(245, 158, 11, 0.06) 0%, transparent 25%),
+        radial-gradient(circle at 48% 52%, rgba(217, 119, 6, 0.05) 0%, transparent 20%);
+      pointer-events: none;
+      opacity: 0.7;
+      z-index: 0;
+    }
+
+    .container::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(circle at 35% 40%, rgba(251, 191, 36, 0.08) 0%, transparent 15%),
+        radial-gradient(circle at 32% 38%, rgba(245, 158, 11, 0.06) 0%, transparent 12%),
+        radial-gradient(circle at 65% 55%, rgba(217, 119, 6, 0.09) 0%, transparent 18%),
+        radial-gradient(circle at 68% 52%, rgba(251, 191, 36, 0.07) 0%, transparent 14%),
+        radial-gradient(circle at 40% 85%, rgba(245, 158, 11, 0.08) 0%, transparent 16%),
+        radial-gradient(circle at 60% 25%, rgba(217, 119, 6, 0.07) 0%, transparent 13%),
+        radial-gradient(circle at 10% 50%, rgba(251, 191, 36, 0.1) 0%, transparent 20%),
+        radial-gradient(circle at 92% 60%, rgba(245, 158, 11, 0.09) 0%, transparent 17%);
+      pointer-events: none;
+      opacity: 0.5;
+      z-index: 0;
+    }
+
+    /* Header */
     header {
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      background: #292524;
       color: white;
       padding: 4rem 3rem 3rem;
       position: relative;
-      border-bottom: 4px solid #0ea5e9;
-      text-align: center;
+      border-bottom: 4px solid #f59e0b;
+      z-index: 10;
     }
 
     .back-link {
       position: absolute;
       top: 1.5rem;
       left: 2rem;
-      color: #cbd5e1;
+      color: #d6d3d1;
       text-decoration: none;
       font-size: 0.95rem;
       font-weight: 500;
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      transition: color 0.2s ease;
+      transition: all 0.2s ease;
     }
 
     .back-link:hover {
-      color: #0ea5e9;
+      color: #fbbf24;
+      transform: translateX(-4px);
     }
 
     .back-link svg {
@@ -79,68 +118,88 @@
       fill: currentColor;
     }
 
-    header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, #0ea5e9 0%, #3b82f6 50%, #0ea5e9 100%);
+    .header-content {
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
     }
 
     h1 {
       font-size: 2.5rem;
       font-weight: 700;
-      margin-bottom: 0.75rem;
+      margin-bottom: 1rem;
       letter-spacing: -0.5px;
       color: white;
     }
 
+    .project-meta {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #d6d3d1;
+      font-size: 0.9rem;
+    }
+
+    .meta-item svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
     .subtitle {
-      font-size: 1.05rem;
-      color: #cbd5e1;
+      font-size: 1.1rem;
+      color: #d6d3d1;
       font-weight: 400;
       line-height: 1.6;
       max-width: 800px;
       margin: 0 auto;
     }
 
+    /* Content */
     .content {
       padding: 3rem;
-    }
-
-    .note {
-      background: #eff6ff;
-      border-left: 4px solid #0ea5e9;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      border-radius: 0 4px 4px 0;
-      border-right: 1px solid rgba(14, 165, 233, 0.2);
-      border-top: 1px solid rgba(14, 165, 233, 0.1);
-      border-bottom: 1px solid rgba(14, 165, 233, 0.1);
-    }
-
-    .note p {
-      margin: 0;
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
     }
 
     h2 {
-      color: #0f172a;
+      color: #292524;
       font-size: 1.75rem;
       margin: 3rem 0 1.5rem;
       padding-bottom: 0.75rem;
-      border-bottom: 2px solid #e2e8f0;
+      border-bottom: 2px solid #f59e0b;
       font-weight: 700;
       letter-spacing: -0.3px;
+      position: relative;
     }
 
-    .content > h2:first-of-type {
+    h2::before {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 80px;
+      height: 2px;
+      background: #d97706;
+    }
+
+    .content > h2:first-child {
       margin-top: 0;
     }
 
     h3 {
-      color: #1e293b;
+      color: #292524;
       font-size: 1.25rem;
       margin: 2rem 0 1rem;
       font-weight: 600;
@@ -148,13 +207,13 @@
 
     p {
       margin-bottom: 1.2rem;
-      color: #475569;
+      color: #57534e;
       font-size: 1rem;
       line-height: 1.8;
     }
 
-    strong, .label {
-      color: #1e293b;
+    strong {
+      color: #292524;
       font-weight: 600;
     }
 
@@ -167,7 +226,7 @@
       position: relative;
       padding-left: 2rem;
       margin-bottom: 0.8rem;
-      color: #475569;
+      color: #57534e;
       font-size: 1rem;
       line-height: 1.7;
     }
@@ -176,10 +235,28 @@
       content: "▪";
       position: absolute;
       left: 0.5rem;
-      color: #0ea5e9;
+      color: #f59e0b;
       font-size: 1.2rem;
     }
 
+    /* Note Box */
+    .note {
+      background: #fffbeb;
+      border-left: 4px solid #f59e0b;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      border-radius: 0 4px 4px 0;
+      border-right: 1px solid rgba(245, 158, 11, 0.2);
+      border-top: 1px solid rgba(245, 158, 11, 0.1);
+      border-bottom: 1px solid rgba(245, 158, 11, 0.1);
+    }
+
+    .note p {
+      margin: 0;
+      color: #92400e;
+    }
+
+    /* Meta Grid */
     .meta {
       display: grid;
       grid-template-columns: 1fr;
@@ -188,118 +265,36 @@
     }
 
     .meta div {
-      border: 1px solid #e2e8f0;
+      border: 1px solid #fde68a;
       border-radius: 4px;
       padding: 1rem 1.25rem;
-      background: #f8fafc;
+      background: #fffbeb;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 2rem;
-      margin: 2rem 0;
-    }
-
-    .grid.two {
-      grid-template-columns: 1fr;
-    }
-
-    figure {
-      margin: 0;
-      border: 1px solid #e2e8f0;
-      border-radius: 4px;
-      overflow: hidden;
-      background: #fff;
-    }
-
-    figure img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    figcaption {
-      padding: 1rem 1.25rem;
-      font-size: 0.9rem;
-      color: #475569;
-      background: #f8fafc;
-      border-top: 1px solid #e2e8f0;
-      line-height: 1.6;
-    }
-
-    footer {
-      text-align: center;
-      padding: 2rem;
-      color: #64748b;
-      font-size: 0.9rem;
-      border-top: 1px solid #e2e8f0;
-    }
-
-    code {
-      background: #f1f5f9;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-family: 'Courier New', monospace;
-      font-size: 0.9em;
-      color: #0f172a;
+    .meta div .label {
+      color: #92400e;
+      font-weight: 600;
     }
 
     @media (min-width: 860px) {
-      .grid.two {
-        grid-template-columns: 1fr 1fr;
-      }
       .meta {
         grid-template-columns: 1fr 1fr;
       }
     }
 
-    @media (max-width: 768px) {
-      header {
-        padding: 3rem 2rem 2.5rem;
-      }
-
-      h1 {
-        font-size: 2rem;
-      }
-
-      .subtitle {
-        font-size: 1rem;
-      }
-
-      .content {
-        padding: 2rem 1.5rem;
-      }
-
-      h2 {
-        font-size: 1.5rem;
-      }
-
-      .note {
-        padding: 1.25rem;
-      }
-    }
-
-    ::selection {
-      background: #0ea5e9;
-      color: white;
-    }
-
     /* Carousel styles */
     .carousel {
       position: relative;
-      margin: 2rem 0;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
+      margin: 2.5rem 0;
     }
 
     .carousel-container {
       position: relative;
       overflow: hidden;
-      border: 1px solid #e2e8f0;
-      border-radius: 4px;
+      border: 2px solid #f59e0b;
+      border-radius: 8px;
       background: white;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
     }
 
     .carousel-track {
@@ -326,14 +321,23 @@
       display: block;
       max-height: 500px;
       object-fit: contain;
-      background: #f8fafc;
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    }
+
+    .carousel-slide figcaption {
+      padding: 1.25rem;
+      font-size: 0.9rem;
+      color: #57534e;
+      background: #fffbeb;
+      border-top: 2px solid #fde68a;
+      line-height: 1.6;
     }
 
     .carousel-button {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: rgba(15, 23, 42, 0.8);
+      background: rgba(41, 37, 36, 0.8);
       color: white;
       border: none;
       width: 48px;
@@ -349,7 +353,7 @@
     }
 
     .carousel-button:hover {
-      background: rgba(15, 23, 42, 0.95);
+      background: rgba(41, 37, 36, 0.95);
       transform: translateY(-50%) scale(1.1);
     }
 
@@ -370,35 +374,209 @@
       justify-content: center;
       gap: 0.5rem;
       padding: 1rem;
-      background: #f8fafc;
-      border-top: 1px solid #e2e8f0;
+      background: #fffbeb;
+      border-top: 2px solid #fde68a;
     }
 
     .carousel-indicator {
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      background: #cbd5e1;
+      background: #fde68a;
       border: none;
       cursor: pointer;
       transition: all 0.2s ease;
     }
 
     .carousel-indicator.active {
-      background: #0ea5e9;
+      background: #f59e0b;
       width: 24px;
       border-radius: 5px;
     }
 
     .carousel-indicator:hover {
-      background: #94a3b8;
+      background: #fbbf24;
     }
 
     .carousel-indicator.active:hover {
-      background: #0284c7;
+      background: #d97706;
     }
 
+    /* Section Cards */
+    .section-card {
+      margin: 2.5rem 0;
+      border-radius: 8px;
+      overflow: hidden;
+      background: white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .section-card:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .section-header {
+      padding: 1.25rem 2rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 2px solid;
+    }
+
+    .section-content {
+      padding: 2rem;
+    }
+
+    /* Integration Issues Card */
+    .integration-issues {
+      border: 2px solid #dc2626;
+    }
+
+    .integration-issues .section-header {
+      background: #fef2f2;
+      color: #991b1b;
+      border-color: #dc2626;
+    }
+
+    .integration-issues .section-content h2,
+    .integration-issues .section-content h3 {
+      color: #dc2626;
+      border-color: #fca5a5;
+    }
+
+    .integration-issues .section-content h2::before {
+      background: #dc2626;
+    }
+
+    /* Process Card */
+    .process-card {
+      border: 2px solid #059669;
+    }
+
+    .process-card .section-header {
+      background: #f0fdf4;
+      color: #065f46;
+      border-color: #059669;
+    }
+
+    .process-card .section-content h2 {
+      color: #059669;
+      border-color: #86efac;
+    }
+
+    .process-card .section-content h2::before {
+      background: #059669;
+    }
+
+    /* Principles Card */
+    .principles {
+      border: 2px solid #f59e0b;
+    }
+
+    .principles .section-header {
+      background: #fffbeb;
+      color: #92400e;
+      border-color: #f59e0b;
+    }
+
+    .principles .section-content h2 {
+      color: #f59e0b;
+      border-color: #fde68a;
+    }
+
+    .principles .section-content h2::before {
+      background: #d97706;
+    }
+
+    .section-content h2 {
+      margin-top: 0;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Footer */
+    footer {
+      background: #292524;
+      color: #d6d3d1;
+      text-align: center;
+      padding: 2rem 3rem;
+      border-top: 4px solid #f59e0b;
+      position: relative;
+      z-index: 10;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: #d6d3d1;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: #fbbf24;
+    }
+
+    /* Mobile Styles */
     @media (max-width: 768px) {
+      header {
+        padding: 3rem 1.5rem 2rem;
+      }
+
+      .back-link {
+        position: static;
+        margin-bottom: 1.5rem;
+        justify-content: center;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .content {
+        padding: 2rem 1.5rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      .section-content {
+        padding: 1.5rem;
+      }
+
+      .section-header {
+        padding: 1rem 1.5rem;
+      }
+
+      .note {
+        padding: 1.25rem;
+      }
+
+      .project-meta {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      footer {
+        padding: 1.5rem;
+      }
+
+      .footer-links {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
       .carousel-button {
         width: 40px;
         height: 40px;
@@ -413,27 +591,71 @@
         right: 0.5rem;
       }
     }
+
+    ::selection {
+      background: #fbbf24;
+      color: #292524;
+    }
+
+    /* Scroll Progress Indicator */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
+      width: 0%;
+      z-index: 1000;
+      transition: width 0.1s ease;
+    }
+
+    code {
+      background: #fef3c7;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9em;
+      color: #92400e;
+    }
   </style>
 </head>
 <body>
+  <div class="progress-bar" id="progressBar"></div>
+
   <div class="container">
     <header>
       <a href="../index.html" class="back-link">
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
         </svg>
-        Back to Home
+        Back to Portfolio
       </a>
-      <h1>Test Fixture Integration and Bring-Up</h1>
-      <p class="subtitle">
-        Electrical test fixture integration for engineering validation: schematic-driven wiring, safe bring-up,
-        interface verification, and repeatability. Details generalized for confidentiality.
-      </p>
+      <div class="header-content">
+        <h1>Test Fixture Integration and Bring-Up</h1>
+        <div class="project-meta">
+          <div class="meta-item">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/>
+            </svg>
+            Test Engineering
+          </div>
+          <div class="meta-item">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+            </svg>
+            2025 - Present
+          </div>
+        </div>
+        <p class="subtitle">
+          Electrical test fixture integration for engineering validation: schematic-driven wiring, safe bring-up,
+          interface verification, and repeatability
+        </p>
+      </div>
     </header>
 
     <div class="content">
       <section class="note">
-        <p><span class="label">Confidentiality:</span> Customer identifiers, part numbers, and proprietary pin names are omitted. Content focuses on integration process, verification discipline, and reliability outcomes.</p>
+        <p><strong>Confidentiality:</strong> Customer identifiers, part numbers, and proprietary pin names are omitted. Content focuses on integration process, verification discipline, and reliability outcomes.</p>
       </section>
 
       <h2>Overview</h2>
@@ -444,10 +666,10 @@
       </p>
 
       <div class="meta">
-        <div><span class="label">Environment:</span> Engineering validation, small-scale, manual operation</div>
-        <div><span class="label">Volume:</span> 30+ fixtures assembled and integrated</div>
-        <div><span class="label">Typical fixture contents:</span> PSU (5–24 V), relay arrays, programmers, Raspberry Pi, USB hubs, network switches</div>
-        <div><span class="label">Primary risks managed:</span> miswires, power distribution errors, connector orientation/pin mapping, operator error</div>
+        <div><strong>Environment:</strong> Engineering validation, small-scale, manual operation</div>
+        <div><strong>Volume:</strong> 30+ fixtures assembled and integrated</div>
+        <div><strong>Typical fixture contents:</strong> PSU (5–24 V), relay arrays, programmers, Raspberry Pi, USB hubs, network switches</div>
+        <div><strong>Primary risks managed:</strong> miswires, power distribution errors, connector orientation/pin mapping, operator error</div>
       </div>
 
       <h2>Artifacts</h2>
@@ -465,7 +687,7 @@
             </div>
             <div class="carousel-slide">
               <figure>
-                <img src="../assets/diagrams/qxq/MRC-Block Diagram.png" alt="Second block diagram reference (optional)" />
+                <img src="../assets/diagrams/qxq/MRC-Block Diagram.png" alt="Second block diagram reference" />
                 <figcaption>Schematic-derived wiring diagram used as the primary reference during fixture assembly and continuity verification, showing power domains, relay routing, and signal fan-out to DUT interfaces. Diagram complexity required staged bring-up and pin-by-pin validation to prevent miswires and power faults.</figcaption>
               </figure>
             </div>
@@ -505,60 +727,90 @@
       <h2>Inputs and Responsibilities</h2>
       <p>Inputs included schematics, wiring diagrams, and customer wiring documentation specifying net destinations (e.g., relay channels, programmer pins, power/ground). Implementation decisions were owned at the build level.</p>
       <ul>
-        <li>Built point-to-point connections (crimping, soldering, custom connector creation, wire-wrap to posts/headers).</li>
-        <li>Mounted boards and components into the fixture; routed multi-rail power distribution (commonly 5–24 V).</li>
-        <li>Owned cable routing, strain relief, and grounding strategy (including shared ground "islands").</li>
-        <li>Performed continuity-based verification prior to bring-up and before customer debug.</li>
-        <li>Escalated integration issues with evidence (photos, observations, routing alternatives) to internal engineers and customer test engineers.</li>
+        <li>Built point-to-point connections (crimping, soldering, custom connector creation, wire-wrap to posts/headers)</li>
+        <li>Mounted boards and components into the fixture; routed multi-rail power distribution (commonly 5–24 V)</li>
+        <li>Owned cable routing, strain relief, and grounding strategy (including shared ground "islands")</li>
+        <li>Performed continuity-based verification prior to bring-up and before customer debug</li>
+        <li>Escalated integration issues with evidence (photos, observations, routing alternatives) to internal engineers and customer test engineers</li>
       </ul>
 
-      <h2>Bring-Up Discipline</h2>
-      <p>Fixtures were not treated as "complete" at assembly finish. Test readiness required safe bring-up gates and verification.</p>
-      <ul>
-        <li><span class="label">Pre-power checks:</span> correct power routing, no shorts, correct ground references across islands.</li>
-        <li><span class="label">Go/No-go behavior:</span> refused power-on when relay/power/ground wiring appeared unsafe; corrected before energizing.</li>
-        <li><span class="label">Primary tool:</span> DMM used for continuity and sanity checks.</li>
-      </ul>
+      <div class="section-card process-card">
+        <div class="section-header">Process Discipline</div>
+        <div class="section-content">
+          <h2>Bring-Up Discipline</h2>
+          <p>Fixtures were not treated as "complete" at assembly finish. Test readiness required safe bring-up gates and verification.</p>
+          <ul>
+            <li><strong>Pre-power checks:</strong> correct power routing, no shorts, correct ground references across islands</li>
+            <li><strong>Go/No-go behavior:</strong> refused power-on when relay/power/ground wiring appeared unsafe; corrected before energizing</li>
+            <li><strong>Primary tool:</strong> DMM used for continuity and sanity checks</li>
+          </ul>
+        </div>
+      </div>
 
-      <h2>Integration Issues</h2>
+      <div class="section-card integration-issues">
+        <div class="section-header">Critical Issues</div>
+        <div class="section-content">
+          <h2>Integration Issues</h2>
 
-      <h3>Connector Interface Reliability Failure</h3>
-      <ul>
-        <li><span class="label">Observed:</span> DUT not consistently recognized due to unreliable connector/header interface.</li>
-        <li><span class="label">Isolation:</span> pin-by-pin probing and continuity verification from connector pins to endpoints.</li>
-        <li><span class="label">Root cause:</span> marginal mechanical/electrical interface between customer connector and added headers.</li>
-        <li><span class="label">Outcome:</span> required on-site repairs and revisions; treated as an interface-quality risk in future builds.</li>
-      </ul>
+          <h3>Connector Interface Reliability Failure</h3>
+          <ul>
+            <li><strong>Observed:</strong> DUT not consistently recognized due to unreliable connector/header interface</li>
+            <li><strong>Isolation:</strong> pin-by-pin probing and continuity verification from connector pins to endpoints</li>
+            <li><strong>Root cause:</strong> marginal mechanical/electrical interface between customer connector and added headers</li>
+            <li><strong>Outcome:</strong> required on-site repairs and revisions; treated as an interface-quality risk in future builds</li>
+          </ul>
 
-      <h3>Mirrored Pinout Error (DB-Series)</h3>
-      <ul>
-        <li><span class="label">Observed:</span> incorrect signal routing due to mirrored orientation after connector mounting.</li>
-        <li><span class="label">Root cause:</span> pinout reference did not match mechanical mounting orientation.</li>
-        <li><span class="label">Outcome:</span> extensive rework and revision; reinforced the requirement to mechanically validate pin orientation before wiring execution.</li>
-      </ul>
+          <h3>Mirrored Pinout Error (DB-Series)</h3>
+          <ul>
+            <li><strong>Observed:</strong> incorrect signal routing due to mirrored orientation after connector mounting</li>
+            <li><strong>Root cause:</strong> pinout reference did not match mechanical mounting orientation</li>
+            <li><strong>Outcome:</strong> extensive rework and revision; reinforced the requirement to mechanically validate pin orientation before wiring execution</li>
+          </ul>
+        </div>
+      </div>
 
       <h2>Documentation and Handoff</h2>
       <ul>
-        <li>Labeling: component IDs, signal names at test points, voltage labels on power distribution, "island" identifiers.</li>
-        <li>Customer-facing checklists (when required): mechanical fit, repeated point-to-point testing, DUT mounting clearance.</li>
-        <li>Build notes: routing choices and practical constraints shared with electrical/mechanical engineers for revision cycles.</li>
+        <li>Labeling: component IDs, signal names at test points, voltage labels on power distribution, "island" identifiers</li>
+        <li>Customer-facing checklists (when required): mechanical fit, repeated point-to-point testing, DUT mounting clearance</li>
+        <li>Build notes: routing choices and practical constraints shared with electrical/mechanical engineers for revision cycles</li>
       </ul>
 
-      <h2>Why This Maps to Reliability Test Engineering</h2>
-      <ul>
-        <li>Built fixtures that produce trusted results by enforcing pre-power verification gates.</li>
-        <li>Reduced false failures by managing wiring correctness, grounding discipline, and connector orientation risk.</li>
-        <li>Improved serviceability and operator robustness through labeling and layout decisions.</li>
-        <li>Communicated integration issues with evidence to accelerate cross-functional resolution.</li>
-      </ul>
+      <div class="section-card principles">
+        <div class="section-header">Reliability Impact</div>
+        <div class="section-content">
+          <h2>Why This Maps to Reliability Test Engineering</h2>
+          <ul>
+            <li>Built fixtures that produce trusted results by enforcing pre-power verification gates</li>
+            <li>Reduced false failures by managing wiring correctness, grounding discipline, and connector orientation risk</li>
+            <li>Improved serviceability and operator robustness through labeling and layout decisions</li>
+            <li>Communicated integration issues with evidence to accelerate cross-functional resolution</li>
+          </ul>
+        </div>
+      </div>
     </div>
 
     <footer>
-      <p>© 2026 Christian Villanueva</p>
+      <p>&copy; 2026 Christian Villanueva. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="../index.html">Home</a>
+        <a href="../index.html#projects">Projects</a>
+        <a href="../index.html#experience">Experience</a>
+        <a href="../index.html#contact">Contact</a>
+      </div>
     </footer>
   </div>
 
   <script>
+    // Scroll progress bar
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.getElementById('progressBar').style.width = scrolled + '%';
+    });
+
+    // Carousel functionality
     const carousels = {};
 
     function initCarousel(id) {
