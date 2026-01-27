@@ -242,10 +242,20 @@
       justify-content: center;
       position: relative;
       z-index: 1;
+      opacity: 0;
+      transform: translateY(50px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
     }
 
     .content-section#home {
       min-height: 100vh;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .content-section.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .section-header {
@@ -1305,6 +1315,28 @@ I'm currently focused on developing strong fundamentals in systems engineering, 
     
     // Initial check
     checkTimelineItems();
+
+    // Animate sections on scroll
+    const contentSections = document.querySelectorAll('.content-section:not(#home)');
+    
+    function checkSections() {
+      contentSections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+        
+        // Trigger animation when section is 20% visible in viewport
+        if (rect.top < windowHeight * 0.8) {
+          section.classList.add('visible');
+        }
+      });
+    }
+
+    // Check on scroll and on load
+    window.addEventListener('scroll', checkSections);
+    window.addEventListener('load', checkSections);
+    
+    // Initial check
+    checkSections();
   </script>
 </body>
 </html>
