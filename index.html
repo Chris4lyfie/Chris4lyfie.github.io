@@ -48,6 +48,21 @@
       flex-direction: column;
       align-items: center;
       gap: 3rem;
+      min-height: 100%;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 2rem;
+      text-align: center;
+      color: #78716c;
+      font-size: 0.813rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      width: 100%;
+    }
+
+    .sidebar-footer p {
+      margin: 0;
     }
 
     .profile-section {
@@ -218,8 +233,8 @@
     }
 
     .content-section {
-      min-height: 100vh;
-      padding: 1rem 2rem;
+      min-height: auto;
+      padding: 2.5rem 2rem;
       max-width: 1000px;
       margin: 0 auto;
       display: flex;
@@ -227,6 +242,10 @@
       justify-content: center;
       position: relative;
       z-index: 1;
+    }
+
+    .content-section#home {
+      min-height: 100vh;
     }
 
     .section-header {
@@ -271,23 +290,49 @@
     }
 
     .home-cta {
-      display: inline-block;
-      padding: 1rem 2rem;
+      padding: 1rem 2.5rem;
       background: #f59e0b;
       color: white;
       text-decoration: none;
-      border-radius: 8px;
+      border-radius: 10px;
       font-weight: 600;
-      font-size: 1.1rem;
-      transition: all 0.2s ease;
-      cursor: pointer;
+      font-size: 1.05rem;
+      transition: all 0.3s ease;
       border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
     }
 
     .home-cta:hover {
       background: #d97706;
+      gap: 1rem;
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    }
+
+    .home-cta svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    .home-cta-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .home-cta-secondary {
+      background: white;
+      color: #f59e0b;
+      border: 2px solid #f59e0b;
+    }
+
+    .home-cta-secondary:hover {
+      background: #f59e0b;
+      color: white;
     }
 
     .profile-pic-home {
@@ -766,6 +811,9 @@
 
       .content-section {
         padding: 2rem 1.5rem;
+      }
+
+      .content-section#home {
         padding-top: 5rem;
       }
 
@@ -936,6 +984,10 @@
             </svg>
           </a>
         </div>
+
+        <div class="sidebar-footer">
+          <p>&copy; 2026 Christian Villanueva</p>
+        </div>
       </div>
     </aside>
 
@@ -955,7 +1007,20 @@ I learn by building first, breaking things along the way, and refining designs u
 
 I'm currently focused on developing strong fundamentals in systems engineering, infrastructure, and hardware-software integration.
             </p>
-            <a href="#projects" class="home-cta">View My Projects</a>
+            <div class="home-cta-buttons">
+              <a href="#projects" class="home-cta">
+                View My Projects
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                </svg>
+              </a>
+              <a href="resume.html" class="home-cta home-cta-secondary">
+                View Resume
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                </svg>
+              </a>
+            </div>
           </div>
           <img src="./assets/photos/Christian.png" alt="Christian Villanueva" class="profile-pic-home">
         </div>
@@ -1170,13 +1235,21 @@ I'm currently focused on developing strong fundamentals in systems engineering, 
 
     window.addEventListener('scroll', () => {
       let current = '';
+      const scrollPosition = pageYOffset + 150; // Adjusted offset for better detection
+      
       sections.forEach(section => {
         const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        if (pageYOffset >= (sectionTop - 200)) {
+        const sectionBottom = sectionTop + section.offsetHeight;
+        
+        if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
           current = section.getAttribute('id');
         }
       });
+
+      // Handle case when scrolled to bottom
+      if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 50) {
+        current = sections[sections.length - 1].getAttribute('id');
+      }
 
       navLinks.forEach(link => {
         link.classList.remove('active');
