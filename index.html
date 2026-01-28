@@ -183,6 +183,7 @@
       background: #ffffff;
       position: relative;
       overflow: hidden;
+      padding: 0;
     }
 
     .main-content::before {
@@ -210,6 +211,11 @@
         radial-gradient(circle at 48% 52%, rgba(217, 119, 6, 0.05) 0%, transparent 20%);
       pointer-events: none;
       opacity: 0.7;
+      transition: opacity 0.3s ease;
+    }
+
+    .main-content.viewing-external::before {
+      opacity: 0;
     }
 
     .main-content::after {
@@ -230,6 +236,11 @@
         radial-gradient(circle at 92% 60%, rgba(245, 158, 11, 0.09) 0%, transparent 17%);
       pointer-events: none;
       opacity: 0.5;
+      transition: opacity 0.3s ease;
+    }
+
+    .main-content.viewing-external::after {
+      opacity: 0;
     }
 
     .content-section {
@@ -812,6 +823,8 @@
       display: none;
       width: 100%;
       min-height: 100vh;
+      margin: 0;
+      padding: 0;
     }
 
     .external-content-container.active {
@@ -822,6 +835,9 @@
       width: 100%;
       height: 100vh;
       border: none;
+      margin: 0;
+      padding: 0;
+      display: block;
     }
 
     .back-button {
@@ -1321,11 +1337,13 @@ I'm currently focused on developing strong fundamentals in systems engineering, 
       const externalContent = document.getElementById('externalContent');
       const contentFrame = document.getElementById('contentFrame');
       const backButton = document.getElementById('backButton');
+      const mainContent = document.querySelector('.main-content');
       
       // Hide portfolio sections and show external content
       portfolioSections.classList.add('hidden');
       externalContent.classList.add('active');
       backButton.classList.add('active');
+      mainContent.classList.add('viewing-external');
       
       // Load the URL in the iframe
       contentFrame.src = url;
@@ -1374,6 +1392,7 @@ I'm currently focused on developing strong fundamentals in systems engineering, 
       const externalContent = document.getElementById('externalContent');
       const contentFrame = document.getElementById('contentFrame');
       const backButton = document.getElementById('backButton');
+      const mainContent = document.querySelector('.main-content');
       
       // Get which section to return to
       const returnSection = backButton.getAttribute('data-return-section') || 'home';
@@ -1382,6 +1401,7 @@ I'm currently focused on developing strong fundamentals in systems engineering, 
       portfolioSections.classList.remove('hidden');
       externalContent.classList.remove('active');
       backButton.classList.remove('active');
+      mainContent.classList.remove('viewing-external');
       
       // Clear iframe
       contentFrame.src = '';
@@ -1452,7 +1472,38 @@ I'm currently focused on developing strong fundamentals in systems engineering, 
 
     // Close sidebar when clicking nav links on mobile
     navLinks.forEach(link => {
-      link.addEventListener('click', () => {
+      link.addEventListener('click', (e) => {
+        // Skip this logic for resume link (it has its own onclick handler)
+        if (link.getAttribute('onclick') && link.getAttribute('onclick').includes('loadExternalContent')) {
+          // This is a link that loads external content, let it handle itself
+          if (window.innerWidth <= 768) {
+            document.getElementById('sidebar').classList.remove('active');
+          }
+          return;
+        }
+        
+        // Check if we're currently viewing external content
+        const externalContent = document.getElementById('externalContent');
+        if (externalContent.classList.contains('active')) {
+          // We're viewing external content, need to go back to portfolio first
+          e.preventDefault();
+          
+          const href = link.getAttribute('href');
+          const targetSection = href ? href.substring(1) : 'home';
+          
+          // Go back to portfolio
+          goBackToPortfolio();
+          
+          // After returning, scroll to the clicked section
+          setTimeout(() => {
+            const section = document.getElementById(targetSection);
+            if (section) {
+              section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          }, 200);
+        }
+        
+        // Close mobile sidebar
         if (window.innerWidth <= 768) {
           document.getElementById('sidebar').classList.remove('active');
         }
