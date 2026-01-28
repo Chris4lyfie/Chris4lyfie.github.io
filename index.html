@@ -799,6 +799,67 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
+    /* Content replacement styles */
+    .portfolio-sections {
+      display: block;
+    }
+
+    .portfolio-sections.hidden {
+      display: none;
+    }
+
+    .external-content-container {
+      display: none;
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    .external-content-container.active {
+      display: block;
+    }
+
+    .external-content-frame {
+      width: 100%;
+      height: 100vh;
+      border: none;
+    }
+
+    .back-button {
+      position: fixed;
+      top: 1rem;
+      left: calc(280px + 1rem);
+      z-index: 100;
+      padding: 0.75rem 1.5rem;
+      background: #f59e0b;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+    }
+
+    .back-button.active {
+      display: flex;
+    }
+
+    .back-button:hover {
+      background: #d97706;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+    }
+
+    .back-button svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
     /* Mobile Styles */
     @media (max-width: 768px) {
       .sidebar {
@@ -893,6 +954,11 @@
       .timeline-dot {
         left: -2.4rem;
       }
+
+      .back-button {
+        left: 1rem;
+        top: 4.5rem;
+      }
     }
 
     ::selection {
@@ -903,6 +969,14 @@
 </head>
 <body>
   <button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
+  
+  <!-- Back Button -->
+  <button class="back-button" id="backButton" onclick="goBackToPortfolio()">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+    </svg>
+    Back to Portfolio
+  </button>
 
   <div class="layout">
     <!-- Sidebar -->
@@ -954,7 +1028,7 @@
               </a>
             </li>
             <li>
-              <a href="resume.html" class="nav-link">
+              <a href="#" class="nav-link" onclick="loadExternalContent('resume.html'); return false;">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
                 </svg>
@@ -1003,8 +1077,10 @@
 
     <!-- Main Content -->
     <main class="main-content">
-      <!-- Home Section -->
-      <section id="home" class="content-section">
+      <!-- Portfolio Sections Container -->
+      <div class="portfolio-sections" id="portfolioSections">
+        <!-- Home Section -->
+        <section id="home" class="content-section">
         <div class="home-content">
           <div class="home-text">
             <h2 class="home-greeting">Hi, I'm Christian Villanueva</h2>
@@ -1024,7 +1100,7 @@ I'm currently focused on developing strong fundamentals in systems engineering, 
                   <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
                 </svg>
               </a>
-              <a href="resume.html" class="home-cta home-cta-secondary">
+              <a href="#" class="home-cta home-cta-secondary" onclick="loadExternalContent('resume.html'); return false;">
                 View Resume
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
@@ -1149,7 +1225,7 @@ I'm currently focused on developing strong fundamentals in systems engineering, 
                 <p class="project-description">
                   Hardware Test Fixture Assembly, Integration, and Bring-Up
                 </p>
-                <a href="projects/QxQ.html" class="project-link">
+                <a href="#" class="project-link" onclick="loadExternalContent('projects/QxQ.html'); return false;">
                   View Project
                   <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
@@ -1168,7 +1244,7 @@ I'm currently focused on developing strong fundamentals in systems engineering, 
                 <p class="project-description">
                   Design, bring-up, failure analysis, and recovery across network, compute, and storage layers.
                 </p>
-                <a href="projects/Home-Infrastructure.html" class="project-link">
+                <a href="#" class="project-link" onclick="loadExternalContent('projects/Home-Infrastructure.html'); return false;">
                   View Project
                   <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
@@ -1228,10 +1304,99 @@ I'm currently focused on developing strong fundamentals in systems engineering, 
           <button type="submit" class="submit-btn">Send Message</button>
         </form>
       </section>
+      </div>
+      <!-- End Portfolio Sections -->
+
+      <!-- External Content Container -->
+      <div class="external-content-container" id="externalContent">
+        <iframe class="external-content-frame" id="contentFrame" src=""></iframe>
+      </div>
     </main>
   </div>
 
   <script>
+    // Content replacement functions
+    function loadExternalContent(url) {
+      const portfolioSections = document.getElementById('portfolioSections');
+      const externalContent = document.getElementById('externalContent');
+      const contentFrame = document.getElementById('contentFrame');
+      const backButton = document.getElementById('backButton');
+      
+      // Hide portfolio sections and show external content
+      portfolioSections.classList.add('hidden');
+      externalContent.classList.add('active');
+      backButton.classList.add('active');
+      
+      // Load the URL in the iframe
+      contentFrame.src = url;
+      
+      // Update active nav link based on what's being loaded
+      const navLinks = document.querySelectorAll('.nav-link');
+      navLinks.forEach(link => link.classList.remove('active'));
+      
+      if (url.includes('resume.html')) {
+        // Highlight Resume link
+        const resumeLink = document.querySelector('a[onclick*="resume.html"]');
+        if (resumeLink) resumeLink.classList.add('active');
+        // Update button text for resume
+        backButton.innerHTML = `
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+          </svg>
+          Back to Portfolio
+        `;
+        backButton.setAttribute('data-return-section', 'home');
+      } else if (url.includes('projects/')) {
+        // Highlight Projects link
+        const projectsLink = document.querySelector('a[href="#projects"]');
+        if (projectsLink) projectsLink.classList.add('active');
+        // Update button text for projects
+        backButton.innerHTML = `
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+          </svg>
+          Return to Projects
+        `;
+        backButton.setAttribute('data-return-section', 'projects');
+      }
+      
+      // Scroll to top
+      window.scrollTo(0, 0);
+      
+      // Close mobile sidebar if open
+      if (window.innerWidth <= 768) {
+        document.getElementById('sidebar').classList.remove('active');
+      }
+    }
+
+    function goBackToPortfolio() {
+      const portfolioSections = document.getElementById('portfolioSections');
+      const externalContent = document.getElementById('externalContent');
+      const contentFrame = document.getElementById('contentFrame');
+      const backButton = document.getElementById('backButton');
+      
+      // Get which section to return to
+      const returnSection = backButton.getAttribute('data-return-section') || 'home';
+      
+      // Show portfolio sections and hide external content
+      portfolioSections.classList.remove('hidden');
+      externalContent.classList.remove('active');
+      backButton.classList.remove('active');
+      
+      // Clear iframe
+      contentFrame.src = '';
+      
+      // Scroll to the appropriate section
+      const targetSection = document.getElementById(returnSection);
+      if (targetSection) {
+        setTimeout(() => {
+          targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      } else {
+        window.scrollTo(0, 0);
+      }
+    }
+
     function toggleSidebar() {
       document.getElementById('sidebar').classList.toggle('active');
     }
@@ -1241,6 +1406,12 @@ I'm currently focused on developing strong fundamentals in systems engineering, 
     const navLinks = document.querySelectorAll('.nav-link');
 
     window.addEventListener('scroll', () => {
+      // Only update nav on scroll if we're viewing portfolio sections
+      const externalContent = document.getElementById('externalContent');
+      if (externalContent.classList.contains('active')) {
+        return; // Don't update nav when viewing external content
+      }
+      
       let current = '';
       const scrollPosition = pageYOffset + 150; // Adjusted offset for better detection
       
