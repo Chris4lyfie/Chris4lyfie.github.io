@@ -19,16 +19,14 @@
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       line-height: 1.7;
       color: #292524;
-      background: 
-        linear-gradient(to bottom, rgba(250, 250, 249, 0.50), rgba(250, 250, 249, 0.50)),
-        url('../assets/photos/SF-Skyline.jpg') center/cover no-repeat fixed;
+      background: #fafaf9;
       min-height: 100vh;
     }
 
     .container {
       max-width: 1200px;
       margin: 0 auto;
-      background: white;
+      background: #ffffff;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       position: relative;
       z-index: 1;
@@ -87,35 +85,10 @@
     header {
       background: #292524;
       color: white;
-      padding: 4rem 3rem 3rem;
+      padding: 3rem 3rem;
       position: relative;
       border-bottom: 4px solid #f59e0b;
       z-index: 10;
-    }
-
-    .back-link {
-      position: absolute;
-      top: 1.5rem;
-      left: 2rem;
-      color: #d6d3d1;
-      text-decoration: none;
-      font-size: 0.95rem;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: all 0.2s ease;
-    }
-
-    .back-link:hover {
-      color: #fbbf24;
-      transform: translateX(-4px);
-    }
-
-    .back-link svg {
-      width: 16px;
-      height: 16px;
-      fill: currentColor;
     }
 
     .header-content {
@@ -239,7 +212,7 @@
       background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
       padding: 2.5rem;
       border: 2px solid #f59e0b;
-      border-radius: 8px;
+      border-radius: 12px;
       box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
     }
 
@@ -247,92 +220,78 @@
       max-width: 100%;
       height: auto;
       border: 2px solid #d97706;
-      border-radius: 4px;
+      border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     /* Section Cards */
     .section-card {
-      margin: 2.5rem 0;
-      border-radius: 8px;
-      overflow: hidden;
-      background: white;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-      transition: all 0.3s ease;
-    }
-
-    .section-card:hover {
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-      transform: translateY(-2px);
+      border-top: 3px solid;
+      padding: 2rem 0;
+      margin: 3rem 0;
     }
 
     .section-header {
-      padding: 1.25rem 2rem;
-      font-weight: 600;
-      font-size: 0.875rem;
+      color: #292524;
+      font-size: 0.85rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      border-bottom: 2px solid;
+      font-weight: 600;
+      margin-bottom: 1rem;
     }
 
     .section-content {
-      padding: 2rem;
+      padding: 0;
     }
 
     /* Failure Event Card */
     .failure-event {
-      border: 2px solid #dc2626;
-    }
-
-    .failure-event .section-header {
-      background: #fef2f2;
-      color: #991b1b;
       border-color: #dc2626;
     }
 
-    .failure-event .section-content h2 {
+    .failure-event .section-header {
       color: #dc2626;
-      border-color: #fca5a5;
+    }
+
+    .failure-event .section-content h2 {
+      color: #292524;
+      border-color: #f59e0b;
     }
 
     .failure-event .section-content h2::before {
-      background: #dc2626;
+      background: #d97706;
     }
 
     /* Architectural Change Card */
     .architectural-change {
-      border: 2px solid #059669;
-    }
-
-    .architectural-change .section-header {
-      background: #f0fdf4;
-      color: #065f46;
       border-color: #059669;
     }
 
-    .architectural-change .section-content h2 {
+    .architectural-change .section-header {
       color: #059669;
-      border-color: #86efac;
+    }
+
+    .architectural-change .section-content h2 {
+      color: #292524;
+      border-color: #f59e0b;
     }
 
     .architectural-change .section-content h2::before {
-      background: #059669;
+      background: #d97706;
     }
 
     /* Principles Card */
     .principles {
-      border: 2px solid #f59e0b;
-    }
-
-    .principles .section-header {
-      background: #fffbeb;
-      color: #92400e;
       border-color: #f59e0b;
     }
 
-    .principles .section-content h2 {
+    .principles .section-header {
       color: #f59e0b;
-      border-color: #fde68a;
+    }
+
+    .principles .section-content h2 {
+      color: #292524;
+      border-color: #f59e0b;
     }
 
     .principles .section-content h2::before {
@@ -383,35 +342,10 @@
       z-index: 10;
     }
 
-    .footer-links {
-      display: flex;
-      gap: 2rem;
-      justify-content: center;
-      margin-top: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .footer-links a {
-      color: #d6d3d1;
-      text-decoration: none;
-      font-size: 0.9rem;
-      transition: color 0.2s ease;
-    }
-
-    .footer-links a:hover {
-      color: #fbbf24;
-    }
-
     /* Mobile Styles */
     @media (max-width: 768px) {
       header {
         padding: 3rem 1.5rem 2rem;
-      }
-
-      .back-link {
-        position: static;
-        margin-bottom: 1.5rem;
-        justify-content: center;
       }
 
       h1 {
@@ -426,14 +360,6 @@
         font-size: 1.5rem;
       }
 
-      .section-content {
-        padding: 1.5rem;
-      }
-
-      .section-header {
-        padding: 1rem 1.5rem;
-      }
-
       .diagram-container {
         padding: 1.5rem;
       }
@@ -445,11 +371,6 @@
 
       footer {
         padding: 1.5rem;
-      }
-
-      .footer-links {
-        flex-direction: column;
-        gap: 0.75rem;
       }
     }
 
@@ -476,12 +397,6 @@
 
   <div class="container">
     <header>
-      <a href="../index.html" class="back-link">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-        </svg>
-        Back to Portfolio
-      </a>
       <div class="header-content">
         <h1>Home Infrastructure Reliability Case Study</h1>
         <div class="project-meta">
@@ -710,17 +625,6 @@
         </div>
       </div>
     </div>
-
-    <footer>
-      <p>&copy; 2026 Christian Villanueva. All rights reserved.</p>
-      <div class="footer-links">
-        <a href="../index.html">Home</a>
-        <a href="../index.html#projects">Projects</a>
-        <a href="../index.html#experience">Experience</a>
-        <a href="../index.html#contact">Contact</a>
-      </div>
-    </footer>
-  </div>
 
   <script>
     // Scroll progress bar
