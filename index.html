@@ -245,8 +245,8 @@
 
     .content-section {
       min-height: auto;
-      padding: 2.5rem 2rem;
-      max-width: 1000px;
+      padding: 2.5rem 3rem;
+      width: 100%;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
@@ -794,14 +794,24 @@
 
     /* Skills Section Styles */
     #skills {
-      padding: 2.5rem 2rem 3rem;
+      padding: 2.5rem 0 3rem;
+      position: relative;
+      width: 100%;
+    }
+
+    #skills > * {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      padding-left: 3rem;
+      padding-right: 3rem;
     }
 
     .skills-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 2rem;
-      margin: 1.5rem 0;
+      gap: 1.5rem;
+      margin: 1rem 0;
     }
 
     .skill-category {
@@ -819,8 +829,8 @@
       font-size: 1.1rem;
       font-weight: 700;
       color: #292524;
-      margin-bottom: 1.25rem;
-      padding-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.35rem;
       border-bottom: 2px solid #fde68a;
       position: relative;
     }
@@ -837,29 +847,52 @@
 
     .skill-tags-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.85rem;
     }
 
     .skill-tag-bar {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      background: #292524;
+      border-radius: 8px;
+      border: 1px solid #44403c;
+      transition: all 0.3s ease;
       opacity: 0;
       transform: translateY(10px);
       animation: slideInUp 0.5s ease forwards;
     }
 
+    .skill-tag-bar:hover {
+      border-color: #f59e0b;
+      box-shadow: 0 8px 24px rgba(245, 158, 11, 0.3);
+      transform: translateY(-4px);
+    }
+
+    .skill-tag-bar.animated .progress-bar-fill {
+      width: var(--skill-level, 85%);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
     .skill-name {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #292524;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .skill-icon {
+      font-size: 1.1rem;
     }
 
     .progress-bar-container {
       width: 100%;
-      height: 8px;
-      background: #e7e5e4;
+      height: 4px;
+      background: #44403c;
       border-radius: 10px;
       overflow: hidden;
     }
@@ -870,10 +903,7 @@
       border-radius: 10px;
       width: 0;
       transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .skill-tag-bar.animated .progress-bar-fill {
-      width: var(--skill-level, 85%);
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
     }
 
     @keyframes slideInUp {
@@ -1276,31 +1306,46 @@ I'm currently focused on developing strong fundamentals in systems engineering, 
             <div class="skill-category-title">Hardware & Testing</div>
             <div class="skill-tags-grid">
               <div class="skill-tag-bar" style="--skill-level: 25%">
-                <div class="skill-name">Test Automation</div>
+                <div class="card-header">
+                  <div class="skill-name">Test Automation</div>
+                  <div class="skill-icon">🔬</div>
+                </div>
                 <div class="progress-bar-container">
                   <div class="progress-bar-fill"></div>
                 </div>
               </div>
               <div class="skill-tag-bar" style="--skill-level: 75%">
-                <div class="skill-name">Hardware Validation</div>
+                <div class="card-header">
+                  <div class="skill-name">Hardware Validation</div>
+                  <div class="skill-icon">✅</div>
+                </div>
                 <div class="progress-bar-container">
                   <div class="progress-bar-fill"></div>
                 </div>
               </div>
               <div class="skill-tag-bar" style="--skill-level: 85%">
-                <div class="skill-name">Fixture Integration</div>
+                <div class="card-header">
+                  <div class="skill-name">Fixture Integration</div>
+                  <div class="skill-icon">🔧</div>
+                </div>
                 <div class="progress-bar-container">
                   <div class="progress-bar-fill"></div>
                 </div>
               </div>
               <div class="skill-tag-bar" style="--skill-level: 30%">
-                <div class="skill-name">Embedded Systems</div>
+                <div class="card-header">
+                  <div class="skill-name">Embedded Systems</div>
+                  <div class="skill-icon">💾</div>
+                </div>
                 <div class="progress-bar-container">
                   <div class="progress-bar-fill"></div>
                 </div>
               </div>
               <div class="skill-tag-bar" style="--skill-level: 35%">
-                <div class="skill-name">Oscilloscopes</div>
+                <div class="card-header">
+                  <div class="skill-name">Oscilloscopes</div>
+                  <div class="skill-icon">📊</div>
+                </div>
                 <div class="progress-bar-container">
                   <div class="progress-bar-fill"></div>
                 </div>
@@ -1312,31 +1357,46 @@ I'm currently focused on developing strong fundamentals in systems engineering, 
             <div class="skill-category-title">Systems & Infrastructure</div>
             <div class="skill-tags-grid">
               <div class="skill-tag-bar" style="--skill-level: 70%">
-                <div class="skill-name">Linux/Unix</div>
+                <div class="card-header">
+                  <div class="skill-name">Linux/Unix</div>
+                  <div class="skill-icon">🐧</div>
+                </div>
                 <div class="progress-bar-container">
                   <div class="progress-bar-fill"></div>
                 </div>
               </div>
               <div class="skill-tag-bar" style="--skill-level: 80%">
-                <div class="skill-name">Networking</div>
+                <div class="card-header">
+                  <div class="skill-name">Networking</div>
+                  <div class="skill-icon">🌐</div>
+                </div>
                 <div class="progress-bar-container">
                   <div class="progress-bar-fill"></div>
                 </div>
               </div>
               <div class="skill-tag-bar" style="--skill-level: 75%">
-                <div class="skill-name">System Administration</div>
+                <div class="card-header">
+                  <div class="skill-name">System Administration</div>
+                  <div class="skill-icon">⚙️</div>
+                </div>
                 <div class="progress-bar-container">
                   <div class="progress-bar-fill"></div>
                 </div>
               </div>
               <div class="skill-tag-bar" style="--skill-level: 70%">
-                <div class="skill-name">Infrastructure Design</div>
+                <div class="card-header">
+                  <div class="skill-name">Infrastructure Design</div>
+                  <div class="skill-icon">🏗️</div>
+                </div>
                 <div class="progress-bar-container">
                   <div class="progress-bar-fill"></div>
                 </div>
               </div>
               <div class="skill-tag-bar" style="--skill-level: 65%">
-                <div class="skill-name">Virtualization</div>
+                <div class="card-header">
+                  <div class="skill-name">Virtualization</div>
+                  <div class="skill-icon">☁️</div>
+                </div>
                 <div class="progress-bar-container">
                   <div class="progress-bar-fill"></div>
                 </div>
@@ -1348,43 +1408,64 @@ I'm currently focused on developing strong fundamentals in systems engineering, 
             <div class="skill-category-title">Programming & Tools</div>
             <div class="skill-tags-grid">
               <div class="skill-tag-bar" style="--skill-level: 30%">
-                <div class="skill-name">Java</div>
+                <div class="card-header">
+                  <div class="skill-name">Java</div>
+                  <div class="skill-icon">☕</div>
+                </div>
                 <div class="progress-bar-container">
                   <div class="progress-bar-fill"></div>
                 </div>
               </div>
               <div class="skill-tag-bar" style="--skill-level: 50%">
-                <div class="skill-name">C/C++</div>
+                <div class="card-header">
+                  <div class="skill-name">C/C++</div>
+                  <div class="skill-icon">⚡</div>
+                </div>
                 <div class="progress-bar-container">
                   <div class="progress-bar-fill"></div>
                 </div>
               </div>
               <div class="skill-tag-bar" style="--skill-level: 55%">
-                <div class="skill-name">Verilog</div>
+                <div class="card-header">
+                  <div class="skill-name">Verilog</div>
+                  <div class="skill-icon">🔌</div>
+                </div>
                 <div class="progress-bar-container">
                   <div class="progress-bar-fill"></div>
                 </div>
               </div>
               <div class="skill-tag-bar" style="--skill-level: 60%">
-                <div class="skill-name">Bash/Shell</div>
+                <div class="card-header">
+                  <div class="skill-name">Bash/Shell</div>
+                  <div class="skill-icon">💻</div>
+                </div>
                 <div class="progress-bar-container">
                   <div class="progress-bar-fill"></div>
                 </div>
               </div>
               <div class="skill-tag-bar" style="--skill-level: 65%">
-                <div class="skill-name">Git</div>
+                <div class="card-header">
+                  <div class="skill-name">Git</div>
+                  <div class="skill-icon">🔀</div>
+                </div>
                 <div class="progress-bar-container">
                   <div class="progress-bar-fill"></div>
                 </div>
               </div>
               <div class="skill-tag-bar" style="--skill-level: 20%">
-                <div class="skill-name">LTspice</div>
+                <div class="card-header">
+                  <div class="skill-name">LTspice</div>
+                  <div class="skill-icon">⚡</div>
+                </div>
                 <div class="progress-bar-container">
                   <div class="progress-bar-fill"></div>
                 </div>
               </div>
               <div class="skill-tag-bar" style="--skill-level: 85%">
-                <div class="skill-name">Documentation</div>
+                <div class="card-header">
+                  <div class="skill-name">Documentation</div>
+                  <div class="skill-icon">📝</div>
+                </div>
                 <div class="progress-bar-container">
                   <div class="progress-bar-fill"></div>
                 </div>
@@ -1396,31 +1477,46 @@ I'm currently focused on developing strong fundamentals in systems engineering, 
             <div class="skill-category-title">Engineering Practices</div>
             <div class="skill-tags-grid">
               <div class="skill-tag-bar" style="--skill-level: 85%">
-                <div class="skill-name">Debugging</div>
+                <div class="card-header">
+                  <div class="skill-name">Debugging</div>
+                  <div class="skill-icon">🐛</div>
+                </div>
                 <div class="progress-bar-container">
                   <div class="progress-bar-fill"></div>
                 </div>
               </div>
               <div class="skill-tag-bar" style="--skill-level: 80%">
-                <div class="skill-name">Root Cause Analysis</div>
+                <div class="card-header">
+                  <div class="skill-name">Root Cause Analysis</div>
+                  <div class="skill-icon">🔍</div>
+                </div>
                 <div class="progress-bar-container">
                   <div class="progress-bar-fill"></div>
                 </div>
               </div>
               <div class="skill-tag-bar" style="--skill-level: 85%">
-                <div class="skill-name">Technical Writing</div>
+                <div class="card-header">
+                  <div class="skill-name">Technical Writing</div>
+                  <div class="skill-icon">✍️</div>
+                </div>
                 <div class="progress-bar-container">
                   <div class="progress-bar-fill"></div>
                 </div>
               </div>
               <div class="skill-tag-bar" style="--skill-level: 70%">
-                <div class="skill-name">Quality Assurance</div>
+                <div class="card-header">
+                  <div class="skill-name">Quality Assurance</div>
+                  <div class="skill-icon">🎯</div>
+                </div>
                 <div class="progress-bar-container">
                   <div class="progress-bar-fill"></div>
                 </div>
               </div>
               <div class="skill-tag-bar" style="--skill-level: 80%">
-                <div class="skill-name">Problem Solving</div>
+                <div class="card-header">
+                  <div class="skill-name">Problem Solving</div>
+                  <div class="skill-icon">💡</div>
+                </div>
                 <div class="progress-bar-container">
                   <div class="progress-bar-fill"></div>
                 </div>
