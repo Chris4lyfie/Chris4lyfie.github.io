@@ -262,6 +262,7 @@
       min-height: 100vh;
       opacity: 1;
       transform: translateY(0);
+      padding: 1.5rem 3rem;
     }
 
     .content-section.visible {
@@ -496,7 +497,7 @@
 
     /* HORIZONTAL TIMELINE STYLES - SIMPLIFIED APPROACH */
     #experience {
-      padding: 2rem 3rem;
+      padding: 1.5rem 3rem;
       min-height: 120vh;
     }
 
@@ -1115,6 +1116,44 @@
       fill: currentColor;
     }
 
+    /* Download Resume Button - appears in top right when viewing resume */
+    .download-resume-btn {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 100;
+      padding: 0.75rem 1.5rem;
+      background: #10b981;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+      text-decoration: none;
+    }
+
+    .download-resume-btn.active {
+      display: flex;
+    }
+
+    .download-resume-btn:hover {
+      background: #059669;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    }
+
+    .download-resume-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
     /* Mobile Styles */
     @media (max-width: 768px) {
       .sidebar {
@@ -1269,6 +1308,11 @@
         left: 1rem;
         top: 4.5rem;
       }
+
+      .download-resume-btn {
+        top: 4.5rem;
+        right: 1rem;
+      }
     }
 
     @media (min-width: 860px) {
@@ -1293,6 +1337,14 @@
     </svg>
     Back to Portfolio
   </button>
+
+  <!-- Download Resume Button -->
+  <a href="./assets/Resume.pdf" download="Christian_Villanueva_Resume.pdf" class="download-resume-btn" id="downloadResumeBtn">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+    </svg>
+    Download PDF
+  </a>
 
   <div class="layout">
     <!-- Sidebar -->
@@ -1373,7 +1425,7 @@
               <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
             </svg>
           </a>
-          <a href="/cdn-cgi/l/email-protection#2e4d465c475d5a474f40584742424f405b4b584f6e474d42415b4a004d4143" class="social-icon" title="Email">
+          <a href="mailto:christian@example.com" class="social-icon" title="Email">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
             </svg>
@@ -1828,13 +1880,14 @@ I'm currently focused on developing strong fundamentals in systems engineering, 
     </main>
   </div>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  <script>
     // Content replacement functions
     function loadExternalContent(url) {
       const portfolioSections = document.getElementById('portfolioSections');
       const externalContent = document.getElementById('externalContent');
       const contentFrame = document.getElementById('contentFrame');
       const backButton = document.getElementById('backButton');
+      const downloadResumeBtn = document.getElementById('downloadResumeBtn');
       const mainContent = document.querySelector('.main-content');
       
       portfolioSections.classList.add('hidden');
@@ -1857,6 +1910,7 @@ I'm currently focused on developing strong fundamentals in systems engineering, 
           Back to Portfolio
         `;
         backButton.setAttribute('data-return-section', 'home');
+        downloadResumeBtn.classList.add('active');
       } else if (url.includes('projects/')) {
         const projectsLink = document.querySelector('a[href="#projects"]');
         if (projectsLink) projectsLink.classList.add('active');
@@ -1867,6 +1921,7 @@ I'm currently focused on developing strong fundamentals in systems engineering, 
           Return to Projects
         `;
         backButton.setAttribute('data-return-section', 'projects');
+        downloadResumeBtn.classList.remove('active');
       }
       
       window.scrollTo(0, 0);
@@ -1881,6 +1936,7 @@ I'm currently focused on developing strong fundamentals in systems engineering, 
       const externalContent = document.getElementById('externalContent');
       const contentFrame = document.getElementById('contentFrame');
       const backButton = document.getElementById('backButton');
+      const downloadResumeBtn = document.getElementById('downloadResumeBtn');
       const mainContent = document.querySelector('.main-content');
       
       const returnSection = backButton.getAttribute('data-return-section') || 'home';
@@ -1888,6 +1944,7 @@ I'm currently focused on developing strong fundamentals in systems engineering, 
       portfolioSections.classList.remove('hidden');
       externalContent.classList.remove('active');
       backButton.classList.remove('active');
+      downloadResumeBtn.classList.remove('active');
       mainContent.classList.remove('viewing-external');
       
       contentFrame.src = '';
