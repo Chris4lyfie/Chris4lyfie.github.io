@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Resume - Christian Villanueva</title>
+  <title>Christian Villanueva - Resume</title>
   <style>
     * {
       margin: 0;
@@ -45,50 +45,9 @@
     h1 {
       font-size: 2.5rem;
       font-weight: 700;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0;
       letter-spacing: -0.5px;
       color: white;
-    }
-
-    .subtitle {
-      font-size: 1.1rem;
-      color: #d6d3d1;
-      font-weight: 400;
-      line-height: 1.6;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .contact-info {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      flex-wrap: wrap;
-      font-size: 0.9rem;
-      color: #a8a29e;
-      margin-top: 1.5rem;
-    }
-
-    .contact-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .contact-item svg {
-      width: 16px;
-      height: 16px;
-      fill: currentColor;
-    }
-
-    .contact-item a {
-      color: #a8a29e;
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-
-    .contact-item a:hover {
-      color: #fbbf24;
     }
 
     /* Content */
@@ -166,14 +125,16 @@
     }
 
     .experience-item,
-    .education-item {
+    .education-item,
+    .project-item {
       margin-bottom: 2.5rem;
       padding-bottom: 2rem;
       border-bottom: 1px solid #fde68a;
     }
 
     .experience-item:last-child,
-    .education-item:last-child {
+    .education-item:last-child,
+    .project-item:last-child {
       border-bottom: none;
       padding-bottom: 0;
     }
@@ -236,156 +197,27 @@
       margin-bottom: 0.75rem;
     }
 
-    /* Enhanced Skills Section */
-    .skills-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 2.5rem;
-      margin: 2rem 0;
+    .item-location {
+      font-size: 0.95rem;
+      color: #78716c;
+      margin-bottom: 0.5rem;
     }
 
-    .skill-category {
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeInUp 0.6s ease forwards;
-    }
-
-    .skill-category:nth-child(1) { animation-delay: 0.1s; }
-    .skill-category:nth-child(2) { animation-delay: 0.2s; }
-    .skill-category:nth-child(3) { animation-delay: 0.3s; }
-    .skill-category:nth-child(4) { animation-delay: 0.4s; }
-
-    .skill-category-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #292524;
-      margin-bottom: 1.25rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 2px solid #fde68a;
-      position: relative;
-    }
-
-    .skill-category-title::after {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 0;
-      width: 60px;
-      height: 2px;
-      background: #f59e0b;
-    }
-
-    .skill-tags {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-    }
-
-    .skill-tag {
-      padding: 0;
-      background: transparent;
+    .coursework {
+      font-size: 0.95rem;
       color: #57534e;
-      border-radius: 0;
-      font-size: 0.9rem;
-      font-weight: 500;
-      border: none;
-      opacity: 0;
-      transform: translateX(-20px);
-      animation: slideIn 0.5s ease forwards;
-      transition: all 0.3s ease;
-      cursor: default;
-      position: relative;
-      padding-bottom: 0.5rem;
+      margin-top: 0.5rem;
+      line-height: 1.6;
     }
 
-    .skill-tag::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      height: 3px;
-      background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
-      border-radius: 3px;
-      width: 0;
-      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .skill-tag.animated::after {
-      width: var(--skill-level, 85%);
-    }
-
-    .skill-tag:hover {
-      color: #292524;
-      transform: translateX(4px);
-    }
-
-    .skill-tag:hover::after {
-      width: 100% !important;
-      background: linear-gradient(90deg, #d97706 0%, #f59e0b 100%);
-    }
-
-    @keyframes slideIn {
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-
-    /* Stagger animation for skill tags */
-    .skill-category:nth-child(1) .skill-tag:nth-child(1) { animation-delay: 0.2s; }
-    .skill-category:nth-child(1) .skill-tag:nth-child(2) { animation-delay: 0.25s; }
-    .skill-category:nth-child(1) .skill-tag:nth-child(3) { animation-delay: 0.3s; }
-    .skill-category:nth-child(1) .skill-tag:nth-child(4) { animation-delay: 0.35s; }
-    .skill-category:nth-child(1) .skill-tag:nth-child(5) { animation-delay: 0.4s; }
-
-    .skill-category:nth-child(2) .skill-tag:nth-child(1) { animation-delay: 0.3s; }
-    .skill-category:nth-child(2) .skill-tag:nth-child(2) { animation-delay: 0.35s; }
-    .skill-category:nth-child(2) .skill-tag:nth-child(3) { animation-delay: 0.4s; }
-    .skill-category:nth-child(2) .skill-tag:nth-child(4) { animation-delay: 0.45s; }
-    .skill-category:nth-child(2) .skill-tag:nth-child(5) { animation-delay: 0.5s; }
-
-    .skill-category:nth-child(3) .skill-tag:nth-child(1) { animation-delay: 0.4s; }
-    .skill-category:nth-child(3) .skill-tag:nth-child(2) { animation-delay: 0.45s; }
-    .skill-category:nth-child(3) .skill-tag:nth-child(3) { animation-delay: 0.5s; }
-    .skill-category:nth-child(3) .skill-tag:nth-child(4) { animation-delay: 0.55s; }
-    .skill-category:nth-child(3) .skill-tag:nth-child(5) { animation-delay: 0.6s; }
-    .skill-category:nth-child(3) .skill-tag:nth-child(6) { animation-delay: 0.65s; }
-    .skill-category:nth-child(3) .skill-tag:nth-child(7) { animation-delay: 0.7s; }
-
-    .skill-category:nth-child(4) .skill-tag:nth-child(1) { animation-delay: 0.5s; }
-    .skill-category:nth-child(4) .skill-tag:nth-child(2) { animation-delay: 0.55s; }
-    .skill-category:nth-child(4) .skill-tag:nth-child(3) { animation-delay: 0.6s; }
-    .skill-category:nth-child(4) .skill-tag:nth-child(4) { animation-delay: 0.65s; }
-    .skill-category:nth-child(4) .skill-tag:nth-child(5) { animation-delay: 0.7s; }
-
-    @keyframes fadeInUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes popIn {
-      0% {
-        opacity: 0;
-        transform: scale(0.8);
-      }
-      50% {
-        transform: scale(1.05);
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
+    .honors {
+      font-size: 0.95rem;
+      color: #57534e;
+      font-style: italic;
+      margin-top: 0.25rem;
     }
 
     /* Mobile Styles */
-    @media (min-width: 860px) {
-      .skills-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
     @media (max-width: 768px) {
       header {
         padding: 3rem 1.5rem 2rem;
@@ -395,22 +227,12 @@
         font-size: 2rem;
       }
 
-      .subtitle {
-        font-size: 1rem;
-      }
-
       .content {
         padding: 2rem 1.5rem;
       }
 
       h2 {
         font-size: 1.5rem;
-      }
-
-      .contact-info {
-        gap: 1rem;
-        flex-direction: column;
-        align-items: center;
       }
 
       .item-header {
@@ -439,16 +261,6 @@
       z-index: 1000;
       transition: width 0.1s ease;
     }
-
-    /* Intersection Observer classes for scroll-triggered animations */
-    .skill-category.animate-on-scroll {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-
-    .skill-category.animate-on-scroll.visible {
-      animation: fadeInUp 0.6s ease forwards;
-    }
   </style>
 </head>
 <body>
@@ -457,45 +269,10 @@
   <div class="container">
     <header>
       <h1>Christian Villanueva</h1>
-      <p class="subtitle">Computer Engineering Student</p>
-      <div class="contact-info">
-        <div class="contact-item">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-          </svg>
-          San Jose, CA
-        </div>
-        <div class="contact-item">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-          </svg>
-          <a href="mailto:Chris4lyfie@yahoo.com">Chris4lyfie@yahoo.com</a>
-        </div>
-        <div class="contact-item">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-          </svg>
-          <a href="https://www.linkedin.com/in/itiancv/" target="_blank">linkedin.com/in/itiancv</a>
-        </div>
-        <div class="contact-item">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
-          </svg>
-          <a href="https://github.com/Chris4lyfie" target="_blank">github.com/Chris4lyfie</a>
-        </div>
-      </div>
     </header>
 
     <div class="content">
       
-      <!-- Professional Summary -->
-      <section>
-        <h2>Professional Summary</h2>
-        <p>
-          Computer Engineering student with hands-on experience in hardware test automation, systems integration, and infrastructure management. Skilled in building and troubleshooting complex technical systems through iterative experimentation and documentation. Strong foundation in embedded systems, networking, and low-level configuration with a focus on understanding system failures and implementing robust solutions.
-        </p>
-      </section>
-
       <!-- Education -->
       <section>
         <h2>Education</h2>
@@ -503,36 +280,37 @@
         <div class="education-item">
           <div class="item-header">
             <div class="item-title">Bachelor of Science in Computer Engineering</div>
-            <div class="item-date">Fall 2024 - Fall 2026</div>
+            <div class="item-date">Expected Fall 2026</div>
           </div>
-          <div class="item-company">San Jose State University, San Jose, CA</div>
-          <p>
-            Pursuing a Bachelor's degree with focus on embedded systems, systems integration, and hardware-software interface design.
+          <div class="item-company">San Jose State University</div>
+          <div class="item-location">San Jose, CA</div>
+          <p class="coursework">
+            <strong>Relevant coursework:</strong> Data Structures & Algorithms (C++), Digital Design I & II (Verilog), Assembly Language Programming, Operating Systems (C), Advanced Algorithm Design, Circuit Analysis, Electronics for Computing Systems, Microprocessor Design.
           </p>
         </div>
 
         <div class="education-item">
           <div class="item-header">
-            <div class="item-title">Associate of Science</div>
-            <div class="item-date">Summer 2022 - Spring 2024</div>
+            <div class="item-title">A.S. Mathematics | A.A. Liberal Arts</div>
+            <div class="item-date">Graduated 2024</div>
           </div>
-          <div class="item-company">Mission College, Santa Clara, CA</div>
-          <p>
-            Completed foundational coursework in engineering, programming, and mathematics with emphasis on practical application and system-level understanding.
-          </p>
+          <div class="item-company">Mission College</div>
+          <div class="item-location">Santa Clara, CA</div>
+          <p class="honors"><strong>Honors:</strong> Magna Cum Laude, Dean's List</p>
         </div>
       </section>
 
       <!-- Professional Experience -->
       <section>
-        <h2>Professional Experience</h2>
+        <h2>Experience</h2>
         
         <div class="experience-item">
           <div class="item-header">
-            <div class="item-title">Hardware Test Engineering Technician</div>
+            <div class="item-title">Hardware Test Engineering Technician (Reliability & Test Fixtures)</div>
             <div class="item-date">May 2025 - Present</div>
           </div>
-          <div class="item-company">QxQ Inc., Fremont, CA</div>
+          <div class="item-company">QxQ Inc.</div>
+          <div class="item-location">Fremont, CA</div>
           <ul>
             <li>Built and integrated custom electrical test fixtures used to validate PCB-level subassemblies for automotive, server, and embedded hardware systems.</li>
             <li>Assembled and wired scalable test stations supporting functional testing and firmware flashing via automated test scripts.</li>
@@ -544,89 +322,89 @@
         <div class="experience-item">
           <div class="item-header">
             <div class="item-title">Information Systems Technical Assistant</div>
-            <div class="item-date">July 2022 - August 2024</div>
+            <div class="item-date">Jul 2022 - Aug 2024</div>
           </div>
-          <div class="item-company">West Valley Mission Community College District, Santa Clara, CA</div>
+          <div class="item-company">West Valley Mission Community College District</div>
+          <div class="item-location">Santa Clara, CA</div>
           <ul>
             <li>Supported campus-wide IT infrastructure through hands-on hardware, cabling, and system troubleshooting across academic and administrative facilities.</li>
             <li>Performed structured patching, endpoint connectivity validation, and fault resolution across networked systems.</li>
             <li>Assisted with server setup, OS deployment, peripheral validation, and system-level troubleshooting.</li>
-            <li>Documented technical procedures and created knowledge base articles for common issues</li>
             <li>Handled basic user account maintenance and access support while documenting issues and resolutions for engineering and IT teams.</li>
           </ul>
         </div>
-      </section>
 
-      <!-- Technical Skills -->
-      <section id="skills-section">
-        <h2>Technical Skills</h2>
-        <div class="skills-grid">
-          <div class="skill-category">
-            <div class="skill-category-title">Hardware & Testing</div>
-            <div class="skill-tags">
-              <span class="skill-tag" style="--skill-level: 25%">Test Automation</span>
-              <span class="skill-tag" style="--skill-level: 75%">Hardware Validation</span>
-              <span class="skill-tag" style="--skill-level: 85%">Fixture Integration</span>
-              <span class="skill-tag" style="--skill-level: 30%">Embedded Systems</span>
-              <span class="skill-tag" style="--skill-level: 35%">Oscilloscopes</span>
-            </div>
+        <div class="experience-item">
+          <div class="item-header">
+            <div class="item-title">Hardware Technician</div>
+            <div class="item-date"></div>
           </div>
+          <div class="item-company">Green E-Waste</div>
+          <ul>
+            <li>Performed computer hardware diagnostics, OS installation, firmware updates, and component-level troubleshooting.</li>
+          </ul>
+        </div>
 
-          <div class="skill-category">
-            <div class="skill-category-title">Systems & Infrastructure</div>
-            <div class="skill-tags">
-              <span class="skill-tag" style="--skill-level: 70%">Linux/Unix</span>
-              <span class="skill-tag" style="--skill-level: 80%">Networking</span>
-              <span class="skill-tag" style="--skill-level: 75%">System Administration</span>
-              <span class="skill-tag" style="--skill-level: 70%">Infrastructure Design</span>
-              <span class="skill-tag" style="--skill-level: 65%">Virtualization</span>
-            </div>
+        <div class="experience-item">
+          <div class="item-header">
+            <div class="item-title">Computer Department Supervisor</div>
+            <div class="item-date"></div>
           </div>
-
-          <div class="skill-category">
-            <div class="skill-category-title">Programming & Tools</div>
-            <div class="skill-tags">
-              <span class="skill-tag" style="--skill-level: 30%">Java</span>
-              <span class="skill-tag" style="--skill-level: 50%">C/C++</span>
-              <span class="skill-tag" style="--skill-level: 55%">Verilog</span>
-              <span class="skill-tag" style="--skill-level: 60%">Bash/Shell</span>
-              <span class="skill-tag" style="--skill-level: 65%">Git</span>
-              <span class="skill-tag" style="--skill-level: 20%">LTspice</span>
-              <span class="skill-tag" style="--skill-level: 85%">Documentation</span>
-            </div>
-          </div>
-
-          <div class="skill-category">
-            <div class="skill-category-title">Engineering Practices</div>
-            <div class="skill-tags">
-              <span class="skill-tag" style="--skill-level: 85%">Debugging</span>
-              <span class="skill-tag" style="--skill-level: 80%">Root Cause Analysis</span>
-              <span class="skill-tag" style="--skill-level: 85%">Technical Writing</span>
-              <span class="skill-tag" style="--skill-level: 70%">Quality Assurance</span>
-              <span class="skill-tag" style="--skill-level: 80%">Problem Solving</span>
-            </div>
-          </div>
+          <div class="item-company">Fry's Electronics</div>
+          <ul>
+            <li>Provided technical support, hardware consultation, and inventory coordination for computer systems and components.</li>
+          </ul>
         </div>
       </section>
 
       <!-- Projects -->
       <section>
-        <h2>Notable Projects</h2>
+        <h2>Projects</h2>
         
-        <div class="experience-item">
+        <div class="project-item">
+          <div class="item-header">
+            <div class="item-title">Proxmox Virtualization Lab</div>
+            <div class="item-date">Jul 2025 - Present</div>
+          </div>
+          <ul>
+            <li>Built and maintained a custom Proxmox server with Xeon CPU, ECC memory, and ZFS-based storage hosting multiple virtual machines and Linux containers.</li>
+            <li>Designed VLAN-separated virtual networks to isolate NAS services, internal workloads, and outward-facing services in a DMZ.</li>
+            <li>Configured static IP assignment, firewall permissions, and inter-VLAN routing to control access between services.</li>
+            <li>Performed system bring-up and troubleshooting for issues including ZFS memory constraints, blocked service access across VLANs, DNS resolution failures, and firewall rule conflicts.</li>
+            <li>Used IPMI for remote hardware management and monitoring; performed regular system maintenance and storage health checks.</li>
+            <li>Currently migrating select services from virtualized environments to bare-metal hardware to improve performance and reliability.</li>
+          </ul>
+        </div>
+
+        <div class="project-item">
+          <div class="item-header">
+            <div class="item-title">Home Network Engineering Lab</div>
+            <div class="item-date">Jul 2025 - Present</div>
+          </div>
+          <ul>
+            <li>Designed, built, and currently manage a fully segmented home network supporting routers, managed and unmanaged switches, wireless access points, IoT devices, a Proxmox server, virtual machines, and Linux containers.</li>
+            <li>Implemented VLANs to separate personal systems, home office, IoT devices, guest access, and a DMZ; assigned static IPs via MAC reservations to ensure predictable connectivity.</li>
+            <li>Developed firewall rules to isolate untrusted and internet-facing devices, preventing compromise of internal systems.</li>
+            <li>Diagnosed and recovered from misconfigurations that caused loss of network access, requiring multi-hop access and manual reconfiguration of routing, VLANs, and firewall rules.</li>
+            <li>Monitored network performance, bandwidth usage, and device behavior; throttled non-critical traffic to prioritize infrastructure and compute workloads.</li>
+          </ul>
+        </div>
+
+        <div class="project-item">
           <div class="item-title"><a href="projects/QxQ.html">QxQ Test Fixture Integration</a></div>
           <p>
             Assembled and verified custom hardware test fixtures, ensuring correct interfacing with measurement equipment for reliability validation and failure analysis.
           </p>
         </div>
 
-        <div class="experience-item">
+        <div class="project-item">
           <div class="item-title"><a href="projects/Home-Infrastructure.html">Infrastructure Reliability Case Study</a></div>
           <p>
             Designed and deployed home lab infrastructure spanning network, compute, and storage layers. Documented system bring-up, failure scenarios, and recovery procedures as a practical case study in systems engineering and infrastructure reliability.
           </p>
         </div>
       </section>
+
     </div>
   </div>
 
@@ -637,26 +415,6 @@
       const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
       const scrolled = (winScroll / height) * 100;
       document.getElementById('progressBar').style.width = scrolled + '%';
-    });
-
-    // Animate skill bars when they come into view
-    const skillObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          // Trigger the bar animation
-          const tags = entry.target.querySelectorAll('.skill-tag');
-          tags.forEach((tag, index) => {
-            setTimeout(() => {
-              tag.classList.add('animated');
-            }, index * 100);
-          });
-          skillObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.3 });
-
-    document.querySelectorAll('.skill-category').forEach(category => {
-      skillObserver.observe(category);
     });
   </script>
 </body>
