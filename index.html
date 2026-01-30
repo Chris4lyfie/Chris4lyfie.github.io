@@ -366,6 +366,289 @@
       box-shadow: 0 8px 24px rgba(245, 158, 11, 0.2);
     }
 
+    /* Projects Section - Split Layout */
+    .project-split-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 4rem;
+      min-height: 500px;
+      align-items: center;
+      color: inherit;
+    }
+
+    .project-split-container:last-child {
+      margin-bottom: 0;
+    }
+
+    .project-split-container.reverse {
+      direction: rtl;
+    }
+
+    .project-split-container.reverse > * {
+      direction: ltr;
+    }
+
+    /* Image wrapper - clickable container */
+    .project-split-image-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 500px;
+      text-decoration: none;
+      display: block;
+      overflow: hidden;
+      border-radius: 12px;
+      cursor: pointer;
+      background: #292524;
+    }
+
+    .project-split-image {
+      width: 100%;
+      height: 100%;
+      min-height: 500px;
+      background-size: cover;
+      background-position: center;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      filter: brightness(1);
+    }
+
+    /* Add gradient overlay that appears on hover */
+    .project-split-image::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 12px;
+      opacity: 0;
+      transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+    }
+
+    /* Gradient for left-sliding images: bright on left, gradually darker, then full background on right */
+    .project-split-container:not(.reverse) .project-split-image::after {
+      background: linear-gradient(to right, 
+        rgba(41, 37, 36, 0) 0%, 
+        rgba(41, 37, 36, 0.2) 30%, 
+        rgba(41, 37, 36, 0.5) 50%,
+        rgba(41, 37, 36, 0.75) 70%,
+        rgba(41, 37, 36, 0.95) 90%,
+        #292524 100%);
+    }
+
+    /* Gradient for right-sliding images: bright on right, gradually darker, then full background on left */
+    .project-split-container.reverse .project-split-image::after {
+      background: linear-gradient(to left, 
+        rgba(41, 37, 36, 0) 0%, 
+        rgba(41, 37, 36, 0.2) 30%, 
+        rgba(41, 37, 36, 0.5) 50%,
+        rgba(41, 37, 36, 0.75) 70%,
+        rgba(41, 37, 36, 0.95) 90%,
+        #292524 100%);
+    }
+
+    /* Slide left for first project (image on left) */
+    .project-split-container:not(.reverse) .project-split-image-wrapper:hover .project-split-image {
+      transform: translateX(-60px);
+      filter: brightness(0.85);
+    }
+
+    /* Slide right for second project (image on right) */
+    .project-split-container.reverse .project-split-image-wrapper:hover .project-split-image {
+      transform: translateX(60px);
+      filter: brightness(0.85);
+    }
+
+    /* Show gradient on hover */
+    .project-split-image-wrapper:hover .project-split-image::after {
+      opacity: 1;
+    }
+
+    .project-split-image-wrapper:hover .project-split-image {
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Indicator that appears in revealed space - chevron pointing toward text */
+    .project-image-indicator {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(245, 158, 11, 0.9);
+      font-size: 4rem;
+      font-weight: 300;
+      opacity: 0;
+      transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+    }
+
+    /* Position chevron on the right for left-sliding images, pointing right toward text */
+    .project-split-container:not(.reverse) .project-image-indicator {
+      right: 15px;
+    }
+
+    /* Position chevron on the left for right-sliding images, pointing left toward text */
+    .project-split-container.reverse .project-image-indicator {
+      left: 15px;
+    }
+
+    .project-split-image-wrapper:hover .project-image-indicator {
+      opacity: 1;
+    }
+
+    /* Chevron drawing animation */
+    .project-image-indicator span {
+      display: inline-block;
+      position: relative;
+      animation: none;
+    }
+
+    .project-split-image-wrapper:hover .project-image-indicator span {
+      animation: drawChevron 1.5s ease-in-out infinite;
+    }
+
+    @keyframes drawChevron {
+      0%, 100% {
+        opacity: 0.3;
+        transform: scale(0.8);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* Reverse chevron animation for right-side images */
+    .project-split-container.reverse .project-split-image-wrapper:hover .project-image-indicator span {
+      animation: drawChevron 1.5s ease-in-out infinite;
+    }
+
+    .project-split-content {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .project-split-tag {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: white;
+      border-radius: 6px;
+      font-size: 0.813rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      width: fit-content;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .project-split-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #292524;
+      margin: 0;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+      transition: all 0.3s ease;
+    }
+
+    .project-split-description {
+      font-size: 1.05rem;
+      color: #57534e;
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    .project-tech-stack {
+      margin-top: 0.5rem;
+    }
+
+    .tech-stack-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #292524;
+      margin-bottom: 0.75rem;
+    }
+
+    .project-tech-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tech-tag {
+      padding: 0.4rem 0.9rem;
+      background: #292524;
+      color: #fbbf24;
+      border-radius: 6px;
+      font-size: 0.813rem;
+      font-weight: 500;
+      border: 1px solid #44403c;
+      transition: all 0.2s ease;
+    }
+
+    .project-outcomes {
+      margin-top: 0.5rem;
+    }
+
+    .outcomes-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #292524;
+      margin-bottom: 0.5rem;
+    }
+
+    .outcomes-list {
+      margin: 0;
+      padding-left: 1.5rem;
+      color: #57534e;
+      line-height: 1.7;
+    }
+
+    .outcomes-list li {
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .outcomes-list li:last-child {
+      margin-bottom: 0;
+    }
+
+    .project-details-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.9rem 1.75rem;
+      background: #f59e0b;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      width: fit-content;
+      margin-top: 0.5rem;
+    }
+
+    .project-details-link:hover {
+      background: #d97706;
+      gap: 0.75rem;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+    }
+
+    .project-details-link svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
     /* Projects Section */
     .projects-grid {
       display: grid;
@@ -1165,6 +1448,49 @@
         top: 4.5rem;
         right: 1rem;
       }
+
+      /* Mobile projects layout */
+      .project-split-container {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        margin-bottom: 3rem;
+        min-height: auto;
+      }
+
+      .project-split-container.reverse {
+        direction: ltr;
+      }
+
+      .project-split-image-wrapper {
+        min-height: 250px;
+        order: -1;
+      }
+
+      .project-split-image {
+        min-height: 250px;
+      }
+
+      .project-split-content {
+        gap: 1rem;
+      }
+
+      .project-split-title {
+        font-size: 1.5rem;
+      }
+
+      .project-split-description {
+        font-size: 1rem;
+      }
+
+      /* Disable slide effect on mobile - just show indicator on tap/hover */
+      .project-split-container:not(.reverse) .project-split-image-wrapper:hover .project-split-image,
+      .project-split-container.reverse .project-split-image-wrapper:hover .project-split-image {
+        transform: none;
+      }
+
+      .project-image-indicator {
+        font-size: 2rem;
+      }
     }
 
     @media (min-width: 860px) {
@@ -1637,49 +1963,75 @@ I seek a career where I can create infrastructure, configure systems, and work o
       <!-- Projects Section -->
       <section id="projects" class="content-section">
         <h2 class="section-header">Projects</h2>
-        <ul class="projects-grid">
-          <li>
-            <a href="#" class="project-card" onclick="loadExternalContent('projects/QxQ.html'); return false;">
-              <div class="project-background" style="background-image: url('assets/photos/Stock Photos/PCB-Test-Stock-Photo.png');"></div>
-              <div class="project-overlay">
-                <div class="project-card-content">
-                  <span class="project-tag">Test Automation</span>
-                  <div class="project-title">QxQ Test Fixture Integration</div>
-                  <p class="project-description">
-                    Hardware Test Fixture Assembly, Integration, and Bring-Up
-                  </p>
-                  <div class="project-explore-text">
-                    Click to explore
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
-                    </svg>
-                  </div>
-                </div>
+        
+        <!-- Project 1: QxQ - Image Left, chevron points right toward text -->
+        <div class="project-split-container">
+          <a href="#" class="project-split-image-wrapper" onclick="loadExternalContent('projects/QxQ.html'); return false;">
+            <div class="project-split-image" style="background-image: url('assets/photos/Stock Photos/PCB-Test-Stock-Photo.jpg');"></div>
+            <div class="project-image-indicator">
+              <span>›</span>
+            </div>
+          </a>
+          <div class="project-split-content">
+            <div class="project-split-tag">Test Automation</div>
+            <h3 class="project-split-title">QxQ Test Fixture Integration</h3>
+            <p class="project-split-description">
+              Hardware Test Fixture Assembly, Integration, and Bring-Up focused on reliability validation and quality assurance processes.
+            </p>
+            <div class="project-tech-stack">
+              <div class="tech-stack-label">Technologies & Skills:</div>
+              <div class="project-tech-tags">
+                <span class="tech-tag">Hardware Validation</span>
+                <span class="tech-tag">Fixture Integration</span>
+                <span class="tech-tag">Test Automation</span>
+                <span class="tech-tag">Quality Assurance</span>
               </div>
-            </a>
-          </li>
+            </div>
+            <div class="project-outcomes">
+              <div class="outcomes-label">Key Outcomes:</div>
+              <ul class="outcomes-list">
+                <li>Assembled and integrated complex test fixtures for hardware validation</li>
+                <li>Improved test reliability and repeatability</li>
+                <li>Documented bring-up procedures for future reference</li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
-          <li>
-            <a href="#" class="project-card" onclick="loadExternalContent('projects/Home-Infrastructure.html'); return false;">
-              <div class="project-background" style="background-image: url('assets/photos/Stock Photos/Homelab-Stock-Photo.webp');"></div>
-              <div class="project-overlay">
-                <div class="project-card-content">
-                  <span class="project-tag">Systems Engineering</span>
-                  <div class="project-title">Infrastructure Reliability Case Study</div>
-                  <p class="project-description">
-                    Design, bring-up, failure analysis, and recovery across network, compute, and storage layers.
-                  </p>
-                  <div class="project-explore-text">
-                    Click to explore
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
-                    </svg>
-                  </div>
-                </div>
+        <!-- Project 2: Home Infrastructure - Image Right, chevron points left toward text -->
+        <div class="project-split-container reverse">
+          <a href="#" class="project-split-image-wrapper" onclick="loadExternalContent('projects/Home-Infrastructure.html'); return false;">
+            <div class="project-split-image" style="background-image: url('assets/photos/Stock Photos/Homelab-Stock-Photo.webp');"></div>
+            <div class="project-image-indicator">
+              <span>‹</span>
+            </div>
+          </a>
+          <div class="project-split-content">
+            <div class="project-split-tag">Systems Engineering</div>
+            <h3 class="project-split-title">Infrastructure Reliability Case Study</h3>
+            <p class="project-split-description">
+              Comprehensive design, bring-up, failure analysis, and recovery across network, compute, and storage layers in a home infrastructure environment.
+            </p>
+            <div class="project-tech-stack">
+              <div class="tech-stack-label">Technologies & Skills:</div>
+              <div class="project-tech-tags">
+                <span class="tech-tag">Linux/Unix</span>
+                <span class="tech-tag">Networking</span>
+                <span class="tech-tag">System Administration</span>
+                <span class="tech-tag">Infrastructure Design</span>
+                <span class="tech-tag">Virtualization</span>
               </div>
-            </a>
-          </li>
-        </ul>
+            </div>
+            <div class="project-outcomes">
+              <div class="outcomes-label">Key Outcomes:</div>
+              <ul class="outcomes-list">
+                <li>Built and configured multi-layer infrastructure from scratch</li>
+                <li>Implemented fault tolerance and recovery procedures</li>
+                <li>Gained hands-on experience with enterprise-grade systems</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </section>
 
       </div>
