@@ -3,553 +3,426 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Test Fixture Integration and Bring-Up | Christian Villanueva</title>
+  <title>Hardware Systems Integration & Production Bring-Up | Christian Villanueva</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    :root {
+      --stone-800: #292524; --stone-700: #44403c; --stone-500: #78716c;
+      --stone-400: #a8a29e; --stone-200: #e7e5e4; --stone-50: #fafaf9;
+      --amber-500: #f59e0b; --amber-400: #fbbf24; --amber-300: #fde68a;
+      --amber-100: #fffbeb; --amber-dark: #d97706; --red-600: #dc2626;
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    body { font-family: 'Space Grotesk', -apple-system, sans-serif; line-height: 1.7; color: var(--stone-800); background: var(--stone-50); }
+    ::selection { background: var(--amber-400); color: var(--stone-800); }
 
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      line-height: 1.7;
-      color: #292524;
-      background: #fafaf9;
-      min-height: 100vh;
-    }
+    body.in-iframe .sidebar,
+    body.in-iframe .mobile-menu-toggle,
+    body.in-iframe .page-header { display: none !important; }
+    body.in-iframe .main-content { margin-left: 0 !important; border-top: 3px solid var(--amber-500); }
+    body.in-iframe .layout { display: block; }
 
-    .container {
-      margin: 0 auto;
-      background: #ffffff;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      position: relative;
-      z-index: 1;
-    }
+    .layout { display: flex; min-height: 100vh; }
 
-    /* Header */
-    header {
-      background: #292524;
-      color: white;
-      padding: 3rem 3rem;
-      position: relative;
-      border-bottom: 4px solid #f59e0b;
-      z-index: 10;
+    .sidebar {
+      width: 280px; background: var(--stone-800); color: white;
+      padding: 3rem 0; position: fixed; height: 100vh; overflow-y: auto;
+      border-right: 1px solid rgba(255,255,255,0.08); z-index: 200;
     }
+    .sidebar-content { display: flex; flex-direction: column; align-items: center; gap: 3rem; min-height: 100%; }
+    .profile-section { text-align: center; padding: 0 2rem; }
+    .profile-name { font-size: 1.5rem; font-weight: 700; color: white; margin-bottom: 0.5rem; letter-spacing: -0.3px; }
+    .profile-title { font-size: 0.9rem; color: #d6d3d1; }
+    .profile-location { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 0.5rem; color: #a8a29e; font-size: 0.85rem; }
+    .profile-location svg { width: 14px; height: 14px; fill: currentColor; }
+    .nav-menu { list-style: none; width: 100%; padding: 0 1.5rem; }
+    .nav-menu li { margin-bottom: 0.5rem; }
+    .nav-menu a { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.25rem; color: #d6d3d1; text-decoration: none; border-radius: 8px; transition: all 0.2s ease; font-weight: 500; font-size: 0.95rem; }
+    .nav-menu a svg { width: 20px; height: 20px; fill: currentColor; flex-shrink: 0; }
+    .nav-menu a:hover { background: rgba(245,158,11,0.1); color: #fbbf24; }
+    .nav-menu a.active { background: rgba(245,158,11,0.15); color: #fbbf24; border-left: 3px solid var(--amber-500); }
+    .social-links { display: flex; gap: 0.5rem; padding: 0 1rem; flex-wrap: wrap; justify-content: center; }
+    .social-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: #d6d3d1; transition: all 0.2s ease; border-radius: 50%; text-decoration: none; background: rgba(255,255,255,0.05); }
+    .social-icon:hover { color: #fbbf24; background: rgba(245,158,11,0.15); transform: translateY(-2px); }
+    .social-icon svg { width: 20px; height: 20px; fill: currentColor; }
+    .sidebar-footer { margin-top: auto; padding: 2rem; text-align: center; color: #78716c; font-size: 0.813rem; border-top: 1px solid rgba(255,255,255,0.08); width: 100%; }
+    .sidebar-footer p { margin: 0; }
 
-    .header-content {
-      margin: 0 auto;
-      text-align: center;
-    }
+    .main-content { flex: 1; margin-left: 280px; background: white; }
 
-    h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      letter-spacing: -0.5px;
-      color: white;
-    }
+    .page-header { background: var(--stone-800); border-bottom: 4px solid var(--amber-500); padding: 2.5rem 3rem 2rem; }
+    .breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--stone-500); margin-bottom: 1.25rem; }
+    .breadcrumb a { color: var(--stone-400); text-decoration: none; transition: color 0.2s; }
+    .breadcrumb a:hover { color: var(--amber-400); }
+    .breadcrumb .sep { color: var(--stone-700); }
+    .breadcrumb .current { color: var(--amber-500); }
+    .page-header h1 { font-size: 2rem; font-weight: 700; color: white; letter-spacing: -0.5px; margin-bottom: 0.5rem; line-height: 1.2; }
+    .header-meta { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; margin-top: 1rem; }
+    .header-meta-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; color: var(--stone-400); font-family: 'JetBrains Mono', monospace; }
+    .header-meta-item svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
+    .header-subtitle { margin-top: 1rem; font-size: 1rem; color: #d6d3d1; line-height: 1.65; max-width: 700px; }
 
-    .project-meta {
-      display: flex;
-      gap: 1.5rem;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-    }
+    .content { padding: 3rem; width: 100%; }
 
-    .meta-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: #d6d3d1;
-      font-size: 0.9rem;
-    }
+    .section-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--amber-500); margin-bottom: 1rem; margin-top: 3rem; display: flex; align-items: center; gap: 1rem; }
+    .section-eyebrow::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--amber-300), transparent); }
+    .content > .section-eyebrow:first-child { margin-top: 0; }
 
-    .meta-item svg {
-      width: 16px;
-      height: 16px;
-      fill: currentColor;
-    }
+    p { font-size: 0.97rem; color: #57534e; line-height: 1.8; margin-bottom: 1rem; }
+    p:last-child { margin-bottom: 0; }
+    strong { color: var(--stone-800); font-weight: 600; }
+    ul { list-style: none; margin: 0.75rem 0 1rem; padding: 0; }
+    ul li { position: relative; padding-left: 1.5rem; margin-bottom: 0.6rem; font-size: 0.95rem; color: #57534e; line-height: 1.7; }
+    ul li::before { content: "▸"; position: absolute; left: 0; color: var(--amber-500); font-size: 0.8rem; top: 0.18rem; }
 
-    .subtitle {
-      font-size: 1.1rem;
-      color: #d6d3d1;
-      font-weight: 400;
-      line-height: 1.6;
-      max-width: 800px;
-      margin: 0 auto;
-    }
+    .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.875rem; margin: 1.5rem 0; }
+    .stat-card { background: var(--stone-800); border-radius: 10px; padding: 1.25rem 1.25rem 1rem; display: flex; flex-direction: column; gap: 0.35rem; }
+    .stat-value { font-family: 'JetBrains Mono', monospace; font-size: 1.6rem; font-weight: 600; color: var(--amber-400); line-height: 1; }
+    .stat-label { font-size: 0.75rem; color: var(--stone-400); line-height: 1.4; }
+    @media (max-width: 768px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
 
-    /* Content */
-    .content {
-      padding: 3rem;
-      margin: 0 auto;
-      position: relative;
-      z-index: 1;
-    }
+    .layer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.875rem; margin: 1.25rem 0; }
+    .layer-card { background: var(--stone-800); border-radius: 10px; padding: 1.1rem 1.25rem; }
+    .layer-card-title { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--amber-400); margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(245,158,11,0.2); }
+    .layer-card ul { margin: 0; }
+    .layer-card ul li { font-size: 0.85rem; color: #d6d3d1; margin-bottom: 0.4rem; }
 
-    h2 {
-      color: #292524;
-      font-size: 1.75rem;
-      margin: 3rem 0 1.5rem;
-      padding-bottom: 0.75rem;
-      border-bottom: 2px solid #f59e0b;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-      position: relative;
-      z-index: 1;
-    }
+    .verify-steps { display: flex; flex-direction: column; gap: 0.6rem; margin: 1.25rem 0; }
+    .verify-step { display: flex; align-items: flex-start; gap: 1rem; padding: 0.85rem 1.1rem; background: var(--stone-50); border: 1px solid var(--stone-200); border-radius: 8px; }
+    .verify-step-num { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 600; color: var(--amber-500); background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2); border-radius: 4px; padding: 0.15rem 0.5rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .verify-step-body { flex: 1; }
+    .verify-step-title { font-size: 0.88rem; font-weight: 600; color: var(--stone-800); margin-bottom: 0.2rem; }
+    .verify-step-desc { font-size: 0.83rem; color: var(--stone-500); line-height: 1.5; margin: 0; }
 
-    h2::before {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 0;
-      width: 80px;
-      height: 2px;
-      background: #d97706;
-    }
+    .image-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.75rem 0; }
+    .image-pair figure { margin: 0; }
+    .image-pair img { width: 100%; height: auto; object-fit: contain; border-radius: 10px; display: block; box-shadow: 0 4px 16px rgba(0,0,0,0.1); border: 1px solid var(--stone-200); }
+    .image-pair figcaption { font-size: 0.82rem; color: var(--stone-500); line-height: 1.55; margin-top: 0.6rem; font-style: italic; }
 
-    .content > h2:first-child {
-      margin-top: 0;
-    }
+    .image-single { margin: 1.75rem 0; }
+    .image-single figure { margin: 0; }
+    .image-single img { width: 100%; height: auto; object-fit: contain; border-radius: 10px; display: block; box-shadow: 0 4px 16px rgba(0,0,0,0.1); border: 1px solid var(--stone-200); }
+    .image-single figcaption { font-size: 0.82rem; color: var(--stone-500); line-height: 1.55; margin-top: 0.6rem; font-style: italic; }
 
-    h3 {
-      color: #292524;
-      font-size: 1.25rem;
-      margin: 2rem 0 1rem;
-      font-weight: 600;
-      position: relative;
-      z-index: 1;
-    }
+    .failure-with-photo { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; margin: 1.5rem 0; }
+    .failure-block { border: 1px solid #fecaca; border-left: 4px solid var(--red-600); border-radius: 0 10px 10px 0; background: #fff5f5; padding: 1.5rem; }
+    .failure-block-title { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--red-600); margin-bottom: 1rem; }
+    .failure-row { display: grid; grid-template-columns: 90px 1fr; gap: 0.4rem 1rem; margin-bottom: 0.5rem; align-items: baseline; }
+    .failure-key { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 600; color: var(--stone-500); text-transform: uppercase; letter-spacing: 0.5px; }
+    .failure-val { font-size: 0.9rem; color: var(--stone-800); line-height: 1.5; }
+    .failure-insight { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #fecaca; font-size: 0.88rem; color: #7f1d1d; line-height: 1.6; }
+    .failure-photo figure { margin: 0; }
+    .failure-photo img { width: 100%; height: 100%; min-height: 240px; object-fit: cover; border-radius: 10px; display: block; box-shadow: 0 4px 16px rgba(0,0,0,0.1); border: 1px solid var(--stone-200); }
+    .failure-photo figcaption { font-size: 0.82rem; color: var(--stone-500); margin-top: 0.6rem; font-style: italic; line-height: 1.5; }
 
-    p {
-      margin-bottom: 1.2rem;
-      color: #57534e;
-      font-size: 1rem;
-      line-height: 1.8;
-      position: relative;
-      z-index: 1;
-    }
+    .conf-note { background: var(--amber-100); border-left: 4px solid var(--amber-500); border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin-bottom: 2.5rem; font-size: 0.88rem; color: #92400e; line-height: 1.6; }
 
-    strong {
-      color: #292524;
-      font-weight: 600;
-    }
+    .proof-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.875rem; margin: 1.25rem 0; }
+    .proof-category { background: var(--stone-800); border-radius: 10px; overflow: hidden; }
+    .proof-category-title { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--amber-400); padding: 0.65rem 1.1rem; border-bottom: 1px solid rgba(245,158,11,0.2); }
+    .proof-category-items { padding: 0.75rem 1.1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+    .proof-category-item { font-size: 0.85rem; color: #d6d3d1; padding-left: 1.1rem; position: relative; line-height: 1.5; }
+    .proof-category-item::before { content: "▸"; position: absolute; left: 0; color: var(--amber-500); font-size: 0.7rem; top: 0.18rem; }
 
-    ul {
-      margin: 1.2rem 0 1.5rem 0;
-      list-style: none;
-      position: relative;
-      z-index: 1;
-    }
-
-    ul li {
-      position: relative;
-      padding-left: 2rem;
-      margin-bottom: 0.8rem;
-      color: #57534e;
-      font-size: 1rem;
-      line-height: 1.7;
-    }
-
-    ul li:before {
-      content: "▪";
-      position: absolute;
-      left: 0.5rem;
-      color: #f59e0b;
-      font-size: 1.2rem;
-    }
-
-    /* Note Box */
-    .note {
-      background: #fffbeb;
-      border-left: 4px solid #f59e0b;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      border-radius: 0 4px 4px 0;
-      border-right: 1px solid rgba(245, 158, 11, 0.2);
-      border-top: 1px solid rgba(245, 158, 11, 0.1);
-      border-bottom: 1px solid rgba(245, 158, 11, 0.1);
-      position: relative;
-      z-index: 1;
-    }
-
-    .note p {
-      margin: 0;
-      color: #92400e;
-    }
-
-    /* Meta Grid */
-    .meta {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1rem;
-      margin: 1.5rem 0;
-      position: relative;
-      z-index: 1;
-    }
-
-    .meta div {
-      border: 1px solid #fde68a;
-      border-radius: 4px;
-      padding: 1rem 1.25rem;
-      background: #fffbeb;
-    }
-
-    .meta div .label {
-      color: #92400e;
-      font-weight: 600;
-    }
-
-    @media (min-width: 860px) {
-      .meta {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
-    /* Image Grid styles */
-    .image-grid {
-      margin: 2.5rem 0;
-      padding-top: 2rem;
-      border-top: 3px solid #f59e0b;
-      position: relative;
-      z-index: 1;
-    }
-
-    .image-grid-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-    }
-
-    .image-item figure {
-      margin: 0;
-    }
-
-    .image-item figure img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .image-item figcaption {
-      padding: 1rem 0;
-      font-size: 0.9rem;
-      color: #57534e;
-      line-height: 1.6;
-    }
+    .mobile-menu-toggle { display: none; position: fixed; top: 1rem; left: 1rem; z-index: 1000; background: var(--stone-800); color: white; border: none; width: 48px; height: 48px; border-radius: 8px; font-size: 1.4rem; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
 
     @media (max-width: 768px) {
-      .image-grid-container {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-      }
+      .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
+      .sidebar.active { transform: translateX(0); }
+      .main-content { margin-left: 0; }
+      .mobile-menu-toggle { display: block; }
+      .page-header { padding: 4.5rem 1.5rem 1.5rem; }
+      .page-header h1 { font-size: 1.5rem; }
+      .content { padding: 2rem 1.5rem; }
+      .image-pair, .failure-with-photo { grid-template-columns: 1fr; }
+      .stat-ticker { flex-wrap: wrap; }
+      .stat-ticker-item { flex: 1 1 45%; border-right: none; border-bottom: 1px solid var(--stone-200); }
+      .stat-ticker-item:last-child { border-bottom: none; }
+      .layer-grid { grid-template-columns: 1fr; }
     }
 
-    /* Section Cards */
-    .section-card {
-      border-top: 3px solid;
-      padding: 2rem 0;
-      margin: 3rem 0;
-      position: relative;
-      z-index: 1;
-    }
-
-    .section-header {
-      color: #292524;
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      font-weight: 600;
-      margin-bottom: 1rem;
-    }
-
-    .section-content {
-      padding: 0;
-    }
-
-    /* Integration Issues Card */
-    .integration-issues {
-      border-color: #dc2626;
-    }
-
-    .integration-issues .section-header {
-      color: #dc2626;
-    }
-
-    .integration-issues .section-content h2,
-    .integration-issues .section-content h3 {
-      color: #292524;
-      border-color: #f59e0b;
-    }
-
-    .integration-issues .section-content h2::before {
-      background: #d97706;
-    }
-
-    /* Process Card */
-    .process-card {
-      border-color: #059669;
-    }
-
-    .process-card .section-header {
-      color: #059669;
-    }
-
-    .process-card .section-content h2 {
-      color: #292524;
-      border-color: #f59e0b;
-    }
-
-    .process-card .section-content h2::before {
-      background: #d97706;
-    }
-
-    /* Principles Card */
-    .principles {
-      border-color: #f59e0b;
-    }
-
-    .principles .section-header {
-      color: #f59e0b;
-    }
-
-    .principles .section-content h2 {
-      color: #292524;
-      border-color: #f59e0b;
-    }
-
-    .principles .section-content h2::before {
-      background: #d97706;
-    }
-
-    .section-content h2 {
-      margin-top: 0;
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-    }
-
-    /* Mobile Styles */
-    @media (max-width: 768px) {
-      header {
-        padding: 3rem 1.5rem 2rem;
-      }
-
-      h1 {
-        font-size: 2rem;
-      }
-
-      .content {
-        padding: 2rem 1.5rem;
-      }
-
-      h2 {
-        font-size: 1.5rem;
-      }
-
-      .note {
-        padding: 1.25rem;
-      }
-
-      .project-meta {
-        flex-direction: column;
-        gap: 0.75rem;
-      }
-    }
-
-    ::selection {
-      background: #fbbf24;
-      color: #292524;
-    }
-
-    /* Scroll Progress Indicator */
-    .progress-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 4px;
-      background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
-      width: 0%;
-      z-index: 1000;
-      transition: width 0.1s ease;
-    }
-
-    code {
-      background: #fef3c7;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-family: 'Courier New', monospace;
-      font-size: 0.9em;
-      color: #92400e;
-    }
+    .fade-up { opacity: 0; transform: translateY(20px); animation: fadeUp 0.55s ease forwards; }
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+    .fade-up:nth-child(1)  { animation-delay: 0.05s; }
+    .fade-up:nth-child(2)  { animation-delay: 0.12s; }
+    .fade-up:nth-child(3)  { animation-delay: 0.19s; }
+    .fade-up:nth-child(4)  { animation-delay: 0.26s; }
+    .fade-up:nth-child(5)  { animation-delay: 0.33s; }
+    .fade-up:nth-child(6)  { animation-delay: 0.40s; }
+    .fade-up:nth-child(7)  { animation-delay: 0.47s; }
+    .fade-up:nth-child(8)  { animation-delay: 0.54s; }
+    .fade-up:nth-child(9)  { animation-delay: 0.61s; }
+    .fade-up:nth-child(10) { animation-delay: 0.68s; }
   </style>
 </head>
 <body>
-  <div class="progress-bar" id="progressBar"></div>
-
-  <div class="container">
-    <header>
-      <div class="header-content">
-        <h1>Test Fixture Integration and Bring-Up</h1>
-        <div class="project-meta">
-          <div class="meta-item">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/>
-            </svg>
-            Test Engineering
-          </div>
-          <div class="meta-item">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
-            </svg>
-            2025 - Present
+  <button class="mobile-menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('active')">&#9776;</button>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-content">
+        <div class="profile-section">
+          <h1 class="profile-name">Christian Villanueva</h1>
+          <p class="profile-title">Computer Engineering Student</p>
+          <div class="profile-location">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            San Jose, California
           </div>
         </div>
-        <p class="subtitle">
-          Electrical test fixture integration for engineering validation: schematic-driven wiring, safe bring-up,
-          interface verification, and repeatability
+        <nav>
+          <ul class="nav-menu">
+            <li><a href="../index.html#home"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Home</a></li>
+            <li><a href="../index.html#skills"><svg viewBox="0 0 24 24"><path d="M9 13.75c-2.34 0-7 1.17-7 3.5V19h14v-1.75c0-2.33-4.66-3.5-7-3.5zM9 12c1.93 0 3.5-1.57 3.5-3.5S10.93 5 9 5 5.5 6.57 5.5 8.5 7.07 12 9 12zm7.04 6.81c1.16.84 1.96 1.96 1.96 3.44V19h4v-1.75c0-2.02-3.5-3.17-5.96-3.44zM15 12c1.93 0 3.5-1.57 3.5-3.5S16.93 5 15 5c-.54 0-1.04.13-1.5.35.63.89 1 1.98 1 3.15s-.37 2.26-1 3.15c.46.22.96.35 1.5.35z"/></svg>Skills</a></li>
+            <li><a href="../index.html#experience"><svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg>Experience</a></li>
+            <li><a href="../index.html#projects" class="active"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>Projects</a></li>
+            <li><a href="../resume.html"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>Resume</a></li>
+          </ul>
+        </nav>
+        <div class="social-links">
+          <a href="https://www.linkedin.com/in/itiancv/" target="_blank" class="social-icon" title="LinkedIn">
+            <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+          <a href="https://github.com/Chris4lyfie" target="_blank" class="social-icon" title="GitHub">
+            <svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          </a>
+        </div>
+        <div class="sidebar-footer">
+          <p>&copy; 2026 Christian Villanueva</p>
+          <p>All Rights Reserved</p>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <div class="breadcrumb">
+          <a href="../index.html">Portfolio</a>
+          <span class="sep">/</span>
+          <a href="../index.html#projects">Projects</a>
+          <span class="sep">/</span>
+          <span class="current">QxQ Inc.</span>
+        </div>
+        <h1>Hardware Systems Integration &amp; Production Bring-Up</h1>
+        <div class="header-meta">
+          <div class="header-meta-item">
+            <svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg>
+            QxQ Inc.
+          </div>
+          <div class="header-meta-item">
+            <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+            May 2025 – Present
+          </div>
+          <div class="header-meta-item">
+            <svg viewBox="0 0 24 24"><path d="M17.21 9l-4.38-6.56c-.19-.28-.51-.42-.83-.42-.32 0-.64.14-.83.43L6.79 9H2c-.55 0-1 .45-1 1 0 .09.01.18.04.27l2.54 9.27c.23.84 1 1.46 1.92 1.46h13c.92 0 1.69-.62 1.93-1.46l2.54-9.27L23 10c0-.55-.45-1-1-1h-4.79zM9 9l3-4.4L15 9H9zm3 8c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+            Hardware Integration
+          </div>
+        </div>
+        <p class="header-subtitle">
+          My day-to-day at QxQ involves turning schematics into fully wired, production-ready test fixtures. The job is part electrical work, part risk management, and making sure nothing destructive happens when you flip the power switch.
         </p>
       </div>
-    </header>
 
-    <div class="content">
-      <section class="note">
-        <p><strong>Confidentiality:</strong> Customer identifiers, part numbers, and proprietary pin names are omitted. Content focuses on integration process, verification discipline, and reliability outcomes.</p>
-      </section>
+      <div class="content">
+        <div class="conf-note">
+          <strong>Confidentiality:</strong> Customer identifiers, part numbers, and proprietary pin designations are omitted. The focus here is on process, methodology, and what I actually learned.
+        </div>
 
-      <h2>Overview</h2>
-      <p>
-        Integrated electrical test fixtures used to validate PCB-level boards and complete assemblies across server,
-        automotive, and embedded electronics. Fixtures supported functional checks and firmware flashing in an
-        operator-driven engineering validation environment.
-      </p>
+        <div class="section-eyebrow fade-up">At a Glance</div>
+        <div class="stat-grid fade-up">
+          <div class="stat-card"><div class="stat-value">30+</div><div class="stat-label">Fixtures shipped</div></div>
+          <div class="stat-card"><div class="stat-value">~0.5%</div><div class="stat-label">Wiring fault rate on 600–700+ termination builds</div></div>
+          <div class="stat-card"><div class="stat-value">$7k–$21k</div><div class="stat-label">Per-fixture value</div></div>
+          <div class="stat-card"><div class="stat-value">1–2 wk</div><div class="stat-label">Delivery turnaround</div></div>
+          <div class="stat-card"><div class="stat-value">800</div><div class="stat-label">Max terminations, largest builds</div></div>
+          <div class="stat-card"><div class="stat-value">80%</div><div class="stat-label">Issues resolved independently</div></div>
+        </div>
 
-      <div class="meta">
-        <div><strong>Environment:</strong> Engineering validation, small-scale, manual operation</div>
-        <div><strong>Volume:</strong> 30+ fixtures assembled and integrated</div>
-        <div><strong>Typical fixture contents:</strong> PSU (5–24 V), relay arrays, programmers, Raspberry Pi, USB hubs, network switches</div>
-        <div><strong>Primary risks managed:</strong> miswires, power distribution errors, connector orientation/pin mapping, operator error</div>
-      </div>
+        <div class="section-eyebrow fade-up">Overview</div>
+        <p class="fade-up">At QxQ, I own the full electrical integration of test fixtures used to validate PCB-level hardware across automotive, server, and embedded systems. Each build involves converting customer schematics and wiring diagrams into a complete, verified system. These systems cover everything from power distribution and relay switching, to control interfaces and DUT connectivity. Builds range in complexity from 50 to 800 individual terminations across mixed power domains, using wires ranging from 10 AWG for high-current conductors, to 30 AWG signal wiring.</p>
+        <p class="fade-up">The core challenge is primarily risk control. These fixtures operate at voltage and current levels that can permanently damage components on the first power cycle if something is misrouted. I developed a verification workflow that systematically intercepts electrical and mechanical faults before power-on. Over time, I became the default assignee for the largest and highest-density builds, proving my reliability when it comes to execution and integration.</p>
 
-      <h2>Artifacts</h2>
+        <div class="section-eyebrow fade-up">Reference Diagrams</div>
+        <p class="fade-up">Block diagrams and wiring schematics are the primary inputs for every build. Before any physical work begins, I use these to map power domains, identify risks across connections, and plan harness routing for enclosure constraints. This preliminary analysis prevents reworks downstream and helps with smoother integration throughout the entire build.</p>
+        <div class="image-pair fade-up">
+          <figure>
+            <img src="../assets/diagrams/qxq/Palm-Block Diagram.png" alt="Block diagram used for fixture integration" />
+            <figcaption>High-level block diagram mapping programmers, relays, power supplies, and communication paths. I use this as a sanity check during bring-up to confirm my interface assumptions before energizing.</figcaption>
+          </figure>
+          <figure>
+            <img src="../assets/diagrams/qxq/MRC-Block Diagram.png" alt="Schematic-derived wiring diagram" />
+            <figcaption>Schematic-derived wiring reference showing power domains, relay routing, and signal fan-out to the DUT. Diagram complexity like this is exactly why I do staged bring-up with pin-by-pin validation.</figcaption>
+          </figure>
+        </div>
 
-      <div class="image-grid">
-        <div class="image-grid-container">
-          <div class="image-item">
+        <div class="section-eyebrow fade-up">System Architecture</div>
+        <p class="fade-up">Each fixture integrates multiple subsystems that need to work together cleanly. Keeping the power, control, and mechanical layers organized is what separates a reliable build from one that causes problems later.</p>
+
+        <div class="layer-grid fade-up">
+          <div class="layer-card">
+            <div class="layer-card-title">Power Layer</div>
+            <ul>
+              <li>Shared 5V / 12V / 24V rails</li>
+              <li>Multi-amp loads, 10 AWG conductors</li>
+              <li>Relay-based switching architectures</li>
+              <li>AC adapter to PSU to distributed DC rails</li>
+            </ul>
+          </div>
+          <div class="layer-card">
+            <div class="layer-card-title">Control / Signal Layer</div>
+            <ul>
+              <li>Raspberry Pi controllers</li>
+              <li>USB hubs and programmers</li>
+              <li>Network switches</li>
+              <li>CAN-connected DUT interfaces</li>
+            </ul>
+          </div>
+          <div class="layer-card">
+            <div class="layer-card-title">Mechanical Integration</div>
+            <ul>
+              <li>VPC and CPC high-density connectors</li>
+              <li>Ferrules, insulated crimps</li>
+              <li>Managed harness routing and slack</li>
+              <li>Customer-specific labeling</li>
+            </ul>
+          </div>
+        </div>
+        <p class="fade-up">Keeping low-voltage logic isolated from higher-current rails is something I treat as non-negotiable. Routing a Raspberry Pi supply lead into a 24V rail isn't something you get a second chance on. That's exactly the kind of fault my pre-power checks are designed to catch.</p>
+
+        <div class="section-eyebrow fade-up">Pre-Energization Verification</div>
+        <p class="fade-up">I don't consider a build finished just because the wiring is done. Before any fixture gets powered on, I work through a set of checks I've developed over time. Some of this came from the job, some of it came from making mistakes early on and not wanting to repeat them.</p>
+        <div class="verify-steps fade-up">
+          <div class="verify-step">
+            <span class="verify-step-num">01</span>
+            <div class="verify-step-body">
+              <div class="verify-step-title">Mechanical Seating</div>
+              <p class="verify-step-desc">Confirm correct terminal seating and strain relief on all connections. VPC and CPC connectors get extra attention for rotational and vertical symmetry risks before being locked in.</p>
+            </div>
+          </div>
+          <div class="verify-step">
+            <span class="verify-step-num">02</span>
+            <div class="verify-step-body">
+              <div class="verify-step-title">Harness Routing Validation</div>
+              <p class="verify-step-desc">Walk every signal and power path to confirm correct routing, adequate slack for hinged enclosures, and no situations where motion could cause a short after delivery.</p>
+            </div>
+          </div>
+          <div class="verify-step">
+            <span class="verify-step-num">03</span>
+            <div class="verify-step-body">
+              <div class="verify-step-title">Full Continuity Pass</div>
+              <p class="verify-step-desc">Spreadsheet-tracked continuity check across every connection. High-risk builds get a second pass. Any failed connections get corrected before I move forward.</p>
+            </div>
+          </div>
+          <div class="verify-step">
+            <span class="verify-step-num">04</span>
+            <div class="verify-step-body">
+              <div class="verify-step-title">Rail Separation Check</div>
+              <p class="verify-step-desc">Confirm isolation between power rails before power-on. I'm specifically looking for anything that could create a cross-domain path into logic components.</p>
+            </div>
+          </div>
+          <div class="verify-step">
+            <span class="verify-step-num">05</span>
+            <div class="verify-step-body">
+              <div class="verify-step-title">Controlled Power-On</div>
+              <p class="verify-step-desc">First power-on goes through a bench PSU with current limiting, not straight to wall power. If anything about the relay, power, or ground wiring looks off, I don't energize until it's resolved.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-eyebrow fade-up">Failure Analysis</div>
+        <p class="fade-up">When something doesn't work during bring-up, I try to isolate it myself before pulling in an engineer. Most of the time I can track it down. The fan issue below is a good example of how that process actually plays out.</p>
+        <div class="failure-with-photo fade-up">
+          <div class="failure-block">
+            <div class="failure-block-title">Case Study — Non-Functional Cooling Fans</div>
+            <div class="failure-row"><span class="failure-key">Symptom</span><span class="failure-val">Cooling fans non-operational on power-on</span></div>
+            <div class="failure-row"><span class="failure-key">Hypothesis</span><span class="failure-val">Faulty PSU</span></div>
+            <div class="failure-row"><span class="failure-key">Step 1</span><span class="failure-val">Replaced PSU, no change</span></div>
+            <div class="failure-row"><span class="failure-key">Step 2</span><span class="failure-val">Verified continuity across expected nodes, passed</span></div>
+            <div class="failure-row"><span class="failure-key">Step 3</span><span class="failure-val">Swapped in a known-good fan, no change</span></div>
+            <div class="failure-row"><span class="failure-key">Root Cause</span><span class="failure-val">PWM control line bridged to ground</span></div>
+            <div class="failure-row"><span class="failure-key">Fix</span><span class="failure-val">Removed bridged PWM line, fans operational</span></div>
+            <div class="failure-insight">The big takeaway here was that continuity checks alone won't catch a control line bridged to ground. That node passes continuity just fine. I added signal isolation checks for PWM and logic lines to my standard process after this.</div>
+          </div>
+          <div class="failure-photo">
             <figure>
-              <img src="../assets/diagrams/qxq/Palm-Block Diagram.png" alt="Block diagram used for fixture integration (generalized)" />
-              <figcaption>High-level block diagram used to reason about system integration, mapping programmers, relays, power supplies, and communication paths before physical wiring. Served as a sanity check during bring-up to validate interface assumptions and grounding strategy.</figcaption>
+              <img src="../assets/photos/qxq/Fixture-Top.jpg" alt="Fixture internal wiring" />
+              <figcaption>Internal fixture wiring showing the kind of dense harness environment where this fault occurred.</figcaption>
             </figure>
           </div>
-          <div class="image-item">
-            <figure>
-              <img src="../assets/diagrams/qxq/MRC-Block Diagram.png" alt="Second block diagram reference" />
-              <figcaption>Schematic-derived wiring diagram used as the primary reference during fixture assembly and continuity verification, showing power domains, relay routing, and signal fan-out to DUT interfaces. Diagram complexity required staged bring-up and pin-by-pin validation to prevent miswires and power faults.</figcaption>
-            </figure>
+        </div>
+
+        <div class="section-eyebrow fade-up">Completed Build</div>
+        <p class="fade-up">After all verification gates are passed, the fixture gets documented and handed off. One thing I'm proud of is that engineers at QxQ stopped requiring a secondary check on my builds over time. That kind of trust doesn't come from one build, it comes from being consistent.</p>
+        <div class="image-single fade-up">
+          <figure>
+            <img src="../assets/photos/qxq/Fixture-Bottom.jpg" alt="Completed fixture" />
+            <figcaption>A completed build showing harness management, component layout, ground routing, and labeling. Everything is organized with serviceability in mind.</figcaption>
+          </figure>
+        </div>
+
+        <div class="section-eyebrow fade-up">Process and Team Impact</div>
+        <ul class="fade-up">
+          <li>Trained two other integrators to around 80-90% of my production speed through hands-on instruction</li>
+          <li>Reduced miswiring frequency across the team by introducing structured verification passes</li>
+          <li>Started flagging mechanical clearance risks during integration, which prevented a few rework situations before they happened</li>
+          <li>Got comfortable working with incomplete documentation and learned when to build on my best interpretation versus when to stop and clarify with an engineer</li>
+          <li>Became the default owner for the highest-density fixture builds as a result of consistent delivery quality</li>
+        </ul>
+
+        <div class="section-eyebrow fade-up">What This Demonstrates</div>
+        <div class="proof-categories fade-up">
+          <div class="proof-category">
+            <div class="proof-category-title">Electrical</div>
+            <div class="proof-category-items">
+              <div class="proof-category-item">Mixed power-domain wiring (5V–24V, multi-amp)</div>
+              <div class="proof-category-item">Rail isolation and cross-domain fault prevention</div>
+              <div class="proof-category-item">High-density connector risk management (VPC, CPC)</div>
+              <div class="proof-category-item">Signal integrity in mixed power/signal environments</div>
+            </div>
+          </div>
+          <div class="proof-category">
+            <div class="proof-category-title">Process</div>
+            <div class="proof-category-items">
+              <div class="proof-category-item">Structured pre-energization verification methodology</div>
+              <div class="proof-category-item">Termination traceability via spreadsheet-based tracking</div>
+              <div class="proof-category-item">Independent failure isolation and root cause analysis</div>
+              <div class="proof-category-item">Production execution under compressed timelines</div>
+            </div>
+          </div>
+          <div class="proof-category">
+            <div class="proof-category-title">Leadership</div>
+            <div class="proof-category-items">
+              <div class="proof-category-item">Trained two technicians to 80–90% of production output</div>
+              <div class="proof-category-item">Trusted ownership of highest-complexity builds</div>
+              <div class="proof-category-item">Proactive mechanical risk flagging during integration</div>
+            </div>
           </div>
         </div>
+
       </div>
-
-      <div class="image-grid">
-        <div class="image-grid-container">
-          <div class="image-item">
-            <figure>
-              <img src="../assets/photos/qxq/Fixture-Bottom.jpg" alt="Completed test fixture photo (generalized)" />
-              <figcaption>Completed fixture: component mounting, harness routing, labeling strategy (generalized).</figcaption>
-            </figure>
-          </div>
-          <div class="image-item">
-            <figure>
-              <img src="../assets/photos/qxq/Fixture-Top.jpg" alt="Fixture internal wiring photo (generalized)" />
-              <figcaption>Fixture internal wiring: strain relief, ground reference strategy, serviceability (generalized).</figcaption>
-            </figure>
-          </div>
-        </div>
-      </div>
-
-      <h2>Inputs and Responsibilities</h2>
-      <p>Inputs included schematics, wiring diagrams, and customer wiring documentation specifying net destinations (e.g., relay channels, programmer pins, power/ground). Implementation decisions were owned at the build level.</p>
-      <ul>
-        <li>Built point-to-point connections (crimping, soldering, custom connector creation, wire-wrap to posts/headers)</li>
-        <li>Mounted boards and components into the fixture; routed multi-rail power distribution (commonly 5–24 V)</li>
-        <li>Owned cable routing, strain relief, and grounding strategy (including shared ground "islands")</li>
-        <li>Performed continuity-based verification prior to bring-up and before customer debug</li>
-        <li>Escalated integration issues with evidence (photos, observations, routing alternatives) to internal engineers and customer test engineers</li>
-      </ul>
-
-      <div class="section-card process-card">
-        <div class="section-header">Process Discipline</div>
-        <div class="section-content">
-          <h2>Bring-Up Discipline</h2>
-          <p>Fixtures were not treated as "complete" at assembly finish. Test readiness required safe bring-up gates and verification.</p>
-          <ul>
-            <li><strong>Pre-power checks:</strong> correct power routing, no shorts, correct ground references across islands</li>
-            <li><strong>Go/No-go behavior:</strong> refused power-on when relay/power/ground wiring appeared unsafe; corrected before energizing</li>
-            <li><strong>Primary tool:</strong> DMM used for continuity and sanity checks</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="section-card integration-issues">
-        <div class="section-header">Critical Issues</div>
-        <div class="section-content">
-          <h2>Integration Issues</h2>
-
-          <h3>Connector Interface Reliability Failure</h3>
-          <ul>
-            <li><strong>Observed:</strong> DUT not consistently recognized due to unreliable connector/header interface</li>
-            <li><strong>Isolation:</strong> pin-by-pin probing and continuity verification from connector pins to endpoints</li>
-            <li><strong>Root cause:</strong> marginal mechanical/electrical interface between customer connector and added headers</li>
-            <li><strong>Outcome:</strong> required on-site repairs and revisions; treated as an interface-quality risk in future builds</li>
-          </ul>
-
-          <h3>Mirrored Pinout Error (DB-Series)</h3>
-          <ul>
-            <li><strong>Observed:</strong> incorrect signal routing due to mirrored orientation after connector mounting</li>
-            <li><strong>Root cause:</strong> pinout reference did not match mechanical mounting orientation</li>
-            <li><strong>Outcome:</strong> extensive rework and revision; reinforced the requirement to mechanically validate pin orientation before wiring execution</li>
-          </ul>
-        </div>
-      </div>
-
-      <h2>Documentation and Handoff</h2>
-      <ul>
-        <li>Labeling: component IDs, signal names at test points, voltage labels on power distribution, "island" identifiers</li>
-        <li>Customer-facing checklists (when required): mechanical fit, repeated point-to-point testing, DUT mounting clearance</li>
-        <li>Build notes: routing choices and practical constraints shared with electrical/mechanical engineers for revision cycles</li>
-      </ul>
-
-      <div class="section-card principles">
-        <div class="section-header">Reliability Impact</div>
-        <div class="section-content">
-          <h2>Why This Maps to Reliability Test Engineering</h2>
-          <ul>
-            <li>Built fixtures that produce trusted results by enforcing pre-power verification gates</li>
-            <li>Reduced false failures by managing wiring correctness, grounding discipline, and connector orientation risk</li>
-            <li>Improved serviceability and operator robustness through labeling and layout decisions</li>
-            <li>Communicated integration issues with evidence to accelerate cross-functional resolution</li>
-          </ul>
-        </div>
-      </div>
-    </div>
+    </main>
   </div>
 
   <script>
-    // Scroll progress bar
-    window.addEventListener('scroll', () => {
-      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const scrolled = (winScroll / height) * 100;
-      document.getElementById('progressBar').style.width = scrolled + '%';
+    const inIframe = window.self !== window.top;
+    if (inIframe) {
+      document.body.classList.add('in-iframe');
+      function reportHeight() {
+        window.parent.postMessage({ type: 'iframeHeight', height: document.documentElement.scrollHeight }, '*');
+      }
+      window.addEventListener('load', reportHeight);
+      window.addEventListener('resize', reportHeight);
+      setTimeout(reportHeight, 700);
+    }
+    document.addEventListener('click', (e) => {
+      const sidebar = document.getElementById('sidebar');
+      const toggle = document.querySelector('.mobile-menu-toggle');
+      if (window.innerWidth <= 768 && sidebar && !sidebar.contains(e.target) && toggle && !toggle.contains(e.target) && sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+      }
     });
   </script>
 </body>
