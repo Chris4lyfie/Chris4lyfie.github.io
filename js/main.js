@@ -359,32 +359,10 @@ document.querySelectorAll('.skill-category').forEach(cat => skillObserver.observ
   let current   = 0;
   let autoTimer = null;
 
-  // Helpers
-  const cardW  = () => cards[0].offsetWidth;
-  const cardH  = () => cards[0].offsetHeight;
-  const flankX = () => cardW() * 0.68; // horizontal offset for flanking cards
-
-  /**
-   * Set absolute centering via marginTop/marginLeft.
-   * Cards use top:50% + negative margin so translateY is never
-   * needed during rotation transitions (prevents vertical jumps).
-   */
-  function initPositions() {
-    cards.forEach(card => {
-      card.style.top        = '50%';
-      card.style.left       = '50%';
-      card.style.marginTop  = `-${cardH() / 2}px`;
-      card.style.marginLeft = `-${cardW() / 2}px`;
-    });
-  }
+  const flankX = () => cards[0].offsetWidth * 0.68; // horizontal offset for flanking cards
 
   /** Apply transform/opacity/zIndex to every card based on current index. */
   function render() {
-    // Re-sync margins in case card dimensions changed (e.g. on resize)
-    cards.forEach(card => {
-      card.style.marginTop  = `-${cardH() / 2}px`;
-      card.style.marginLeft = `-${cardW() / 2}px`;
-    });
 
     cards.forEach((card, i) => {
       // Relative position: 0 = active, negative = left, positive = right
@@ -479,13 +457,11 @@ document.querySelectorAll('.skill-category').forEach(cat => skillObserver.observ
 
   // Initialize once fonts/images are loaded so cardH() is accurate
   window.addEventListener('load', () => {
-    initPositions();
     goTo(0);
     startAuto();
   });
 
   window.addEventListener('resize', () => {
-    initPositions();
     render();
   });
 
