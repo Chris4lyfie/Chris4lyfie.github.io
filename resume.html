@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
@@ -23,7 +24,7 @@
       line-height: 1.7;
       color: var(--stone-800);
       background: var(--stone-50);
-      min-height: 100vh;
+      overflow: hidden;
     }
 
     ::selection { background: var(--amber-400); color: var(--stone-800); }
@@ -325,45 +326,29 @@
         
         <div class="project-item">
           <div class="item-header">
-            <div class="item-title">Proxmox Virtualization Lab</div>
-            <div class="item-date">Jul 2025 - Present</div>
+            <div class="item-title"><a href="projects/QxQ.html">Hardware Systems Integration &amp; Production Bring-Up</a></div>
+            <div class="item-date">May 2025 - Present</div>
           </div>
           <ul>
-            <li>Built and maintained a custom Proxmox server with Xeon CPU, ECC memory, and ZFS-based storage hosting multiple virtual machines and Linux containers.</li>
-            <li>Designed VLAN-separated virtual networks to isolate NAS services, internal workloads, and outward-facing services in a DMZ.</li>
-            <li>Configured static IP assignment, firewall permissions, and inter-VLAN routing to control access between services.</li>
-            <li>Performed system bring-up and troubleshooting for issues including ZFS memory constraints, blocked service access across VLANs, DNS resolution failures, and firewall rule conflicts.</li>
-            <li>Used IPMI for remote hardware management and monitoring; performed regular system maintenance and storage health checks.</li>
-            <li>Currently migrating select services from virtualized environments to bare-metal hardware to improve performance and reliability.</li>
+            <li>Built and integrated custom electrical test fixtures used to validate PCB-level subassemblies for automotive, server, and embedded hardware systems.</li>
+            <li>Assembled and wired scalable test stations supporting functional testing and firmware flashing via automated test scripts.</li>
+            <li>Performed electrical bring-up and fault isolation using schematics, continuity testing, probing, and signal verification.</li>
+            <li>Collaborated with electrical and test engineers to iterate fixture designs, implement hardware changes, and improve test reliability and repeatability.</li>
           </ul>
         </div>
 
         <div class="project-item">
           <div class="item-header">
-            <div class="item-title">Home Network Engineering Lab</div>
+            <div class="item-title"><a href="projects/Home-Infrastructure.html">Home Network Engineering Lab</a></div>
             <div class="item-date">Jul 2025 - Present</div>
           </div>
           <ul>
-            <li>Designed, built, and currently manage a fully segmented home network supporting routers, managed and unmanaged switches, wireless access points, IoT devices, a Proxmox server, virtual machines, and Linux containers.</li>
+            <li>Designed, built, and currently manage a fully segmented home network supporting routers, managed and unmanaged switches, wireless access points, IoT devices, and Linux hosts.</li>
             <li>Implemented VLANs to separate personal systems, home office, IoT devices, guest access, and a DMZ; assigned static IPs via MAC reservations to ensure predictable connectivity.</li>
             <li>Developed firewall rules to isolate untrusted and internet-facing devices, preventing compromise of internal systems.</li>
             <li>Diagnosed and recovered from misconfigurations that caused loss of network access, requiring multi-hop access and manual reconfiguration of routing, VLANs, and firewall rules.</li>
             <li>Monitored network performance, bandwidth usage, and device behavior; throttled non-critical traffic to prioritize infrastructure and compute workloads.</li>
           </ul>
-        </div>
-
-        <div class="project-item">
-          <div class="item-title"><a href="projects/QxQ.html">Hardware Systems Integration &amp; Production Bring-Up</a></div>
-          <p>
-            Assembled and verified custom hardware test fixtures, ensuring correct interfacing with measurement equipment for reliability validation and failure analysis.
-          </p>
-        </div>
-
-        <div class="project-item">
-          <div class="item-title"><a href="projects/Home-Infrastructure.html">Home Infrastructure &amp; Virtualization Lab</a></div>
-          <p>
-            Designed and deployed home lab infrastructure spanning network, compute, and storage layers. Documented system bring-up, failure scenarios, and recovery procedures as a practical case study in systems engineering and infrastructure reliability.
-          </p>
         </div>
       </section>
 
@@ -383,7 +368,7 @@
     const inIframe = window.self !== window.top;
     if (inIframe) {
       function reportHeight() {
-        window.parent.postMessage({ type: 'iframeHeight', height: document.documentElement.scrollHeight }, '*');
+        window.parent.postMessage({ type: 'iframeHeight', height: document.body.offsetHeight }, '*');
       }
       window.addEventListener('load', reportHeight);
       window.addEventListener('resize', reportHeight);
