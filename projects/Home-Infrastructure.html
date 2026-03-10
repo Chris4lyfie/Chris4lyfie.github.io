@@ -3,580 +3,738 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home Infrastructure Reliability | Christian Villanueva</title>
+  <title>Home Infrastructure Systems Architecture | Christian Villanueva</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    :root {
+      --stone-800: #292524; --stone-700: #44403c; --stone-500: #78716c;
+      --stone-400: #a8a29e; --stone-200: #e7e5e4; --stone-50: #fafaf9;
+      --amber-500: #f59e0b; --amber-400: #fbbf24; --amber-300: #fde68a;
+      --amber-100: #fffbeb; --amber-dark: #d97706; --red-600: #dc2626;
+      --green-600: #059669;
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    body { font-family: 'Space Grotesk', -apple-system, sans-serif; line-height: 1.7; color: var(--stone-800); background: var(--stone-50); }
+    ::selection { background: var(--amber-400); color: var(--stone-800); }
 
-    body {
-      font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      line-height: 1.7;
-      color: #292524;
-      background: #fafaf9;
-      min-height: 100vh;
-    }
+    body.in-iframe .sidebar,
+    body.in-iframe .mobile-menu-toggle,
+    body.in-iframe .page-header { display: none !important; }
+    body.in-iframe .main-content { margin-left: 0 !important; border-top: 3px solid var(--amber-500); }
+    body.in-iframe .layout { display: block; }
 
-    .container {
-      margin: 0 auto;
-      background: #ffffff;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      position: relative;
-      z-index: 1;
-    }
+    .layout { display: flex; min-height: 100vh; }
 
-    /* Header */
-    header {
-      background: #292524;
-      color: white;
-      padding: 3rem 3rem;
-      position: relative;
-      border-bottom: 4px solid #f59e0b;
-      z-index: 10;
+    .sidebar {
+      width: 280px; background: var(--stone-800); color: white;
+      padding: 3rem 0; position: fixed; height: 100vh; overflow-y: auto;
+      border-right: 1px solid rgba(255,255,255,0.08); z-index: 200;
     }
+    .sidebar-content { display: flex; flex-direction: column; align-items: center; gap: 3rem; min-height: 100%; }
+    .profile-section { text-align: center; padding: 0 2rem; }
+    .profile-name { font-size: 1.5rem; font-weight: 700; color: white; margin-bottom: 0.5rem; letter-spacing: -0.3px; }
+    .profile-title { font-size: 0.9rem; color: #d6d3d1; }
+    .profile-location { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 0.5rem; color: #a8a29e; font-size: 0.85rem; }
+    .profile-location svg { width: 14px; height: 14px; fill: currentColor; }
+    .nav-menu { list-style: none; width: 100%; padding: 0 1.5rem; }
+    .nav-menu li { margin-bottom: 0.5rem; }
+    .nav-menu a { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.25rem; color: #d6d3d1; text-decoration: none; border-radius: 8px; transition: all 0.2s ease; font-weight: 500; font-size: 0.95rem; }
+    .nav-menu a svg { width: 20px; height: 20px; fill: currentColor; flex-shrink: 0; }
+    .nav-menu a:hover { background: rgba(245,158,11,0.1); color: #fbbf24; }
+    .nav-menu a.active { background: rgba(245,158,11,0.15); color: #fbbf24; border-left: 3px solid var(--amber-500); }
+    .social-links { display: flex; gap: 0.5rem; padding: 0 1rem; flex-wrap: wrap; justify-content: center; }
+    .social-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: #d6d3d1; transition: all 0.2s ease; border-radius: 50%; text-decoration: none; background: rgba(255,255,255,0.05); }
+    .social-icon:hover { color: #fbbf24; background: rgba(245,158,11,0.15); transform: translateY(-2px); }
+    .social-icon svg { width: 20px; height: 20px; fill: currentColor; }
+    .sidebar-footer { margin-top: auto; padding: 2rem; text-align: center; color: #78716c; font-size: 0.813rem; border-top: 1px solid rgba(255,255,255,0.08); width: 100%; }
+    .sidebar-footer p { margin: 0; color: #78716c; }
 
-    .header-content {
-      margin: 0 auto;
-      text-align: center;
-    }
+    .main-content { flex: 1; margin-left: 280px; background: white; }
 
-    h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      letter-spacing: -0.5px;
-      color: white;
-    }
+    .page-header { background: var(--stone-800); border-bottom: 4px solid var(--amber-500); padding: 2.5rem 3rem 2rem; }
+    .breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--stone-500); margin-bottom: 1.25rem; }
+    .breadcrumb a { color: var(--stone-400); text-decoration: none; transition: color 0.2s; }
+    .breadcrumb a:hover { color: var(--amber-400); }
+    .breadcrumb .sep { color: var(--stone-700); }
+    .breadcrumb .current { color: var(--amber-500); }
+    .page-header h1 { font-size: 2rem; font-weight: 700; color: white; letter-spacing: -0.5px; margin-bottom: 0.5rem; line-height: 1.2; }
+    .header-meta { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; margin-top: 1rem; }
+    .header-meta-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; color: var(--stone-400); font-family: 'JetBrains Mono', monospace; }
+    .header-meta-item svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
+    .header-subtitle { margin-top: 1rem; font-size: 1rem; color: #d6d3d1; line-height: 1.65; max-width: 700px; }
 
-    .project-meta {
-      display: flex;
-      gap: 1.5rem;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-    }
+    .content { padding: 3rem; width: 100%; }
 
-    .meta-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: #d6d3d1;
-      font-size: 0.9rem;
-    }
+    .section-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--amber-500); margin-bottom: 1rem; margin-top: 3rem; display: flex; align-items: center; gap: 1rem; }
+    .section-eyebrow::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--amber-300), transparent); }
+    .content > .section-eyebrow:first-child { margin-top: 0; }
 
-    .meta-item svg {
-      width: 16px;
-      height: 16px;
-      fill: currentColor;
-    }
+    p { font-size: 0.97rem; color: #57534e; line-height: 1.8; margin-bottom: 1rem; }
+    p:last-child { margin-bottom: 0; }
+    strong { color: var(--stone-800); font-weight: 600; }
+    ul { list-style: none; margin: 0.75rem 0 1rem; padding: 0; }
+    ul li { position: relative; padding-left: 1.5rem; margin-bottom: 0.6rem; font-size: 0.95rem; color: #57534e; line-height: 1.7; }
+    ul li::before { content: "▸"; position: absolute; left: 0; color: var(--amber-500); font-size: 0.8rem; top: 0.18rem; }
 
-    .subtitle {
-      font-size: 1.1rem;
-      color: #d6d3d1;
-      font-weight: 400;
-      line-height: 1.6;
-      max-width: 800px;
-      margin: 0 auto;
-    }
+    .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.875rem; margin: 1.5rem 0; }
+    .stat-card { background: var(--stone-800); border-radius: 10px; padding: 1.25rem 1.25rem 1rem; display: flex; flex-direction: column; gap: 0.35rem; }
+    .stat-value { font-family: 'JetBrains Mono', monospace; font-size: 1.6rem; font-weight: 600; color: var(--amber-400); line-height: 1; }
+    .stat-label { font-size: 0.75rem; color: var(--stone-400); line-height: 1.4; }
 
-    /* Content */
-    .content {
-      padding: 3rem;
-      margin: 0 auto;
-      position: relative;
-      z-index: 1;
-    }
+    .layer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.875rem; margin: 1.25rem 0; }
+    .layer-card { background: var(--stone-800); border-radius: 10px; padding: 1.1rem 1.25rem; }
+    .layer-card-title { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--amber-400); margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(245,158,11,0.2); }
+    .layer-card ul { margin: 0; }
+    .layer-card ul li { font-size: 0.85rem; color: #d6d3d1; margin-bottom: 0.4rem; }
 
-    h2 {
-      color: #292524;
-      font-size: 1.75rem;
-      margin: 3rem 0 1.5rem;
-      padding-bottom: 0.75rem;
-      border-bottom: 2px solid #f59e0b;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-      position: relative;
-    }
+    .proof-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.875rem; margin: 1.25rem 0; }
+    .proof-category { background: var(--stone-800); border-radius: 10px; overflow: hidden; }
+    .proof-category-title { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--amber-400); padding: 0.65rem 1.1rem; border-bottom: 1px solid rgba(245,158,11,0.2); }
+    .proof-category-items { padding: 0.75rem 1.1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+    .proof-category-item { font-size: 0.85rem; color: #d6d3d1; padding-left: 1.1rem; position: relative; line-height: 1.5; }
+    .proof-category-item::before { content: "▸"; position: absolute; left: 0; color: var(--amber-500); font-size: 0.7rem; top: 0.18rem; }
 
-    h2::before {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 0;
-      width: 80px;
-      height: 2px;
-      background: #d97706;
-    }
+    .conf-note { background: var(--amber-100); border-left: 4px solid var(--amber-500); border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin-bottom: 2.5rem; font-size: 0.88rem; color: #92400e; line-height: 1.6; }
 
-    .content > h2:first-child {
-      margin-top: 0;
-    }
+    .invariant-block { background: var(--stone-800); border-radius: 10px; padding: 1.5rem 1.75rem; margin: 1.5rem 0; border-left: 4px solid var(--amber-500); }
+    .invariant-label { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--amber-400); margin-bottom: 0.6rem; }
+    .invariant-text { font-size: 1.05rem; color: white; font-weight: 500; line-height: 1.6; font-style: italic; }
 
-    p {
-      margin-bottom: 1.2rem;
-      color: #57534e;
-      font-size: 1rem;
-      line-height: 1.8;
-    }
+    .vlan-table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 0.9rem; }
+    .vlan-table thead tr { background: var(--stone-800); }
+    .vlan-table thead th { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--amber-400); padding: 0.75rem 1rem; text-align: left; font-weight: 600; }
+    .vlan-table tbody tr { border-bottom: 1px solid var(--stone-200); }
+    .vlan-table tbody tr:last-child { border-bottom: none; }
+    .vlan-table tbody tr:hover { background: var(--amber-100); }
+    .vlan-table td { padding: 0.75rem 1rem; color: #57534e; vertical-align: top; }
+    .vlan-table td:first-child { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; font-weight: 600; color: var(--stone-800); }
+    .trust-badge { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .trust-high { background: rgba(5,150,105,0.12); color: #059669; border: 1px solid rgba(5,150,105,0.3); }
+    .trust-med { background: rgba(245,158,11,0.12); color: #d97706; border: 1px solid rgba(245,158,11,0.3); }
+    .trust-low { background: rgba(220,38,38,0.1); color: #dc2626; border: 1px solid rgba(220,38,38,0.25); }
 
-    strong {
-      color: #292524;
-      font-weight: 600;
-    }
+    .policy-table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 0.88rem; }
+    .policy-table thead tr { background: var(--stone-800); }
+    .policy-table thead th { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--amber-400); padding: 0.65rem 1rem; text-align: left; font-weight: 600; }
+    .policy-table tbody tr { border-bottom: 1px solid var(--stone-200); }
+    .policy-table tbody tr:last-child { border-bottom: none; }
+    .policy-table td { padding: 0.65rem 1rem; color: #57534e; }
+    .policy-table td:first-child, .policy-table td:nth-child(2) { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
+    .policy-allow { color: #059669; font-weight: 600; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
+    .policy-deny { color: #dc2626; font-weight: 600; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
+    .policy-limited { color: #d97706; font-weight: 600; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
 
-    ul {
-      margin: 1.2rem 0 1.5rem 0;
-      list-style: none;
-    }
+    .port-map { display: flex; flex-direction: column; gap: 0.5rem; margin: 1.25rem 0; }
+    .port-row { display: grid; grid-template-columns: 90px 1fr; gap: 1rem; align-items: center; padding: 0.75rem 1rem; background: var(--stone-50); border: 1px solid var(--stone-200); border-radius: 8px; }
+    .port-row.management { border-left: 3px solid var(--green-600); }
+    .port-row.critical { border-left: 3px solid var(--amber-500); }
+    .port-row.future { border-left: 3px solid var(--stone-400); opacity: 0.7; }
+    .port-id { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 600; color: var(--stone-800); }
+    .port-desc { font-size: 0.88rem; color: #57534e; }
+    .port-desc strong { color: var(--stone-800); }
 
-    ul li {
-      position: relative;
-      padding-left: 2rem;
-      margin-bottom: 0.8rem;
-      color: #57534e;
-      font-size: 1rem;
-      line-height: 1.7;
-    }
+    .failure-block { border: 1px solid #fecaca; border-left: 4px solid var(--red-600); border-radius: 0 10px 10px 0; background: #fff5f5; padding: 1.5rem; margin: 1.25rem 0; }
+    .failure-block-title { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--red-600); margin-bottom: 1rem; }
+    .failure-row { display: grid; grid-template-columns: 130px 1fr; gap: 0.4rem 1rem; margin-bottom: 0.5rem; align-items: baseline; }
+    .failure-key { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 600; color: var(--stone-500); text-transform: uppercase; letter-spacing: 0.5px; }
+    .failure-val { font-size: 0.9rem; color: var(--stone-800); line-height: 1.5; }
+    .failure-insight { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #fecaca; font-size: 0.88rem; color: #7f1d1d; line-height: 1.6; }
 
-    ul li:before {
-      content: "▪";
-      position: absolute;
-      left: 0.5rem;
-      color: #f59e0b;
-      font-size: 1.2rem;
-    }
+    .adr-block { border: 1px solid #bbf7d0; border-left: 4px solid var(--green-600); border-radius: 0 10px 10px 0; background: #f0fdf4; padding: 1.5rem; margin: 1.25rem 0; }
+    .adr-block-title { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--green-600); margin-bottom: 1rem; }
+    .adr-block p { color: #166534; }
+    .adr-block ul li { color: #166534; }
+    .adr-block ul li::before { color: var(--green-600); }
 
-    /* Diagram Container */
-    .diagram-container {
-      margin: 2.5rem 0;
-      text-align: center;
-      padding-top: 2rem;
-      border-top: 3px solid #f59e0b;
-    }
+    .tradeoff-block { background: var(--stone-800); border-radius: 10px; padding: 1.5rem; margin: 1.25rem 0; }
+    .tradeoff-label { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--amber-400); margin-bottom: 0.75rem; }
+    .tradeoff-title { font-size: 1rem; font-weight: 600; color: white; margin-bottom: 0.5rem; }
+    .tradeoff-body { font-size: 0.9rem; color: var(--stone-400); line-height: 1.7; }
 
-    .diagram-container img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
+    .img-placeholder { width: 100%; background: var(--stone-50); border: 2px dashed var(--stone-200); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; color: var(--stone-400); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; padding: 3rem 2rem; text-align: center; }
+    .img-placeholder svg { width: 32px; height: 32px; fill: var(--stone-300); margin-bottom: 0.25rem; }
+    .img-placeholder-label { color: var(--stone-500); font-size: 0.85rem; font-family: 'Space Grotesk', sans-serif; font-weight: 600; }
+    .img-placeholder-sub { color: var(--stone-400); font-size: 0.78rem; font-family: 'Space Grotesk', sans-serif; max-width: 420px; line-height: 1.5; }
 
-    /* Section Cards */
-    .section-card {
-      border-top: 3px solid;
-      padding: 2rem 0;
-      margin: 3rem 0;
-    }
+    .image-single { margin: 1.75rem 0; }
+    .image-single figcaption { font-size: 0.82rem; color: var(--stone-500); line-height: 1.55; margin-top: 0.6rem; font-style: italic; }
 
-    .section-header {
-      color: #292524;
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      font-weight: 600;
-      margin-bottom: 1rem;
-    }
+    .improvement-steps { display: flex; flex-direction: column; gap: 0.6rem; margin: 1.25rem 0; }
+    .improvement-step { display: flex; align-items: flex-start; gap: 1rem; padding: 0.85rem 1.1rem; background: var(--stone-50); border: 1px solid var(--stone-200); border-radius: 8px; }
+    .improvement-num { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 600; color: var(--amber-500); background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2); border-radius: 4px; padding: 0.15rem 0.5rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .improvement-body { flex: 1; }
+    .improvement-title { font-size: 0.88rem; font-weight: 600; color: var(--stone-800); margin-bottom: 0.2rem; }
+    .improvement-desc { font-size: 0.83rem; color: var(--stone-500); line-height: 1.5; margin: 0; }
 
-    .section-content {
-      padding: 0;
-    }
+    .mobile-menu-toggle { display: none; position: fixed; top: 1rem; left: 1rem; z-index: 1000; background: var(--stone-800); color: white; border: none; width: 48px; height: 48px; border-radius: 8px; font-size: 1.4rem; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
 
-    /* Failure Event Card */
-    .failure-event {
-      border-color: #dc2626;
-    }
-
-    .failure-event .section-header {
-      color: #dc2626;
-    }
-
-    .failure-event .section-content h2 {
-      color: #292524;
-      border-color: #f59e0b;
-    }
-
-    .failure-event .section-content h2::before {
-      background: #d97706;
-    }
-
-    /* Architectural Change Card */
-    .architectural-change {
-      border-color: #059669;
-    }
-
-    .architectural-change .section-header {
-      color: #059669;
-    }
-
-    .architectural-change .section-content h2 {
-      color: #292524;
-      border-color: #f59e0b;
-    }
-
-    .architectural-change .section-content h2::before {
-      background: #d97706;
-    }
-
-    /* Principles Card */
-    .principles {
-      border-color: #f59e0b;
-    }
-
-    .principles .section-header {
-      color: #f59e0b;
-    }
-
-    .principles .section-content h2 {
-      color: #292524;
-      border-color: #f59e0b;
-    }
-
-    .principles .section-content h2::before {
-      background: #d97706;
-    }
-
-    .section-content h2 {
-      margin-top: 0;
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-    }
-
-    /* Badges */
-    .badge {
-      display: inline-block;
-      padding: 0.375rem 0.875rem;
-      background: white;
-      border: 2px solid #dc2626;
-      color: #dc2626;
-      border-radius: 6px;
-      font-size: 0.813rem;
-      font-weight: 600;
-      margin-right: 0.5rem;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-      box-shadow: 0 2px 4px rgba(220, 38, 38, 0.1);
-    }
-
-    .metric {
-      display: inline-block;
-      background: rgba(245, 158, 11, 0.1);
-      padding: 0.25rem 0.75rem;
-      border-radius: 6px;
-      font-size: 0.875rem;
-      color: #92400e;
-      font-weight: 500;
-      border: 1px solid rgba(245, 158, 11, 0.3);
-    }
-
-    /* Footer */
-    footer {
-      background: #292524;
-      color: #d6d3d1;
-      text-align: center;
-      padding: 2rem 3rem;
-      border-top: 4px solid #f59e0b;
-      position: relative;
-      z-index: 10;
-    }
-
-    /* Mobile Styles */
     @media (max-width: 768px) {
-      header {
-        padding: 3rem 1.5rem 2rem;
-      }
-
-      h1 {
-        font-size: 2rem;
-      }
-
-      .content {
-        padding: 2rem 1.5rem;
-      }
-
-      h2 {
-        font-size: 1.5rem;
-      }
-
-      .diagram-container {
-        padding: 1.5rem;
-      }
-
-      .project-meta {
-        flex-direction: column;
-        gap: 0.75rem;
-      }
-
-      footer {
-        padding: 1.5rem;
-      }
+      .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
+      .sidebar.active { transform: translateX(0); }
+      .main-content { margin-left: 0; }
+      .mobile-menu-toggle { display: block; }
+      .page-header { padding: 4.5rem 1.5rem 1.5rem; }
+      .page-header h1 { font-size: 1.5rem; }
+      .content { padding: 2rem 1.5rem; }
+      .stat-grid { grid-template-columns: repeat(2, 1fr); }
+      .failure-row { grid-template-columns: 80px 1fr; }
     }
 
-    ::selection {
-      background: #fbbf24;
-      color: #292524;
-    }
-
-    /* Scroll Progress Indicator */
-    .progress-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 4px;
-      background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
-      width: 0%;
-      z-index: 1000;
-      transition: width 0.1s ease;
-    }
+    .fade-up { opacity: 0; transform: translateY(20px); animation: fadeUp 0.55s ease forwards; }
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+    .fade-up:nth-child(1)  { animation-delay: 0.05s; }
+    .fade-up:nth-child(2)  { animation-delay: 0.12s; }
+    .fade-up:nth-child(3)  { animation-delay: 0.19s; }
+    .fade-up:nth-child(4)  { animation-delay: 0.26s; }
+    .fade-up:nth-child(5)  { animation-delay: 0.33s; }
+    .fade-up:nth-child(6)  { animation-delay: 0.40s; }
+    .fade-up:nth-child(7)  { animation-delay: 0.47s; }
+    .fade-up:nth-child(8)  { animation-delay: 0.54s; }
+    .fade-up:nth-child(9)  { animation-delay: 0.61s; }
+    .fade-up:nth-child(10) { animation-delay: 0.68s; }
   </style>
 </head>
 <body>
-  <div class="progress-bar" id="progressBar"></div>
-
-  <div class="container">
-    <header>
-      <div class="header-content">
-        <h1>Home Infrastructure Reliability Case Study</h1>
-        <div class="project-meta">
-          <div class="meta-item">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/>
-            </svg>
-            Systems Engineering
-          </div>
-          <div class="meta-item">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
-            </svg>
-            2025 - Present
+  <button class="mobile-menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('active')">&#9776;</button>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-content">
+        <div class="profile-section">
+          <h1 class="profile-name">Christian Villanueva</h1>
+          <p class="profile-title">Computer Engineering Student</p>
+          <div class="profile-location">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            San Jose, California
           </div>
         </div>
-        <p class="subtitle">Design, bring-up, failure analysis, and recovery across network, compute, and storage layers</p>
-      </div>
-    </header>
-
-    <div class="content">
-      <h2>System Overview</h2>
-      
-      <div class="diagram-container">
-        <img src="../assets/diagrams/network-architecture.png"
-             alt="Home infrastructure architecture showing router, switch, hypervisor, storage, and management services">
-      </div>
-      
-      <p>
-        Primary self-managed virtualization and infrastructure platform supporting storage,
-        network services, and application workloads. Designed with VLAN-based segmentation,
-        out-of-band management, and fault containment as core reliability goals.
-      </p>
-
-      <h2>Bring-Up and Initial Risk Assessment</h2>
-      <p>
-        Initial system bring-up focused on network reachability and remote manageability.
-        The host had no direct video output, requiring full reliance on IPMI for access and recovery.
-        Primary concern was compatibility between dual 10 Gb NICs on the server and a 1 Gb network
-        edge, with risk of total loss of connectivity during initial configuration.
-      </p>
-
-      <p>Before trusting the system for unattended operation, the following were verified:</p>
-      <ul>
-        <li>BIOS thermal and power configuration</li>
-        <li>Correct ECC memory detection, capacity, and speed</li>
-        <li>IPMI network reachability and remote power cycling</li>
-        <li>VLAN reachability on the management network</li>
-      </ul>
-
-      <p>
-        No instability was observed on first boot. However, a subsequent BIOS management
-        misconfiguration temporarily locked out IPMI access, reinforcing the need for
-        conservative change control on management paths.
-      </p>
-
-      <div class="section-card failure-event">
-        <div class="section-header">Incident Report</div>
-        <div class="section-content">
-          <h2>Failure Event 1: VLAN Reset Causing Management Lockout</h2>
-
-          <p><strong>Symptom:</strong> Loss of access to wireless access point web management interface.</p>
-          <p><span class="badge">Impact: High</span> Wireless configuration and recovery were blocked.</p>
-
-          <p>
-            The issue was detected immediately after a firmware update when the access point
-            became unreachable on the management VLAN.
-          </p>
-
-          <p><strong>Root Cause:</strong> Firmware update reset the management VLAN configuration on the access point.</p>
-
-          <p><strong>Recovery Path:</strong></p>
-          <ul>
-            <li>Configured static IP on a laptop within the expected management subnet</li>
-            <li>Established direct Ethernet connection to the access point</li>
-            <li>Reconfigured management VLAN and verified persistence post-update</li>
+        <nav>
+          <ul class="nav-menu">
+            <li><a href="../index.html#home"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Home</a></li>
+            <li><a href="../index.html#skills"><svg viewBox="0 0 24 24"><path d="M9 13.75c-2.34 0-7 1.17-7 3.5V19h14v-1.75c0-2.33-4.66-3.5-7-3.5zM9 12c1.93 0 3.5-1.57 3.5-3.5S10.93 5 9 5 5.5 6.57 5.5 8.5 7.07 12 9 12zm7.04 6.81c1.16.84 1.96 1.96 1.96 3.44V19h4v-1.75c0-2.02-3.5-3.17-5.96-3.44zM15 12c1.93 0 3.5-1.57 3.5-3.5S16.93 5 15 5c-.54 0-1.04.13-1.5.35.63.89 1 1.98 1 3.15s-.37 2.26-1 3.15c.46.22.96.35 1.5.35z"/></svg>Skills</a></li>
+            <li><a href="../index.html#experience"><svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg>Experience</a></li>
+            <li><a href="../index.html#projects" class="active"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>Projects</a></li>
+            <li><a href="../resume.html"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>Resume</a></li>
           </ul>
-
-          <p>
-            Total lockout duration was approximately two hours. Without physical access, recovery
-            would not have been possible.
-          </p>
-
-          <p><strong>Permanent Change:</strong></p>
-          <ul>
-            <li>Dedicated management VLAN enforced</li>
-            <li>Post-update configuration verification added as a required step</li>
-          </ul>
+        </nav>
+        <div class="social-links">
+          <a href="https://www.linkedin.com/in/itiancv/" target="_blank" class="social-icon" title="LinkedIn">
+            <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+          <a href="https://github.com/Chris4lyfie" target="_blank" class="social-icon" title="GitHub">
+            <svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          </a>
+        </div>
+        <div class="sidebar-footer">
+          <p>&copy; 2026 Christian Villanueva</p>
+          <p>All Rights Reserved</p>
         </div>
       </div>
+    </aside>
 
-      <div class="section-card failure-event">
-        <div class="section-header">Incident Report</div>
-        <div class="section-content">
-          <h2>Failure Event 2: Cross-VLAN DNS Isolation (Pi-hole)</h2>
-
-          <p><strong>Symptom:</strong> Devices on non-management VLANs lost internet access when configured to use Pi-hole for DNS.</p>
-          <p><span class="badge">Impact: High</span> Entire VLANs experienced loss of connectivity.</p>
-
-          <p>
-            The issue manifested only after redirecting DNS traffic from other VLANs to the Pi-hole instance.
-            Devices could route to the internet until DNS resolution failed.
-          </p>
-
-          <p><strong>Root Cause:</strong> Firewall rules on the ER605v2 router did not permit cross-VLAN DNS traffic.</p>
-
-          <p><strong>Recovery Path:</strong></p>
-          <ul>
-            <li>Validated that routing and NAT were functional</li>
-            <li>Identified DNS as the sole failing service</li>
-            <li>Implemented firewall rules explicitly allowing DNS traffic only</li>
-          </ul>
-
-          <p><strong>Permanent Change:</strong></p>
-          <ul>
-            <li>Moved Pi-hole permanently to the management VLAN</li>
-            <li>Restricted cross-VLAN access to DNS traffic only</li>
-          </ul>
+    <main class="main-content">
+      <div class="page-header">
+        <div class="breadcrumb">
+          <a href="../index.html">Portfolio</a>
+          <span class="sep">/</span>
+          <a href="../index.html#projects">Projects</a>
+          <span class="sep">/</span>
+          <span class="current">Home Infrastructure Systems Architecture</span>
         </div>
+        <h1>Home Infrastructure Systems Architecture</h1>
+        <div class="header-meta">
+          <div class="header-meta-item">
+            <svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg>
+            Systems / Network Engineering
+          </div>
+          <div class="header-meta-item">
+            <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+            2025 – Present
+          </div>
+        </div>
+        <p class="header-subtitle">Trust boundary design, service isolation, and recovery-path engineering across network, compute, and storage layers.</p>
       </div>
 
-      <div class="section-card failure-event">
-        <div class="section-header">Incident Report</div>
-        <div class="section-content">
-          <h2>Failure Event 3: Network Trunk Misconfiguration</h2>
+      <div class="content">
 
-          <p><strong>Symptom:</strong> Complete loss of access to network switch and access point.</p>
-          <p><span class="badge">Impact: High</span> All network traffic disrupted.</p>
-
-          <p>
-            The failure occurred after simultaneous changes to tagged and untagged VLAN settings
-            across all switch ports.
-          </p>
-
-          <p><strong>Root Cause:</strong> Incorrect trunk configuration combined with modifying all ports at once,
-          eliminating the management path.</p>
-
-          <p><strong>Recovery Path:</strong></p>
-          <ul>
-            <li>Performed factory reset of the managed switch</li>
-            <li>Rebuilt VLAN configuration incrementally</li>
-            <li>Restored management access before reintroducing trunks</li>
-          </ul>
-
-          <p>Total recovery time was approximately two hours.</p>
-
-          <p><strong>Permanent Change:</strong></p>
-          <ul>
-            <li>One switch port permanently reserved as management-only</li>
-            <li>All VLAN changes performed incrementally, one port at a time</li>
-            <li>Physical port-to-VLAN documentation maintained</li>
-          </ul>
+        <div class="conf-note">
+          <strong>Confidentiality:</strong> Internal IPs, credentials, and device-identifying labels are omitted. This entry focuses on architecture decisions, failure modes, and how the system evolved over time.
         </div>
-      </div>
 
-      <div class="section-card architectural-change">
-        <div class="section-header">Architecture Decision Record</div>
-        <div class="section-content">
-          <h2>Architectural Change: Collapse Switching Layers and Upgrade Core to High-Speed PoE</h2>
-
-          <p><strong>Context:</strong> The network is being simplified to reduce power draw, reduce failure modes, and reduce physical devices while keeping VLAN segmentation. The prior design used multiple managed switches with split responsibility (management vs all other VLANs). That approach increased configuration surface area and amplified lockout risk during trunk/VLAN changes.</p>
-
-          <p><strong>Current State:</strong></p>
-          <ul>
-            <li>Router: TP-Link ER605v2 (VLANs terminate here; inter-VLAN routing/firewalling at router)</li>
-            <li>Switching: single L2 managed switch (Netgear GS308E v4), gigabit, non-PoE</li>
-            <li>VLAN model: Management (10), Home (20), Guest (30), DMZ (40), IoT (50)</li>
-            <li>Wireless: one AP connected via wired uplink; multiple hidden SSIDs mapped to VLANs (all except DMZ)</li>
-            <li>Wired-critical endpoints: NAS, Proxmox server, Pi-hole, AP</li>
-            <li>Physical constraint: router and core switch are in separate rooms connected by a ~100 ft Ethernet run</li>
-          </ul>
-
-          <p><strong>Problem / Motivation:</strong> Operational instability has repeatedly come from trunk/VLAN misconfiguration and firmware resets, causing management lockouts and broad connectivity loss. The primary reliability goal is to reduce the number of devices and the number of trunk/tagging decision points while preserving a hard recovery path.</p>
-
-          <p><strong>Decision:</strong> Replace the current gigabit non-PoE core switch with a single "core access" switch that provides:</p>
-          <ul>
-            <li>PoE for the AP</li>
-            <li>2.5GbE to the AP (to match AP capabilities)</li>
-            <li>10GbE capability for NAS and Proxmox (either via native 10G ports or SFP+), while retaining the ER605v2 as the VLAN termination and policy point</li>
-            <li>A simplified VLAN approach: one core switch, one trunk to the router, minimal trunks elsewhere</li>
-          </ul>
-
-          <p><strong>Options Considered:</strong></p>
-          <ul>
-            <li><strong>Keep GS308E v4 and add an injector/PoE midspan + separate 10G switch later:</strong> Pros: incremental cost, minimal immediate change. Cons: more devices, more inter-switch trunks, more failure modes, more configuration drift</li>
-            <li><strong>Two-tier core (10G aggregation switch + separate PoE access switch):</strong> Pros: clean separation, scalability. Cons: reintroduces multi-switch trunking and the exact lockout class that has caused outages</li>
-            <li><strong>Single upgraded core switch (chosen):</strong> Pros: fewer devices, fewer trunks, fewer VLAN-tagging surfaces, lower operational risk. Cons: single point of failure at the switch; requires careful cutover since no spare router exists</li>
-          </ul>
-
-          <p><strong>Reliability Risks and Mitigations:</strong></p>
-          <ul>
-            <li><strong>Risk:</strong> Repeat management lockout during trunk/VLAN changes. <strong>Mitigation:</strong> dedicate a management-only access port on both the router and the switch; never modify these ports during changes</li>
-            <li><strong>Risk:</strong> Firmware reset wipes VLAN/trunk settings on new switch. <strong>Mitigation:</strong> export/backup config after baseline; enforce a post-update verification checklist before relying on it</li>
-            <li><strong>Risk:</strong> Single-core switch failure impacts everything. <strong>Mitigation:</strong> keep spare switch staged for emergency "flat network" recovery; keep router reachable on an untagged fallback port</li>
-            <li><strong>Risk:</strong> Long 100 ft run becomes a single critical uplink. <strong>Mitigation:</strong> treat router↔core uplink as a controlled trunk with no other duties; label and document; avoid frequent changes</li>
-          </ul>
-
-          <p><strong>Resulting Reliability Improvements:</strong></p>
-          <ul>
-            <li>Reduced device count and trunk complexity, directly targeting prior lockout modes</li>
-            <li>PoE and higher-speed uplinks remove the need for extra devices (injectors, secondary switches)</li>
-            <li>Centralized L2 behavior in one switch while keeping L3/policy at the router maintains clear fault boundaries</li>
-            <li>Dedicated management ports create a persistent recovery path even under VLAN/trunk failure</li>
-          </ul>
-
-          <p><strong>Guardrails:</strong></p>
-          <ul>
-            <li>One router port permanently reserved as management-only access to VLAN 10</li>
-            <li>One switch port permanently reserved as management-only access to VLAN 10</li>
-            <li>Router↔core trunk is treated as critical infrastructure: changes only with documented procedure and immediate verification</li>
-            <li>Pi-hole access rules remain explicit per VLAN (DNS allowed; nothing else by default)</li>
-          </ul>
+        <!-- WHY I BUILT THIS -->
+        <div class="section-eyebrow fade-up">Why I Built This</div>
+        <div class="layer-grid fade-up">
+          <div class="layer-card">
+            <div class="layer-card-title">It started with Plex</div>
+            <ul><li>Wanted to stream movies from a hard drive to any device at home — that was the whole idea.</li></ul>
+          </div>
+          <div class="layer-card">
+            <div class="layer-card-title">Then came automation</div>
+            <ul><li>Automating the media stack meant software phoning out to the internet, which meant actually thinking about what was exposed.</li></ul>
+          </div>
+          <div class="layer-card">
+            <div class="layer-card-title">That led to segmentation</div>
+            <ul><li>One firewall question led to VLANs, which led to a full network redesign I did not plan on doing.</li></ul>
+          </div>
+          <div class="layer-card">
+            <div class="layer-card-title">Then the scope grew</div>
+            <ul><li>Added a server, started experimenting with virtualization and Docker — at some point it stopped being about movies.</li></ul>
+          </div>
         </div>
-      </div>
 
-      <div class="section-card principles">
-        <div class="section-header">Design Principles</div>
-        <div class="section-content">
-          <h2>Reliability Principles Applied</h2>
-          <ul>
-            <li>Always preserve a recovery path before making changes</li>
-            <li>Management access must be isolated and minimally modified</li>
-            <li>Changes are applied incrementally to avoid systemic lockout</li>
-            <li>Critical data systems must not depend on non-critical services</li>
-          </ul>
+        <!-- SYSTEM GOAL -->
+        <div class="section-eyebrow fade-up">System Goal</div>
+        <p class="fade-up">Build a platform that could host services and isolate risk without making the network a pain to manage or recover from. The design priority is <strong>clear trust boundaries and a preserved recovery path</strong> — not maximum features.</p>
+        <p class="fade-up">One router, one managed switch, a small set of physical hosts. Complexity is a risk surface — every extra trunk link is another place a misconfiguration can lock you out. The architecture is a direct response to learning that the hard way.</p>
+
+        <!-- NETWORK TOPOLOGY DIAGRAM -->
+        <div class="section-eyebrow fade-up">Network Topology</div>
+        <div class="image-single fade-up">
+          <figure>
+            <img src="../assets/diagrams/home-infra/network-topology.png" alt="Network topology showing router, core switch, wireless AP, and wired endpoints on VLAN 10" style="width:100%; max-width:1000px; height:auto; display:block; margin:0 auto; border-radius:10px; box-shadow:0 4px 16px rgba(0,0,0,0.1); border:1px solid var(--stone-200);" />
+            <figcaption>Physical and logical topology showing the single-switch core, router uplink, and device placement across VLANs. The management plane is isolated on a dedicated port and VLAN throughout.</figcaption>
+          </figure>
         </div>
+
+        <!-- CURRENT ARCHITECTURE -->
+        <div class="section-eyebrow fade-up">Current Architecture</div>
+        <div class="layer-grid fade-up">
+          <div class="layer-card">
+            <div class="layer-card-title">L3 / Policy</div>
+            <ul>
+              <li>TP-Link ER605v2</li>
+              <li>Terminates all 5 VLANs</li>
+              <li>Enforces all inter-VLAN firewall rules</li>
+              <li>Single routing and policy control point</li>
+            </ul>
+          </div>
+          <div class="layer-card">
+            <div class="layer-card-title">L2 / Distribution</div>
+            <ul>
+              <li>Netgear GS308E v4</li>
+              <li>Single managed switch</li>
+              <li>Carries all VLANs to wired endpoints</li>
+              <li>100 ft Cat7 trunk to router</li>
+            </ul>
+          </div>
+          <div class="layer-card">
+            <div class="layer-card-title">Wireless</div>
+            <ul>
+              <li>TP-Link EAP660 HD</li>
+              <li>SSID-to-VLAN mapping</li>
+              <li>Serves Management, Home, IoT, Guest SSIDs</li>
+              <li>Wired uplink to core switch</li>
+            </ul>
+          </div>
+          <div class="layer-card">
+            <div class="layer-card-title">Compute / Services</div>
+            <ul>
+              <li>TrueNAS — primary workload host</li>
+              <li>Raspberry Pi 3 — Pi-hole DNS</li>
+              <li>Raspberry Pi 3 B+ — Nginx Proxy Manager</li>
+              <li>"Prometheus" node — reserved, future use</li>
+            </ul>
+          </div>
+        </div>
+        <p class="fade-up">Keeping L3 policy at the router and L2 behavior at the switch creates a clear fault boundary: routing and firewalling problems are router problems; connectivity problems are switch problems. Mixing these responsibilities makes failures harder to isolate.</p>
+
+        <!-- SEGMENTATION MODEL -->
+        <div class="section-eyebrow fade-up">Network Segmentation Model</div>
+        <p class="fade-up">VLANs enforce trust boundaries, not just network organization. Cross-VLAN access is explicit and allowlisted. Nothing is implicitly reachable from another zone.</p>
+        <table class="vlan-table fade-up">
+          <thead>
+            <tr>
+              <th>VLAN</th>
+              <th>Name</th>
+              <th>Purpose</th>
+              <th>Trust Level</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>10</td>
+              <td>Management</td>
+              <td>Infrastructure devices, core services, admin plane</td>
+              <td><span class="trust-badge trust-high">Highest</span></td>
+            </tr>
+            <tr>
+              <td>15</td>
+              <td>Home</td>
+              <td>Personal devices — semi-trusted, no management access</td>
+              <td><span class="trust-badge trust-med">Medium</span></td>
+            </tr>
+            <tr>
+              <td>30</td>
+              <td>IoT</td>
+              <td>Untrusted devices — constrained by default</td>
+              <td><span class="trust-badge trust-low">Low</span></td>
+            </tr>
+            <tr>
+              <td>40</td>
+              <td>DMZ</td>
+              <td>Isolated experiments and lab workloads — blast-radius containment</td>
+              <td><span class="trust-badge trust-low">Untrusted</span></td>
+            </tr>
+            <tr>
+              <td>50</td>
+              <td>Guest</td>
+              <td>Guest Wi-Fi — internet only, no internal access</td>
+              <td><span class="trust-badge trust-low">Untrusted</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="fade-up"><strong>Non-negotiable rule:</strong> No non-management zone can initiate access into VLAN 10. Management may initiate access outward for administrative purposes. The reverse is never permitted.</p>
+
+        <!-- TRUST ZONE DIAGRAM -->
+        <div class="image-single fade-up">
+          <figure>
+            <img src="../assets/diagrams/home-infra/trust-zones.png" alt="Trust zone diagram showing 5 VLANs with directional traffic policy between zones" style="width:100%; max-width:700px; height:auto; display:block; margin:0 auto; border-radius:10px; box-shadow:0 4px 16px rgba(0,0,0,0.1); border:1px solid var(--stone-200);" />
+            <figcaption>Logical trust model showing zone boundaries and directional traffic policy. Arrows indicate allowed flows; blocked flows have no arrow. Management zone is the only zone that can initiate access to any other.</figcaption>
+          </figure>
+        </div>
+
+        <!-- INTER-ZONE POLICY -->
+        <div class="section-eyebrow fade-up">Inter-Zone Policy</div>
+        <table class="policy-table fade-up">
+          <thead>
+            <tr>
+              <th>Source Zone</th>
+              <th>Destination</th>
+              <th>Policy</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Management</td>
+              <td>All zones</td>
+              <td><span class="policy-allow">ALLOW</span></td>
+              <td>Administrative control plane only</td>
+            </tr>
+            <tr>
+              <td>Home</td>
+              <td>Management</td>
+              <td><span class="policy-deny">DENY</span></td>
+              <td>Personal devices have no management access</td>
+            </tr>
+            <tr>
+              <td>Home</td>
+              <td>TrueNAS / Plex</td>
+              <td><span class="policy-limited">LIMITED</span></td>
+              <td>Media access only — explicit allowlist entry</td>
+            </tr>
+            <tr>
+              <td>IoT</td>
+              <td>Management</td>
+              <td><span class="policy-deny">DENY</span></td>
+              <td>Untrusted devices blocked from all internal access</td>
+            </tr>
+            <tr>
+              <td>IoT</td>
+              <td>Plex / Media</td>
+              <td><span class="policy-deny">DENY</span></td>
+              <td>Media access restricted to Home zone only</td>
+            </tr>
+            <tr>
+              <td>Guest</td>
+              <td>Internal zones</td>
+              <td><span class="policy-deny">DENY</span></td>
+              <td>Internet egress only</td>
+            </tr>
+            <tr>
+              <td>DMZ</td>
+              <td>Internal zones</td>
+              <td><span class="policy-deny">DENY</span></td>
+              <td>No lateral access — full blast-radius containment</td>
+            </tr>
+            <tr>
+              <td>All zones</td>
+              <td>Pi-hole (DNS)</td>
+              <td><span class="policy-limited">DNS ONLY</span></td>
+              <td>DNS explicitly allowlisted; all other cross-VLAN traffic to VLAN 10 denied</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- SERVICE PLATFORM -->
+        <div class="section-eyebrow fade-up">Service Platform</div>
+        <p class="fade-up">Services are distributed across independent physical devices. This prevents a single workload event from collapsing all infrastructure functions — a lesson learned by observing how collocated services create cascading dependencies.</p>
+        <div class="layer-grid fade-up">
+          <div class="layer-card">
+            <div class="layer-card-title">TrueNAS — Primary Host</div>
+            <ul>
+              <li>Plex media server</li>
+              <li>Automated arr stack (Sonarr, Radarr, Prowlarr)</li>
+              <li>qBittorrent + Gluetun (PIA VPN tunnel)</li>
+              <li>Tailscale overlay node (remote access)</li>
+            </ul>
+          </div>
+          <div class="layer-card">
+            <div class="layer-card-title">Pi-hole — DNS</div>
+            <ul>
+              <li>Dedicated Raspberry Pi 3 v1.2</li>
+              <li>Resides on VLAN 10 (Management)</li>
+              <li>Serves all zones via explicit firewall rules</li>
+              <li>Kept separate from heavy workloads intentionally</li>
+            </ul>
+          </div>
+          <div class="layer-card">
+            <div class="layer-card-title">Nginx Proxy Manager</div>
+            <ul>
+              <li>Raspberry Pi 3 B+</li>
+              <li>Reverse proxy for internal services</li>
+              <li>Decouples service URLs from device IPs</li>
+              <li>Staged for potential future TLS termination</li>
+            </ul>
+          </div>
+          <div class="layer-card">
+            <div class="layer-card-title">Prometheus Node (Future)</div>
+            <ul>
+              <li>Reserved for AI/ML or lab workloads</li>
+              <li>Zone placement pending (DMZ vs Management)</li>
+              <li>IPMI management port already provisioned</li>
+              <li>10G switch ports reserved</li>
+            </ul>
+          </div>
+        </div>
+        <p class="fade-up">Pi-hole is kept on a dedicated low-power device because DNS is infrastructure-critical — if it fails, all zones lose internet resolution with no automatic fallback. Keeping it independent means a TrueNAS restart or storage event doesn't take DNS down with it. This is an intentional fail-closed design: there is no silent bypass to a public resolver.</p>
+
+        <!-- PHYSICAL PORT MAP -->
+        <div class="section-eyebrow fade-up">Physical Port Map</div>
+        <p class="fade-up">Both the router and switch have a dedicated management-only port that is never touched during changes. This is the same discipline applied at both devices — the recovery path exists regardless of which one you're working on.</p>
+
+        <p class="fade-up" style="font-family:'JetBrains Mono',monospace; font-size:0.72rem; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:var(--stone-500); margin-bottom:0.5rem;">TP-Link ER605v2 — Router</p>
+        <div class="port-map fade-up">
+          <div class="port-row critical">
+            <div class="port-id">Port 1</div>
+            <div class="port-desc"><strong>WAN</strong> — Internet uplink.</div>
+          </div>
+          <div class="port-row management">
+            <div class="port-id">Port 2</div>
+            <div class="port-desc"><strong>Reserved management-only (VLAN 10)</strong> — Never modified during changes. Guaranteed access to the router even if trunk or VLAN configuration breaks other paths.</div>
+          </div>
+          <div class="port-row">
+            <div class="port-id">Port 3</div>
+            <div class="port-desc"><strong>Wireless Access Point</strong> — TP-Link EAP660HD. SSID-to-VLAN mapping for Management, Home, IoT, and Guest.</div>
+          </div>
+          <div class="port-row critical">
+            <div class="port-id">Port 4</div>
+            <div class="port-desc"><strong>Trunk to core switch</strong> — 100 ft Cat7 run to separate room. Treated as critical infrastructure; changes require immediate post-change verification.</div>
+          </div>
+          <div class="port-row">
+            <div class="port-id">Port 5</div>
+            <div class="port-desc"><strong>Desktop workstation</strong> — VLAN 10. Primary management workstation used to administer all infrastructure devices.</div>
+          </div>
+        </div>
+
+        <p class="fade-up" style="font-family:'JetBrains Mono',monospace; font-size:0.72rem; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:var(--stone-500); margin-bottom:0.5rem; margin-top:1.5rem;">Netgear GS308E v4 — Core Switch</p>
+        <div class="port-map fade-up">
+          <div class="port-row critical">
+            <div class="port-id">Port 1</div>
+            <div class="port-desc"><strong>Trunk to router</strong> — 100 ft Cat7 uplink. All VLANs carried on this trunk.</div>
+          </div>
+          <div class="port-row management">
+            <div class="port-id">Port 2</div>
+            <div class="port-desc"><strong>Reserved management-only (VLAN 10)</strong> — Never modified during changes. This port is the recovery path if a trunk or VLAN misconfiguration locks out all other access.</div>
+          </div>
+          <div class="port-row">
+            <div class="port-id">Port 3</div>
+            <div class="port-desc"><strong>Pi-hole</strong> — VLAN 10. DNS infrastructure host.</div>
+          </div>
+          <div class="port-row">
+            <div class="port-id">Port 4</div>
+            <div class="port-desc"><strong>Nginx Proxy Manager</strong> — VLAN 10. Reverse proxy host.</div>
+          </div>
+          <div class="port-row">
+            <div class="port-id">Port 5</div>
+            <div class="port-desc"><strong>TrueNAS</strong> — VLAN 10. Primary workload and storage host.</div>
+          </div>
+          <div class="port-row future">
+            <div class="port-id">Ports 6–8</div>
+            <div class="port-desc"><strong>"Prometheus" node (future use)</strong> — 10G links + IPMI management port. Reserved, not currently active.</div>
+          </div>
+        </div>
+
+
+
+        <!-- ARCHITECTURAL SIMPLIFICATION -->
+        <div class="section-eyebrow fade-up">Architectural Simplification Decision</div>
+        <div class="adr-block fade-up">
+          <div class="adr-block-title">Architecture Decision Record — Collapse to Single Switching Layer</div>
+          <p><strong>Context:</strong> The original design used multiple managed switches with split responsibilities. Each additional switch introduced more trunk links, more VLAN tagging decision points, and more places where a single misconfiguration could eliminate the management path entirely.</p>
+          <p><strong>Decision:</strong> Collapse to a single core switch. One trunk to the router. Minimal tagging surfaces. All wired connectivity through one documented device.</p>
+          <ul>
+            <li><strong>Fewer devices</strong> — fewer failure domains to manage simultaneously</li>
+            <li><strong>Fewer trunks</strong> — fewer places a VLAN misconfiguration can cause a full lockout</li>
+            <li><strong>Reduced configuration drift</strong> — one switch config to maintain, not two or three</li>
+            <li><strong>Clear fault isolation</strong> — if switching is broken, there is one place to look</li>
+          </ul>
+          <p><strong>Tradeoff accepted:</strong> The single switch is now a single point of failure for all wired connectivity. A spare switch is staged for emergency flat-network recovery, and the router retains a fallback untagged management port.</p>
+        </div>
+
+        <!-- INTENTIONAL TRADEOFF -->
+        <div class="section-eyebrow fade-up">Intentional Tradeoff</div>
+        <div class="tradeoff-block fade-up">
+          <div class="tradeoff-label">Accepted Tradeoff</div>
+          <div class="tradeoff-title">Single Core Switch — Simplicity Over Redundancy</div>
+          <div class="tradeoff-body">A redundant switch topology would eliminate the single point of failure at the switching layer. It would also reintroduce the exact multi-switch trunk complexity that caused the management lockout incidents documented below. The decision to accept switch-level failure risk in exchange for dramatically reduced configuration surface area is deliberate. Recovery from a failed switch — swap hardware, restore config — is faster and more predictable than recovery from a management lockout caused by a trunk misconfiguration on a live, multi-switch system.</div>
+        </div>
+
+        <!-- INCIDENTS -->
+        <div class="section-eyebrow fade-up">Incidents as Design Evidence</div>
+        <p class="fade-up">These failures weren't random. Each one identified a place where the architecture needed a hard guardrail. The permanent changes they produced are what make the current design defensible.</p>
+
+        <div class="failure-block fade-up">
+          <div class="failure-block-title">Incident 1 — AP Firmware Reset Broke Management Access · July 2025 · ~60 min</div>
+          <div class="failure-row"><span class="failure-key">Failure Mode</span><span class="failure-val">Firmware update silently reset management VLAN configuration on the access point</span></div>
+          <div class="failure-row"><span class="failure-key">Symptom</span><span class="failure-val">AP became unreachable on the management VLAN immediately after the update completed</span></div>
+          <div class="failure-row"><span class="failure-key">Recovery</span><span class="failure-val">Direct-wired laptop with static IP in the management subnet → manually reconfigured VLAN settings</span></div>
+          <div class="failure-row"><span class="failure-key">Root Cause</span><span class="failure-val">Firmware updates were not treated as change events requiring post-update verification</span></div>
+          <div class="failure-row"><span class="failure-key">Permanent Change</span><span class="failure-val">Firmware updates are now change events: management VLAN verification is a required step before considering the update complete</span></div>
+          <div class="failure-insight">The core lesson: firmware updates are not safe operations. They can reset configuration silently. Without a direct-connect recovery path, this would have required a full factory reset and rebuild from scratch.</div>
+        </div>
+
+        <div class="failure-block fade-up">
+          <div class="failure-block-title">Incident 2 — Cross-VLAN DNS Failure · July–Sept 2025</div>
+          <div class="failure-row"><span class="failure-key">Failure Mode</span><span class="failure-val">Devices on non-management VLANs lost internet access after being pointed at Pi-hole for DNS</span></div>
+          <div class="failure-row"><span class="failure-key">Symptom</span><span class="failure-val">Routing and NAT were functional; DNS resolution failed silently with no error surfaced to users</span></div>
+          <div class="failure-row"><span class="failure-key">Root Cause</span><span class="failure-val">Router firewall did not permit cross-VLAN DNS traffic to VLAN 10 by default</span></div>
+          <div class="failure-row"><span class="failure-key">Recovery</span><span class="failure-val">Validated routing independently, isolated DNS as the sole failing component, added explicit per-VLAN firewall rules allowing DNS only</span></div>
+          <div class="failure-row"><span class="failure-key">Permanent Change</span><span class="failure-val">"DNS is a controlled shared service" rule: explicit allowlist for DNS traffic only; all other cross-VLAN access to VLAN 10 denied by default</span></div>
+          <div class="failure-insight">This established the principle that shared infrastructure services must be explicitly allowlisted — never assumed reachable. DNS is now treated as a first-class dependency, not an ambient background service.</div>
+        </div>
+
+        <div class="failure-block fade-up">
+          <div class="failure-block-title">Incident 3 — Trunk Misconfiguration Caused Full Management Lockout · Aug 2025 · ~60 min</div>
+          <div class="failure-row"><span class="failure-key">Failure Mode</span><span class="failure-val">Changed tagged/untagged VLAN settings across multiple switch ports simultaneously, eliminating the management path</span></div>
+          <div class="failure-row"><span class="failure-key">Symptom</span><span class="failure-val">Complete loss of access to both the switch and the access point</span></div>
+          <div class="failure-row"><span class="failure-key">Root Cause</span><span class="failure-val">No dedicated management-only port existed; all ports were within the change scope</span></div>
+          <div class="failure-row"><span class="failure-key">Recovery</span><span class="failure-val">Factory reset → incremental VLAN rebuild → management access restored before re-introducing trunk configuration</span></div>
+          <div class="failure-row"><span class="failure-key">Permanent Change</span><span class="failure-val">Dedicated management-only port on both router and switch; VLAN changes one port at a time; physical port-to-VLAN map maintained</span></div>
+          <div class="failure-insight">This incident directly motivated the single-switch consolidation. Multi-switch topologies multiply the number of places this class of mistake can occur. Reducing to one switch with one documented port map was the architectural response.</div>
+        </div>
+
+        <!-- DESIGN PRINCIPLES -->
+        <div class="section-eyebrow fade-up">Design Principles Applied</div>
+        <div class="proof-categories fade-up">
+          <div class="proof-category">
+            <div class="proof-category-title">Recovery</div>
+            <div class="proof-category-items">
+              <div class="proof-category-item">Preserve recovery path before any change</div>
+              <div class="proof-category-item">Management port is never in scope during changes</div>
+              <div class="proof-category-item">Incremental changes only — one port at a time</div>
+              <div class="proof-category-item">Spare hardware staged for emergency recovery</div>
+            </div>
+          </div>
+          <div class="proof-category">
+            <div class="proof-category-title">Isolation</div>
+            <div class="proof-category-items">
+              <div class="proof-category-item">Deny-by-default across all VLAN boundaries</div>
+              <div class="proof-category-item">Explicit allowlists only — no implicit trust</div>
+              <div class="proof-category-item">DMZ for experiments — no lateral access to core</div>
+              <div class="proof-category-item">Infrastructure services isolated from app workloads</div>
+            </div>
+          </div>
+          <div class="proof-category">
+            <div class="proof-category-title">Simplicity</div>
+            <div class="proof-category-items">
+              <div class="proof-category-item">Single L3 policy point — no distributed routing</div>
+              <div class="proof-category-item">Single L2 switching layer — minimal trunks</div>
+              <div class="proof-category-item">Reduce configuration surface area wherever possible</div>
+              <div class="proof-category-item">Complexity reduction as a reliability strategy</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- WHAT THIS DEMONSTRATES -->
+        <div class="section-eyebrow fade-up">What This Demonstrates</div>
+        <div class="proof-categories fade-up">
+          <div class="proof-category">
+            <div class="proof-category-title">Systems Architecture</div>
+            <div class="proof-category-items">
+              <div class="proof-category-item">VLAN-based trust boundary design</div>
+              <div class="proof-category-item">Clear L3 policy / L2 distribution layer separation</div>
+              <div class="proof-category-item">Intentional service placement and dependency isolation</div>
+              <div class="proof-category-item">Explicit recovery-path engineering</div>
+            </div>
+          </div>
+          <div class="proof-category">
+            <div class="proof-category-title">Operational Maturity</div>
+            <div class="proof-category-items">
+              <div class="proof-category-item">Failure analysis leading to architectural changes</div>
+              <div class="proof-category-item">Controlled change strategy to prevent systemic lockout</div>
+              <div class="proof-category-item">Firmware-reset and misconfiguration risk management</div>
+              <div class="proof-category-item">Physical documentation maintained alongside hardware</div>
+            </div>
+          </div>
+          <div class="proof-category">
+            <div class="proof-category-title">Systems Thinking</div>
+            <div class="proof-category-items">
+              <div class="proof-category-item">Topology simplification as a reliability strategy</div>
+              <div class="proof-category-item">DNS and management treated as critical dependencies</div>
+              <div class="proof-category-item">Tradeoff decisions grounded in outage evidence</div>
+              <div class="proof-category-item">Infrastructure modeled as a dependency graph</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- HOW I'D SCALE THIS -->
+        <div class="section-eyebrow fade-up">How I Would Scale This</div>
+        <p class="fade-up">The single switch was the right call for this environment, but at larger scale I'd add a second one — the redundancy is worth the added complexity when other people are depending on the network staying up. The segmentation model and the single L3 policy point would stay the same; that part scales fine.</p>
+        <p class="fade-up">The first thing I'd add in a real work environment is monitoring and alerting. Right now I find out something broke when I notice it. That's fine at home, not fine anywhere else. Beyond that, the change discipline I follow in my head — change one thing at a time, verify before moving on — would need to become actual documentation and automated checks. You can't rely on everyone just knowing the rules.</p>
+
+        <!-- NEXT IMPROVEMENTS -->
+        <div class="section-eyebrow fade-up">Next Engineering Improvements</div>
+        <p class="fade-up">These are committed next steps, not aspirational items.</p>
+        <div class="improvement-steps fade-up">
+          <div class="improvement-step">
+            <span class="improvement-num">01</span>
+            <div class="improvement-body">
+              <div class="improvement-title">Encrypted Configuration Backups</div>
+              <p class="improvement-desc">Export and store router, switch, and AP configs after every baseline change. Currently, recovery from a failed device requires a rebuild from memory — slower and error-prone. Versioned config backups reduce recovery time and eliminate configuration drift after hardware replacement.</p>
+            </div>
+          </div>
+          <div class="improvement-step">
+            <span class="improvement-num">02</span>
+            <div class="improvement-body">
+              <div class="improvement-title">Formalized Post-Change Verification Checklist</div>
+              <p class="improvement-desc">All three incidents above could have been detected faster with a structured post-change verification pass. The checklist will cover: management VLAN reachability, DNS resolution from each zone, inter-VLAN deny rules, and wireless SSID-to-VLAN mapping. Firmware updates are included as change events requiring the full checklist.</p>
+            </div>
+          </div>
+          <div class="improvement-step">
+            <span class="improvement-num">03</span>
+            <div class="improvement-body">
+              <div class="improvement-title">Decouple Remote Access from TrueNAS</div>
+              <p class="improvement-desc">The Tailscale overlay node currently runs on TrueNAS. A TrueNAS restart or storage event removes remote access entirely. Moving the overlay node to a lightweight independent host — a dedicated Pi or the Nginx device — creates a separate failure domain for remote access and removes the hard dependency on the primary storage host.</p>
+            </div>
+          </div>
+        </div>
+
       </div>
-    </div>
+    </main>
+  </div>
 
   <script>
-    // Scroll progress bar
-    window.addEventListener('scroll', () => {
-      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const scrolled = (winScroll / height) * 100;
-      document.getElementById('progressBar').style.width = scrolled + '%';
+    const inIframe = window.self !== window.top;
+    if (inIframe) {
+      document.body.classList.add('in-iframe');
+      function reportHeight() {
+        window.parent.postMessage({ type: 'iframeHeight', height: document.documentElement.scrollHeight }, '*');
+      }
+      window.addEventListener('load', reportHeight);
+      window.addEventListener('resize', reportHeight);
+      setTimeout(reportHeight, 700);
+    }
+    document.addEventListener('click', (e) => {
+      const sidebar = document.getElementById('sidebar');
+      const toggle = document.querySelector('.mobile-menu-toggle');
+      if (window.innerWidth <= 768 && sidebar && !sidebar.contains(e.target) && toggle && !toggle.contains(e.target) && sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+      }
     });
   </script>
 </body>
