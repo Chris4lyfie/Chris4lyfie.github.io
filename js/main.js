@@ -435,6 +435,7 @@ document.querySelectorAll('.skill-category').forEach(cat => skillObserver.observ
   const PROJECT_URLS = [
     'projects/QxQ.html',
     'projects/Home-Infrastructure.html',
+    'projects/Project-Argus.html',
     null  // EnkiNotes — in progress
   ];
 

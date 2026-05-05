@@ -133,7 +133,7 @@
         <section id="home" class="content-section">
         <div class="home-content">
           <div class="home-text">
-            <h2 class="home-greeting">Hi, I'm Christian Villanueva</h2>
+            <h2 class="home-greeting">Hi, I'm Christian!</h2>
             <p class="home-description">
               I'm a systems-oriented computer engineering student who thrives on building real, hands-on systems from the ground up. I love the intersection of code and hardware, whether that's configuring lab infrastructure, programming microcontrollers, or designing circuits that respond to software commands. Seeing my work become tangible is what drives me.
 
@@ -156,7 +156,7 @@ I seek a career where I can create infrastructure, configure systems, and work o
               </a>
             </div>
           </div>
-          <img src="./assets/photos/Christian.png" alt="Christian Villanueva" class="profile-pic-home">
+          <img src="./assets/photos/Christian(New).jpg" alt="Christian Villanueva" class="profile-pic-home">
         </div>
       </section>
 
@@ -267,7 +267,7 @@ I seek a career where I can create infrastructure, configure systems, and work o
                   <div class="progress-bar-fill"></div>
                 </div>
               </div>
-              <div class="skill-tag-bar" style="--skill-level: 65%">
+              <div class="skill-tag-bar" style="--skill-level: 80%">
                 <div class="card-header">
                   <div class="skill-name">Git</div>
                 </div>
@@ -291,7 +291,7 @@ I seek a career where I can create infrastructure, configure systems, and work o
                   <div class="progress-bar-fill"></div>
                 </div>
               </div>
-              <div class="skill-tag-bar" style="--skill-level: 50%">
+              <div class="skill-tag-bar" style="--skill-level: 70%">
                 <div class="card-header">
                   <div class="skill-name">C/C++</div>
                 </div>
@@ -307,7 +307,7 @@ I seek a career where I can create infrastructure, configure systems, and work o
                   <div class="progress-bar-fill"></div>
                 </div>
               </div>
-              <div class="skill-tag-bar" style="--skill-level: 20%">
+              <div class="skill-tag-bar" style="--skill-level: 50%">
                 <div class="card-header">
                   <div class="skill-name">LTspice</div>
                 </div>
@@ -345,7 +345,7 @@ I seek a career where I can create infrastructure, configure systems, and work o
                   <div class="progress-bar-fill"></div>
                 </div>
               </div>
-              <div class="skill-tag-bar" style="--skill-level: 30%">
+              <div class="skill-tag-bar" style="--skill-level: 75%">
                 <div class="card-header">
                   <div class="skill-name">Embedded Systems</div>
                 </div>
@@ -499,8 +499,19 @@ I seek a career where I can create infrastructure, configure systems, and work o
                   </div>
                 </div>
 
-                <!-- Card 2: EnkiNotes — WIP -->
-                <div class="wheel-card wheel-card--wip" data-index="2">
+                <!-- Card 2: Project Argus -->
+                <div class="wheel-card" data-index="2">
+                  <div class="wheel-card-inner">
+                    <div class="wheel-card-image" style="background-image: url('assets/photos/Project%20Argus/Project%20Argus%20UI.png');"></div>
+                    <div class="wheel-card-body">
+                      <span class="proj-tag">Embedded Systems</span>
+                      <h3 class="proj-title">Project Argus — Multi-Sensor Ethernet Monitor</h3>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Card 3: EnkiNotes — WIP -->
+                <div class="wheel-card wheel-card--wip" data-index="3">
                   <div class="wheel-card-inner">
                     <div class="wheel-card-image wheel-card-image--wip"></div>
                     <div class="proj-wip-overlay">
@@ -532,6 +543,7 @@ I seek a career where I can create infrastructure, configure systems, and work o
                 <button class="proj-dot active" data-index="0" aria-label="Project 1"></button>
                 <button class="proj-dot" data-index="1" aria-label="Project 2"></button>
                 <button class="proj-dot" data-index="2" aria-label="Project 3"></button>
+                <button class="proj-dot" data-index="3" aria-label="Project 4"></button>
               </div>
 
             </div><!-- /wheel-scene -->
@@ -585,8 +597,30 @@ I seek a career where I can create infrastructure, configure systems, and work o
 
               </div>
 
-              <!-- Project 2 detail (WIP) -->
+              <!-- Project 2 detail: Project Argus -->
               <div class="proj-detail" data-detail="2">
+                <div class="proj-detail-tag">Embedded Systems · Prototype</div>
+                <h3 class="proj-detail-title">Project Argus — Multi-Sensor Ethernet Monitor</h3>
+                <p class="proj-detail-desc">ESP32-based sensor node monitoring temperature and humidity across a homelab server closet — six sensors, three protocols, and a live Chart.js web dashboard served over Ethernet. Built from scratch to solve a real gap in my infrastructure.</p>
+                <div class="proj-detail-section-label">Tech Stack</div>
+                <div class="proj-detail-tech">
+                  <span class="proj-tech-tag">ESP32</span>
+                  <span class="proj-tech-tag">C++ / PlatformIO</span>
+                  <span class="proj-tech-tag">W5500 Ethernet</span>
+                  <span class="proj-tech-tag">DS18B20</span>
+                  <span class="proj-tech-tag">SHT31-D</span>
+                  <span class="proj-tech-tag">Chart.js</span>
+                </div>
+                <div class="proj-detail-section-label">Key Outcomes</div>
+                <ul class="proj-detail-outcomes">
+                  <li>Integrated SPI, I2C, and 1-Wire simultaneously on a single MCU</li>
+                  <li>Deployed a live web dashboard with JSON data endpoint — Ethernet only, no WiFi</li>
+                  <li>Wrote custom EthernetServerFixed wrapper to resolve ESP32 core 3.x incompatibility after 2 hours of debugging</li>
+                </ul>
+              </div>
+
+              <!-- Project 3 detail (WIP) -->
+              <div class="proj-detail" data-detail="3">
                 <div class="proj-detail-tag proj-detail-tag--wip">Web App · In Progress</div>
                 <h3 class="proj-detail-title">EnkiNotes</h3>
                 <p class="proj-detail-desc">A note-taking web application currently in active development. Details will be published here once the project reaches a shareable milestone.</p>
