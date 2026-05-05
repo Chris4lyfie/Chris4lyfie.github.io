@@ -326,6 +326,19 @@
         
         <div class="project-item">
           <div class="item-header">
+            <div class="item-title"><a href="projects/Project-Argus.html">Project Argus — Multi-Sensor Ethernet Monitor</a></div>
+            <div class="item-date">May 2026 - Present</div>
+          </div>
+          <ul>
+            <li>Designed and built an ESP32-based sensor node integrating SPI (W5500 Ethernet), I2C (SHT31-D), and 1-Wire (5× DS18B20) protocols simultaneously to monitor temperature and humidity across a homelab server closet.</li>
+            <li>Selected all components, designed the circuit from scratch, and assembled the hardware including 12V-to-3.3V power regulation via a buck converter module.</li>
+            <li>Developed firmware in C++ using PlatformIO and the Arduino framework with timer-based non-blocking sensor polling and a custom EthernetServer wrapper to resolve an ESP32 core 3.x compatibility issue.</li>
+            <li>Deployed live on the homelab network at a static IP on a managed VLAN, serving a real-time Chart.js dashboard and a JSON data endpoint over Ethernet.</li>
+          </ul>
+        </div>
+
+        <div class="project-item">
+          <div class="item-header">
             <div class="item-title"><a href="projects/QxQ.html">Hardware Systems Integration &amp; Production Bring-Up</a></div>
             <div class="item-date">May 2025 - Present</div>
           </div>

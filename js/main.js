@@ -377,15 +377,20 @@ document.querySelectorAll('.skill-category').forEach(cat => skillObserver.observ
         tx = 0; tz = 0; ry = 0;
         scale = 1; opacity = 1; zIndex = 10;
         card.classList.add('is-active');
-      } else if (rel < 0) {
+      } else if (rel === -1) {
         // Left flanking card
         tx = -flankX(); tz = FLANK_Z; ry = FLANK_ROT;
         scale = FLANK_SCALE; opacity = FLANK_OPACITY; zIndex = 5;
         card.classList.remove('is-active');
-      } else {
+      } else if (rel === 1) {
         // Right flanking card
         tx = flankX(); tz = FLANK_Z; ry = -FLANK_ROT;
         scale = FLANK_SCALE; opacity = FLANK_OPACITY; zIndex = 5;
+        card.classList.remove('is-active');
+      } else {
+        // Back card — hidden behind the active card
+        tx = 0; tz = FLANK_Z * 2; ry = 0;
+        scale = 0.6; opacity = 0; zIndex = 1;
         card.classList.remove('is-active');
       }
 
@@ -433,9 +438,9 @@ document.querySelectorAll('.skill-category').forEach(cat => skillObserver.observ
    * Use null for cards that don't yet have a page (e.g. WIP).
    */
   const PROJECT_URLS = [
+    'projects/Project-Argus.html',
     'projects/QxQ.html',
     'projects/Home-Infrastructure.html',
-    'projects/Project-Argus.html',
     null  // EnkiNotes — in progress
   ];
 

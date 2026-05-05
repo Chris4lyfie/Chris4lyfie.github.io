@@ -23,7 +23,7 @@
   </button>
 
   <!-- Download Resume Button -->
-  <a href="./assets/Resume.pdf" download="Christian_Villanueva_Resume.pdf" class="download-resume-btn" id="downloadResumeBtn">
+  <a href="./assets/Christian Villanueva Resume (2026).pdf" download="Christian_Villanueva_Resume.pdf" class="download-resume-btn" id="downloadResumeBtn">
     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
     </svg>
@@ -101,7 +101,7 @@
               <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
             </svg>
           </a>
-          <a href="/cdn-cgi/l/email-protection#1e7d766c776d6a777f7073777d767f7b7230687772727f706b7b687f5e6d746d6b307b7a6b" class="social-icon" title="Email">
+          <a href="mailto:christianmichael.villanueva@sjsu.edu" class="social-icon" title="Email">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
             </svg>
@@ -477,8 +477,19 @@ I seek a career where I can create infrastructure, configure systems, and work o
             <div class="wheel-scene" id="wheelScene">
               <div class="wheel-stage" id="wheelStage">
 
-                <!-- Card 0: QxQ -->
+                <!-- Card 0: Project Argus -->
                 <div class="wheel-card" data-index="0">
+                  <div class="wheel-card-inner">
+                    <div class="wheel-card-image" style="background-image: url('assets/photos/Project%20Argus/Project%20Argus%20UI.png');"></div>
+                    <div class="wheel-card-body">
+                      <span class="proj-tag">Embedded Systems</span>
+                      <h3 class="proj-title">Project Argus — Multi-Sensor Ethernet Monitor</h3>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Card 1: QxQ -->
+                <div class="wheel-card" data-index="1">
                   <div class="wheel-card-inner">
                     <div class="wheel-card-image" style="background-image: url('assets/photos/Stock Photos/PCB-Test-Stock-Photo.jpg');"></div>
                     <div class="wheel-card-body">
@@ -488,24 +499,13 @@ I seek a career where I can create infrastructure, configure systems, and work o
                   </div>
                 </div>
 
-                <!-- Card 1: Home Infrastructure + Proxmox -->
-                <div class="wheel-card" data-index="1">
+                <!-- Card 2: Home Infrastructure -->
+                <div class="wheel-card" data-index="2">
                   <div class="wheel-card-inner">
                     <div class="wheel-card-image" style="background-image: url('assets/photos/Stock Photos/Homelab-Stock-Photo.webp');"></div>
                     <div class="wheel-card-body">
                       <span class="proj-tag">Infrastructure</span>
                       <h3 class="proj-title">Home Network Engineering Lab</h3>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Card 2: Project Argus -->
-                <div class="wheel-card" data-index="2">
-                  <div class="wheel-card-inner">
-                    <div class="wheel-card-image" style="background-image: url('assets/photos/Project%20Argus/Project%20Argus%20UI.png');"></div>
-                    <div class="wheel-card-body">
-                      <span class="proj-tag">Embedded Systems</span>
-                      <h3 class="proj-title">Project Argus — Multi-Sensor Ethernet Monitor</h3>
                     </div>
                   </div>
                 </div>
@@ -553,8 +553,30 @@ I seek a career where I can create infrastructure, configure systems, and work o
           <div class="proj-detail-col">
             <div class="proj-detail-panel" id="projDetail">
 
-              <!-- Project 0 detail -->
+              <!-- Project 0 detail: Project Argus -->
               <div class="proj-detail" data-detail="0">
+                <div class="proj-detail-tag">Embedded Systems · Prototype</div>
+                <h3 class="proj-detail-title">Project Argus — Multi-Sensor Ethernet Monitor</h3>
+                <p class="proj-detail-desc">ESP32-based sensor node monitoring temperature and humidity across a homelab server closet — six sensors, three protocols, and a live Chart.js web dashboard served over Ethernet. Built from scratch to solve a real gap in my infrastructure.</p>
+                <div class="proj-detail-section-label">Tech Stack</div>
+                <div class="proj-detail-tech">
+                  <span class="proj-tech-tag">ESP32</span>
+                  <span class="proj-tech-tag">C++ / PlatformIO</span>
+                  <span class="proj-tech-tag">W5500 Ethernet</span>
+                  <span class="proj-tech-tag">DS18B20</span>
+                  <span class="proj-tech-tag">SHT31-D</span>
+                  <span class="proj-tech-tag">Chart.js</span>
+                </div>
+                <div class="proj-detail-section-label">Key Outcomes</div>
+                <ul class="proj-detail-outcomes">
+                  <li>Integrated SPI, I2C, and 1-Wire simultaneously on a single MCU</li>
+                  <li>Deployed a live web dashboard with JSON data endpoint — Ethernet only, no WiFi</li>
+                  <li>Wrote custom EthernetServerFixed wrapper to resolve ESP32 core 3.x incompatibility after 2 hours of debugging</li>
+                </ul>
+              </div>
+
+              <!-- Project 1 detail: QxQ -->
+              <div class="proj-detail" data-detail="1">
                 <div class="proj-detail-tag">Hardware Integration</div>
                 <h3 class="proj-detail-title">Hardware Systems Integration &amp; Production Bring-Up</h3>
                 <p class="proj-detail-desc">Full electrical integration of multi-subsystem hardware platforms used in automotive, server, and embedded environments — from schematics to verified, production-ready builds across mixed power domains.</p>
@@ -574,8 +596,8 @@ I seek a career where I can create infrastructure, configure systems, and work o
                 </ul>
               </div>
 
-              <!-- Project 1 detail -->
-              <div class="proj-detail" data-detail="1">
+              <!-- Project 2 detail: Home Infrastructure -->
+              <div class="proj-detail" data-detail="2">
                 <div class="proj-detail-tag">Infrastructure</div>
                 <h3 class="proj-detail-title">Home Network Engineering Lab</h3>
                 <p class="proj-detail-desc">Fully segmented home network built around clear trust boundaries and a preserved recovery path — spanning routing, managed switching, VLAN isolation, firewall policy, and distributed services across independent physical hosts.</p>
@@ -593,29 +615,6 @@ I seek a career where I can create infrastructure, configure systems, and work o
                   <li>Designed multi-zone network with explicit allowlisted cross-VLAN policy — nothing implicitly reachable across trust boundaries</li>
                   <li>Diagnosed and recovered from full network lockout via multi-hop access and manual reconfiguration</li>
                   <li>Distributed services across independent physical hosts to eliminate cascading failure dependencies</li>
-                </ul>
-
-              </div>
-
-              <!-- Project 2 detail: Project Argus -->
-              <div class="proj-detail" data-detail="2">
-                <div class="proj-detail-tag">Embedded Systems · Prototype</div>
-                <h3 class="proj-detail-title">Project Argus — Multi-Sensor Ethernet Monitor</h3>
-                <p class="proj-detail-desc">ESP32-based sensor node monitoring temperature and humidity across a homelab server closet — six sensors, three protocols, and a live Chart.js web dashboard served over Ethernet. Built from scratch to solve a real gap in my infrastructure.</p>
-                <div class="proj-detail-section-label">Tech Stack</div>
-                <div class="proj-detail-tech">
-                  <span class="proj-tech-tag">ESP32</span>
-                  <span class="proj-tech-tag">C++ / PlatformIO</span>
-                  <span class="proj-tech-tag">W5500 Ethernet</span>
-                  <span class="proj-tech-tag">DS18B20</span>
-                  <span class="proj-tech-tag">SHT31-D</span>
-                  <span class="proj-tech-tag">Chart.js</span>
-                </div>
-                <div class="proj-detail-section-label">Key Outcomes</div>
-                <ul class="proj-detail-outcomes">
-                  <li>Integrated SPI, I2C, and 1-Wire simultaneously on a single MCU</li>
-                  <li>Deployed a live web dashboard with JSON data endpoint — Ethernet only, no WiFi</li>
-                  <li>Wrote custom EthernetServerFixed wrapper to resolve ESP32 core 3.x incompatibility after 2 hours of debugging</li>
                 </ul>
               </div>
 
