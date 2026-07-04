@@ -9,6 +9,10 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" href="../favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="../css/styles.css">
+  <script>
+    // Apply the saved theme before first paint (shared with the main page).
+    if (localStorage.getItem('siteTheme') === 'dark') document.documentElement.classList.add('dark');
+  </script>
 </head>
 <body>
   <header class="site-nav">
@@ -269,7 +273,7 @@
 
         <!-- WEB DASHBOARD -->
         <div class="section-eyebrow fade-up">Web Dashboard</div>
-        <p class="fade-up">The dashboard is served directly from the ESP32 at a static IP on the management VLAN. Two routes: <code style="font-family:'JetBrains Mono',monospace; font-size:0.88rem; background:#f5f5f4; padding:0.1rem 0.4rem; border-radius:4px;">/</code> returns the full HTML dashboard, and <code style="font-family:'JetBrains Mono',monospace; font-size:0.88rem; background:#f5f5f4; padding:0.1rem 0.4rem; border-radius:4px;">/data</code> returns a JSON payload of current readings. The JSON endpoint means any other service on the network can consume the data without scraping HTML.</p>
+        <p class="fade-up">The dashboard is served directly from the ESP32 at a static IP on the management VLAN. Two routes: <code style="font-family:'JetBrains Mono',monospace; font-size:0.88rem; background:#f5f5f4; padding:0.1rem 0.4rem; border-radius:3px;">/</code> returns the full HTML dashboard, and <code style="font-family:'JetBrains Mono',monospace; font-size:0.88rem; background:#f5f5f4; padding:0.1rem 0.4rem; border-radius:3px;">/data</code> returns a JSON payload of current readings. The JSON endpoint means any other service on the network can consume the data without scraping HTML.</p>
         <p class="fade-up">The frontend was completely vibecoded. I gave artistic direction (albeit simple), but I had 0 experience with UI design. This project was to show hardware and embedded systems, frontend wasn't my main focus. The final result is functional and clean!</p>
         <div class="image-single fade-up">
           <figure>
@@ -281,7 +285,7 @@
         <!-- FIRMWARE -->
         <div class="section-eyebrow fade-up">Firmware</div>
         <p class="fade-up">This was my first real firmware project. I used references and other people's code extensively — reading through their implementations taught me more about these protocols than any class could. The code is built on PlatformIO with the Arduino framework, with a timer-based non-blocking sensor polling so the HTTP server stays responsive between reads.</p>
-        <p class="fade-up">The biggest firmware obstacle was the Ethernet server itself. I spent two hours trying to get the standard Ethernet library to initialize correctly, only to be met with an error each time. I tried different libraries, older framework versions in the <code style="font-family:'JetBrains Mono',monospace; font-size:0.88rem; background:#f5f5f4; padding:0.1rem 0.4rem; border-radius:4px;">platformio.ini</code>, different initializations — nothing worked. Eventually I used AI to write a custom <code style="font-family:'JetBrains Mono',monospace; font-size:0.88rem; background:#f5f5f4; padding:0.1rem 0.4rem; border-radius:4px;">EthernetServer</code> wrapper class that fixed all of my problems. It also helped me with chunking the HTTP transmission as a workaround for the hardware buffer constraints.</p>
+        <p class="fade-up">The biggest firmware obstacle was the Ethernet server itself. I spent two hours trying to get the standard Ethernet library to initialize correctly, only to be met with an error each time. I tried different libraries, older framework versions in the <code style="font-family:'JetBrains Mono',monospace; font-size:0.88rem; background:#f5f5f4; padding:0.1rem 0.4rem; border-radius:3px;">platformio.ini</code>, different initializations — nothing worked. Eventually I used AI to write a custom <code style="font-family:'JetBrains Mono',monospace; font-size:0.88rem; background:#f5f5f4; padding:0.1rem 0.4rem; border-radius:3px;">EthernetServer</code> wrapper class that fixed all of my problems. It also helped me with chunking the HTTP transmission as a workaround for the hardware buffer constraints.</p>
 
         <!-- CHALLENGES -->
         <div class="section-eyebrow fade-up">Known Challenges</div>
@@ -413,5 +417,6 @@
       }
     });
   </script>
+  <script src="../js/subpage-circuit.js"></script>
 </body>
 </html>

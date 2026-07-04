@@ -13,6 +13,12 @@
 </head>
 <body>
 
+  <!-- Boot sequence overlay — plays once per session, skippable on click/keypress -->
+  <div class="boot-screen" id="bootScreen" aria-hidden="true">
+    <pre class="boot-log" id="bootLog"></pre>
+    <div class="boot-hint">click or press any key to skip</div>
+  </div>
+
   <!-- Sticky top nav -->
   <header class="site-nav">
     <div class="site-nav-inner" id="siteNavInner">
@@ -60,6 +66,22 @@
               <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
             </svg>
           </a>
+        </div>
+        <!-- Front panel: PWR (dark/light theme) + RST (reboot — replays
+             the BIOS boot sequence), like a PC case's power/reset pair -->
+        <div class="panel-buttons">
+          <button class="panel-btn" id="powerToggle" aria-label="Toggle dark mode" title="PWR — dark/light mode">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M12 3v8"/>
+              <path d="M6.3 6.6a8 8 0 1 0 11.4 0"/>
+            </svg>
+          </button>
+          <button class="panel-btn" id="resetButton" aria-label="Reboot the site" title="RST — reboot">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 12a8 8 0 1 1-2.34-5.66"/>
+              <path d="M18 2v4.5h-4.5"/>
+            </svg>
+          </button>
         </div>
         <!-- Download Resume Button -->
         <a href="./assets/Christian Villanueva Resume (2026).pdf" download="Christian_Villanueva_Resume.pdf" class="download-resume-btn" id="downloadResumeBtn">
@@ -113,13 +135,51 @@
     <!-- Portfolio Sections Container -->
     <div class="portfolio-sections" id="portfolioSections">
 
+      <!-- PCB trace layer (all geometry computed in JS — see the
+           "PCB TRACE LAYER" block in main.js):
+           - #traceNetwork: decorative trace clusters in the left
+             margin gutter, Y-merging into the trunk at 45 degrees,
+             with filled/hollow via pads.
+           - The connecting trace: a vertical trunk in the left
+             margin gutter (never crosses real content) with branch
+             stubs into the U1/U2/U3 section tags, plus a lead from
+             the portrait's "+" terminal. Solid black on the light
+             sections; the portion inside the dark Projects band is
+             a separate white-colored path, split at the section
+             boundary. A native SVG animateMotion pulse rides an
+             invisible reference path down the trunk. -->
+      <svg class="section-trace-svg" id="sectionTraceSvg" aria-hidden="true">
+        <g id="traceNetwork"></g>
+        <path id="sectionTraceBlack" class="section-trace-path section-trace-path--black" fill="none"/>
+        <path id="sectionTraceWhite" class="section-trace-path section-trace-path--white" fill="none"/>
+
+        <circle id="sectionTraceDotU1" class="section-trace-dot section-trace-dot--black" r="3"/>
+        <circle id="sectionTraceDotU2" class="section-trace-dot section-trace-dot--black" r="3"/>
+        <circle id="sectionTraceDotU3" class="section-trace-dot section-trace-dot--white" r="3"/>
+
+        <!-- Invisible pulse routes (d set in JS): the full run to U3,
+             plus two routes that peel off at the U1/U2 forks. The
+             pulse driver in main.js spawns circles into the layer
+             below — one trio per in-flight pulse, so clicking the
+             portrait stacks pulses instead of resetting. -->
+        <path id="sectionTracePath" fill="none" stroke="none"/>
+        <path id="sectionTracePathU1" fill="none" stroke="none"/>
+        <path id="sectionTracePathU2" fill="none" stroke="none"/>
+        <g id="tracePulseLayer"></g>
+      </svg>
+
       <!-- Home Section (Skills folded in as a compact strip) -->
       <section id="home" class="content-section">
         <div class="section-inner section-inner--wide">
           <div class="home-split">
             <div class="home-split-main">
               <div class="home-masthead">
-                <img src="./assets/photos/Christian(New).jpg" alt="Christian Villanueva" class="profile-pic-home">
+                <div class="profile-pic-frame">
+                  <img src="./assets/photos/Christian(New).jpg" alt="Christian Villanueva" class="profile-pic-home">
+                  <span class="battery-terminal battery-terminal--plus" id="batteryPositive" aria-hidden="true">+</span>
+                  <span class="battery-terminal battery-terminal--minus" aria-hidden="true">&minus;</span>
+                  <span class="pulse-hint" aria-hidden="true"><span class="pulse-hint-dot"></span>PULSE</span>
+                </div>
                 <div class="home-masthead-text">
                   <h2 class="home-greeting">Hi, I'm Christian!</h2>
                   <p class="profile-title">Computer Engineering Student</p>
@@ -157,7 +217,11 @@ I seek a career where I can create infrastructure, configure systems, and work o
             <!-- Compact Skills strip -->
             <div class="home-split-skills">
               <div class="home-skills-strip">
-                <div class="home-skills-strip-label">Skills</div>
+                <div class="home-skills-strip-label">
+                  <svg class="trace-icon" viewBox="0 0 32 14" width="32" height="14" aria-hidden="true"><path d="M0 7 H6 L9 2 L13 12 L17 2 L21 12 L25 7 H32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg>
+                  <span>U1 // Skills</span>
+                  <svg class="trace-icon" viewBox="0 0 24 16" width="24" height="16" aria-hidden="true"><path d="M0 8 H9 M11 2 V14 M15 4.5 V11.5 M19 6.5 V9.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                </div>
                 <div class="home-skills-mini-grid">
                   <div class="skill-category">
                     <div class="skill-category-title">Engineering Practices</div>
@@ -239,7 +303,7 @@ I seek a career where I can create infrastructure, configure systems, and work o
                         <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
                       </div>
                       <div class="skill-row" style="--skill-level: 50%">
-                        <div class="skill-row-name">LTspice</div>
+                        <div class="skill-row-name"><svg class="skill-icon" viewBox="0 0 20 10" width="16" height="8" aria-hidden="true"><path d="M0 5 H3 L5 1 L8 9 L11 1 L14 9 L17 5 H20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/></svg>LTspice</div>
                         <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
                       </div>
                     </div>
@@ -249,11 +313,11 @@ I seek a career where I can create infrastructure, configure systems, and work o
                     <div class="skill-category-title">Hardware &amp; Testing</div>
                     <div class="skill-rows">
                       <div class="skill-row" style="--skill-level: 85%">
-                        <div class="skill-row-name">Fixture Integration</div>
+                        <div class="skill-row-name"><svg class="skill-icon" viewBox="0 0 20 14" width="16" height="10" aria-hidden="true"><path d="M0 7 H8 M8 1 V13 M12 1 V13 M12 7 H20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Fixture Integration</div>
                         <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
                       </div>
                       <div class="skill-row" style="--skill-level: 75%">
-                        <div class="skill-row-name">Hardware Validation</div>
+                        <div class="skill-row-name"><svg class="skill-icon" viewBox="0 0 20 16" width="16" height="12" aria-hidden="true"><path d="M2 2 V14 L16 8 Z M0 5 H2 M0 11 H2 M16 8 H20" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/></svg>Hardware Validation</div>
                         <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
                       </div>
                       <div class="skill-row" style="--skill-level: 35%">
@@ -261,7 +325,7 @@ I seek a career where I can create infrastructure, configure systems, and work o
                         <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
                       </div>
                       <div class="skill-row" style="--skill-level: 75%">
-                        <div class="skill-row-name">Embedded Systems</div>
+                        <div class="skill-row-name"><svg class="skill-icon" viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M0 8 H4 M4 2 V14 M6 3 V6 M6 7.5 V9.5 M6 11 V14 M6 4 H14 M6 12 H14 M8 10 L10.5 12 L8 14" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Embedded Systems</div>
                         <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
                       </div>
                       <div class="skill-row" style="--skill-level: 25%">
@@ -280,13 +344,17 @@ I seek a career where I can create infrastructure, configure systems, and work o
       <!-- Experience Section -->
       <section id="experience" class="content-section">
         <div class="section-inner section-inner--wide">
-          <h2 class="section-header">Experience</h2>
+          <h2 class="section-tag">
+            <svg class="trace-icon" viewBox="0 0 32 14" width="32" height="14" aria-hidden="true"><path d="M0 7 H6 L9 2 L13 12 L17 2 L21 12 L25 7 H32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg>
+            <span>U2 // Experience</span>
+            <svg class="trace-icon" viewBox="0 0 24 16" width="24" height="16" aria-hidden="true"><path d="M0 8 H9 M11 2 V14 M15 4.5 V11.5 M19 6.5 V9.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </h2>
           <div class="doctimeline" id="timelineWrapper">
 
             <!-- Oldest: 2022 - 2024 (Education) -->
             <div class="doctimeline-item" data-index="0">
               <div class="doctimeline-meta">
-                <div class="doctimeline-thumb-frame"><div class="doctimeline-thumb" data-parallax></div></div>
+                <div class="doctimeline-thumb-frame corner-frame"><div class="doctimeline-thumb" data-parallax></div></div>
                 <div class="doctimeline-date">2022 - 2024</div>
                 <div class="experience-company">Mission College, Santa Clara, CA</div>
               </div>
@@ -307,7 +375,7 @@ I seek a career where I can create infrastructure, configure systems, and work o
             <!-- 2022 - 2024 (Work) -->
             <div class="doctimeline-item" data-index="1">
               <div class="doctimeline-meta">
-                <div class="doctimeline-thumb-frame"><div class="doctimeline-thumb" data-parallax></div></div>
+                <div class="doctimeline-thumb-frame corner-frame"><div class="doctimeline-thumb" data-parallax></div></div>
                 <div class="doctimeline-date">2022 - 2024</div>
                 <div class="experience-company">West Valley Mission Community College District, Santa Clara, CA</div>
               </div>
@@ -329,7 +397,7 @@ I seek a career where I can create infrastructure, configure systems, and work o
             <!-- 2024 - 2026 -->
             <div class="doctimeline-item" data-index="2">
               <div class="doctimeline-meta">
-                <div class="doctimeline-thumb-frame"><div class="doctimeline-thumb" data-parallax></div></div>
+                <div class="doctimeline-thumb-frame corner-frame"><div class="doctimeline-thumb" data-parallax></div></div>
                 <div class="doctimeline-date">2024 - 2026</div>
                 <div class="experience-company">San Jose State University, San Jose, CA</div>
               </div>
@@ -350,7 +418,7 @@ I seek a career where I can create infrastructure, configure systems, and work o
             <!-- Most Recent: 2025 - Present -->
             <div class="doctimeline-item" data-index="3">
               <div class="doctimeline-meta">
-                <div class="doctimeline-thumb-frame"><div class="doctimeline-thumb" data-parallax></div></div>
+                <div class="doctimeline-thumb-frame corner-frame"><div class="doctimeline-thumb" data-parallax></div></div>
                 <div class="doctimeline-date">2025 - Present</div>
                 <div class="experience-company">QxQ Inc., Fremont, CA</div>
               </div>
@@ -375,13 +443,17 @@ I seek a career where I can create infrastructure, configure systems, and work o
       <!-- Projects Section -->
       <section id="projects" class="content-section">
         <div class="section-inner section-inner--xwide">
-          <h2 class="section-header">Projects</h2>
+          <h2 class="section-tag">
+            <svg class="trace-icon" viewBox="0 0 32 14" width="32" height="14" aria-hidden="true"><path d="M0 7 H6 L9 2 L13 12 L17 2 L21 12 L25 7 H32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg>
+            <span>U3 // Projects</span>
+            <svg class="trace-icon" viewBox="0 0 24 16" width="24" height="16" aria-hidden="true"><path d="M0 8 H9 M11 2 V14 M15 4.5 V11.5 M19 6.5 V9.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </h2>
 
           <div class="proj-layout">
 
             <!-- LEFT: Carousel -->
             <div class="proj-carousel-col">
-              <div class="wheel-scene" id="wheelScene">
+              <div class="wheel-scene corner-frame" id="wheelScene">
                 <div class="wheel-stage" id="wheelStage">
 
                   <!-- Card 0: Project Argus -->
@@ -552,7 +624,10 @@ I seek a career where I can create infrastructure, configure systems, and work o
       <!-- Footer -->
       <footer class="site-footer">
         <div class="site-footer-inner">
-          <p class="site-footer-copy">&copy; 2026 Christian Villanueva — All Rights Reserved</p>
+          <p class="site-footer-copy">
+            <svg class="footer-signature" viewBox="0 0 24 16" width="20" height="14" aria-hidden="true"><rect x="6" y="2" width="12" height="12" rx="1" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M0 5 H6 M0 11 H6 M18 5 H24 M18 11 H24" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+            &copy; 2026 Christian Villanueva — All Rights Reserved
+          </p>
         </div>
       </footer>
 

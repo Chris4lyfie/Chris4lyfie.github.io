@@ -9,6 +9,10 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="css/styles.css">
+  <script>
+    // Apply the saved theme before first paint (shared with the main page).
+    if (localStorage.getItem('siteTheme') === 'dark') document.documentElement.classList.add('dark');
+  </script>
   <style>
     body { overflow: hidden; }
   </style>
@@ -25,7 +29,7 @@
 
       <!-- Education -->
       <section>
-        <div class="section-eyebrow">Education</div>
+        <div class="section-eyebrow">U1 // Education</div>
 
         <div class="education-item">
           <div class="item-header">
@@ -52,7 +56,7 @@
 
       <!-- Professional Experience -->
       <section>
-        <div class="section-eyebrow">Experience</div>
+        <div class="section-eyebrow">U2 // Experience</div>
 
         <div class="experience-item">
           <div class="item-header">
@@ -109,7 +113,7 @@
 
       <!-- Projects -->
       <section>
-        <div class="section-eyebrow">Projects</div>
+        <div class="section-eyebrow">U3 // Projects</div>
 
         <div class="project-item">
           <div class="item-header">
@@ -175,5 +179,6 @@
       setTimeout(reportHeight, 700);
     }
   </script>
+  <script src="js/subpage-circuit.js"></script>
 </body>
 </html>

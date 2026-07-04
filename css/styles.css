@@ -16,15 +16,157 @@
   --stone-100: #f0f0f1;
   --stone-50:  #fafafa;
 
-  --accent-600: #3c5875;
-  --accent-500: #4f7093;
-  --accent-400: #82a0b8;
-  --accent-100: #eef2f6;
+  /* Signal accent — reserved for "live" indicators only (status
+     dots, boot confirmations), evoking a copper trace / lit LED
+     against the cool steel-blue accent used everywhere else. */
+  --signal-600: #a8672e;
+  --signal-500: #c8843f;
+  --signal-400: #e3a868;
+
+  /* Page surface — flips with the theme (see html.dark below). All
+     former hardcoded white backgrounds/text-on-dark use this token. */
+  --page-bg: #ffffff;
+  /* Translucent nav surface (keeps the backdrop blur working). */
+  --nav-bg: rgba(250, 250, 250, 0.85);
 
   --nav-height: 68px;
   --content-max: 760px;
   --content-max-wide: 1360px;
   --content-max-xwide: 1640px;
+}
+
+/* ==============================================
+   BOOT SEQUENCE
+   Full-screen POST/BIOS-style overlay that plays once
+   per browser session before the site is revealed.
+   ============================================== */
+.boot-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--stone-950);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 8vh 8vw;
+  transition: opacity 0.6s ease, filter 0.6s ease;
+}
+
+.boot-screen.boot-done {
+  opacity: 0;
+  filter: blur(6px);
+  pointer-events: none;
+}
+
+/* Circuit motif behind the boot log (built in JS): same trace
+   language as the page — 45-degree tree fans with dot/ring
+   terminals — in muted strokes, with amber pulses riding the buses. */
+.boot-circuit {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.boot-log,
+.boot-hint {
+  position: relative;
+  z-index: 1;
+}
+
+.boot-trace {
+  fill: none;
+  stroke: var(--stone-700);
+  stroke-width: 2;
+}
+
+.boot-pad--dot {
+  fill: var(--stone-600);
+}
+
+.boot-pad--ring {
+  fill: var(--stone-950);
+  stroke: var(--stone-600);
+  stroke-width: 2;
+}
+
+.boot-pulse {
+  fill: var(--signal-500);
+  filter: drop-shadow(0 0 4px var(--signal-400)) drop-shadow(0 0 10px var(--signal-500));
+}
+
+.boot-log {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.78rem, 1.6vw, 1rem);
+  line-height: 1.9;
+  color: var(--stone-300);
+  white-space: pre-wrap;
+  margin: 0;
+}
+
+.boot-line {
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.boot-line.boot-line-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.boot-line .boot-ok {
+  color: var(--signal-400);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.boot-line.boot-ok-visible .boot-ok {
+  opacity: 1;
+}
+
+.boot-cursor {
+  display: inline-block;
+  width: 0.55em;
+  background: var(--stone-50);
+  margin-left: 0.15em;
+  animation: bootBlink 1s step-end infinite;
+}
+
+@keyframes bootBlink {
+  50% { opacity: 0; }
+}
+
+.boot-hint {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--stone-600);
+  margin-top: 2rem;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.boot-hint.boot-hint-visible {
+  opacity: 1;
+}
+
+html.boot-lock,
+html.boot-lock body {
+  overflow: hidden;
+  height: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boot-screen,
+  .boot-line,
+  .boot-cursor {
+    transition: none;
+    animation: none;
+  }
 }
 
 /* ==============================================
@@ -51,7 +193,7 @@ body {
 }
 
 ::selection {
-  background: var(--accent-100);
+  background: var(--stone-200);
   color: var(--stone-950);
 }
 
@@ -62,7 +204,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 500;
-  background: rgba(250, 250, 250, 0.85);
+  background: var(--nav-bg);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--stone-200);
 }
@@ -99,7 +241,7 @@ body {
   padding: 0.5rem 0.9rem;
   color: var(--stone-600);
   text-decoration: none;
-  border-radius: 6px;
+  border-radius: 3px;
   font-weight: 500;
   font-size: 0.92rem;
   transition: all 0.2s ease;
@@ -148,9 +290,9 @@ body {
   gap: 0.5rem;
   padding: 0.5rem 1rem;
   background: var(--stone-950);
-  color: white;
+  color: var(--page-bg);
   border: none;
-  border-radius: 6px;
+  border-radius: 3px;
   font-weight: 600;
   font-size: 0.88rem;
   cursor: pointer;
@@ -168,7 +310,7 @@ body {
 }
 
 .back-button:hover {
-  background: var(--accent-600);
+  background: var(--stone-700);
 }
 
 .back-button svg {
@@ -182,10 +324,10 @@ body {
   align-items: center;
   gap: 0.4rem;
   padding: 0.5rem 0.9rem;
-  background: white;
+  background: var(--page-bg);
   color: var(--stone-950);
   border: 1.5px solid var(--stone-950);
-  border-radius: 6px;
+  border-radius: 3px;
   font-weight: 600;
   font-size: 0.85rem;
   cursor: pointer;
@@ -200,7 +342,7 @@ body {
 
 .download-resume-btn:hover {
   background: var(--stone-950);
-  color: white;
+  color: var(--page-bg);
 }
 
 .download-resume-btn svg {
@@ -216,7 +358,7 @@ body {
   border: none;
   width: 40px;
   height: 40px;
-  border-radius: 6px;
+  border-radius: 3px;
   font-size: 1.4rem;
   cursor: pointer;
 }
@@ -230,7 +372,7 @@ body {
   flex-direction: column;
   padding: 0.5rem 1.25rem 1.25rem;
   border-top: 1px solid var(--stone-200);
-  background: white;
+  background: var(--page-bg);
 }
 
 .site-nav-mobile.active {
@@ -273,7 +415,7 @@ body {
 }
 
 .social-icon:hover {
-  color: white;
+  color: var(--page-bg);
   background: var(--stone-950);
   transform: translateY(-2px);
 }
@@ -288,7 +430,7 @@ body {
    MAIN CONTENT AREA
    ============================================== */
 .main-content {
-  background: #ffffff;
+  background: var(--page-bg);
   position: relative;
 }
 
@@ -334,12 +476,90 @@ body {
   filter: blur(0);
 }
 
-.section-header {
-  font-size: 2.1rem;
+/* Component reference-designator tag (e.g. "U2 // Experience") —
+   stands in as the section heading itself, styled like a PCB
+   silkscreen label rather than an editorial title. */
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.05rem;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
   color: var(--stone-950);
   margin-bottom: 2.5rem;
-  letter-spacing: -0.5px;
+}
+
+/* ==============================================
+   PCB TRACE MOTIF
+   Small inline "wire + resistor/ground" glyphs
+   marking where the main trace feeds into a labeled
+   component (section tags). Solid, static (the
+   animated pulse lives on the main connecting trace
+   instead). Explicit colors per section — U1/U2 always
+   sit on a light background, U3 always sits inside the
+   dark Projects band, so a plain override is simpler
+   and more reliable than a blend-mode trick.
+   ============================================== */
+.trace-icon {
+  flex-shrink: 0;
+  overflow: visible;
+  color: var(--stone-950);
+}
+
+#projects .trace-icon {
+  color: var(--stone-50);
+}
+
+/* ==============================================
+   COMPONENT-FRAME CORNER MARKS
+   Viewfinder-style alignment brackets — a hardware/
+   PCB-fiducial motif applied to a few signature
+   panels (timeline photos, project carousel).
+   ============================================== */
+.corner-frame {
+  --corner-size: 16px;
+  --corner-inset: 8px;
+  --corner-color: #fff;
+  position: relative;
+}
+
+.corner-frame::before,
+.corner-frame::after {
+  content: '';
+  position: absolute;
+  width: var(--corner-size);
+  height: var(--corner-size);
+  z-index: 20;
+  pointer-events: none;
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.55));
+}
+
+.corner-frame::before {
+  top: var(--corner-inset);
+  left: var(--corner-inset);
+  border-top: 2px solid var(--corner-color);
+  border-left: 2px solid var(--corner-color);
+}
+
+.corner-frame::after {
+  bottom: var(--corner-inset);
+  right: var(--corner-inset);
+  border-bottom: 2px solid var(--corner-color);
+  border-right: 2px solid var(--corner-color);
+}
+
+.doctimeline-thumb-frame.corner-frame {
+  --corner-size: 12px;
+  --corner-inset: 6px;
+}
+
+.wheel-scene.corner-frame {
+  --corner-size: 22px;
+  --corner-inset: 14px;
+  --corner-color: var(--stone-50);
 }
 
 /* ==============================================
@@ -347,9 +567,16 @@ body {
    ============================================== */
 .home-split {
   display: grid;
-  grid-template-columns: 65fr 35fr;
+  grid-template-columns: 35fr 65fr;
   gap: 4rem;
   align-items: start;
+}
+
+/* Skills sits visually first (left) so U1/U2/U3 all align on the same
+   side for the PCB trace — swapped via `order`, not DOM order, so the
+   bio/intro still reads first for screen readers and tab order. */
+.home-split-skills {
+  order: -1;
 }
 
 @media (max-width: 900px) {
@@ -370,6 +597,23 @@ body {
   margin-bottom: 2rem;
 }
 
+/* Portrait styled as a coin-cell voltage source — the "+" terminal is
+   where the PCB trace's pulse animation originates (see
+   updateSectionTrace in main.js). */
+.profile-pic-frame {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.profile-pic-frame::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border: 1.5px solid var(--stone-950);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
 .profile-pic-home {
   width: 96px;
   height: 96px;
@@ -377,7 +621,35 @@ body {
   object-fit: cover;
   object-position: center 15%;
   border: 2px solid var(--stone-950);
-  flex-shrink: 0;
+  display: block;
+}
+
+.battery-terminal {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--stone-950);
+  color: var(--page-bg);
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 0.9rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--stone-50);
+  z-index: 3;
+}
+
+.battery-terminal--plus {
+  top: -8px;
+  left: -8px;
+}
+
+.battery-terminal--minus {
+  bottom: -8px;
+  right: -8px;
 }
 
 .home-masthead-text { min-width: 0; }
@@ -422,9 +694,9 @@ body {
 .home-cta {
   padding: 0.85rem 1.75rem;
   background: var(--stone-950);
-  color: white;
+  color: var(--page-bg);
   text-decoration: none;
-  border-radius: 8px;
+  border-radius: 3px;
   font-weight: 600;
   font-size: 0.98rem;
   transition: all 0.25s ease;
@@ -436,7 +708,7 @@ body {
 }
 
 .home-cta:hover {
-  background: var(--accent-600);
+  background: var(--stone-700);
   gap: 0.9rem;
   transform: translateY(-2px);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
@@ -455,14 +727,14 @@ body {
 }
 
 .home-cta-secondary {
-  background: white;
+  background: var(--page-bg);
   color: var(--stone-950);
   border: 1.5px solid var(--stone-950);
 }
 
 .home-cta-secondary:hover {
   background: var(--stone-950);
-  color: white;
+  color: var(--page-bg);
 }
 
 /* ==============================================
@@ -473,13 +745,16 @@ body {
 }
 
 .home-skills-strip-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.68rem;
-  font-weight: 600;
+  font-size: 0.92rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--stone-400);
-  margin-bottom: 1.25rem;
+  letter-spacing: 2.5px;
+  color: var(--stone-950);
+  margin-bottom: 1.4rem;
 }
 
 .home-skills-mini-grid {
@@ -508,10 +783,21 @@ body {
 }
 
 .home-skills-mini-grid .skill-row-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   font-size: 0.72rem;
   font-weight: 500;
   margin-bottom: 0.3rem;
   white-space: nowrap;
+}
+
+/* Component glyphs — a small nod next to the skills where they're
+   literally relevant (LTspice, embedded hardware work), rather than
+   scattered everywhere. */
+.skill-icon {
+  flex-shrink: 0;
+  color: var(--stone-400);
 }
 
 .home-skills-mini-grid .progress-bar-container {
@@ -564,14 +850,14 @@ body {
   width: 100%;
   height: 3px;
   background: var(--stone-150, var(--stone-200));
-  border-radius: 10px;
+  border-radius: 3px;
   overflow: hidden;
 }
 
 .progress-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--accent-600) 0%, var(--accent-400) 100%);
-  border-radius: 10px;
+  background: linear-gradient(90deg, var(--stone-900) 0%, var(--stone-400) 100%);
+  border-radius: 3px;
   width: 0;
   transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -634,7 +920,7 @@ body {
 .doctimeline-thumb-frame {
   width: 100%;
   height: 150px;
-  border-radius: 10px;
+  border-radius: 3px;
   margin-bottom: 0.9rem;
   border: 1px solid var(--stone-200);
   overflow: hidden;
@@ -680,7 +966,7 @@ body {
 }
 
 .doctimeline-item.visible .doctimeline-rule {
-  background: var(--accent-500);
+  background: var(--stone-950);
 }
 
 .doctimeline-body {
@@ -720,7 +1006,7 @@ body {
   padding: 0.25rem 0.6rem;
   background: var(--stone-100);
   color: var(--stone-600);
-  border-radius: 6px;
+  border-radius: 3px;
   font-size: 0.78rem;
   font-weight: 500;
 }
@@ -743,8 +1029,16 @@ body {
 }
 
 .site-footer-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
   font-size: 0.82rem;
   color: var(--stone-400);
+}
+
+.footer-signature {
+  flex-shrink: 0;
+  color: var(--stone-300);
 }
 
 /* ==============================================
@@ -752,10 +1046,278 @@ body {
    ============================================== */
 .portfolio-sections {
   display: block;
+  position: relative;
 }
 
 .portfolio-sections.hidden {
   display: none;
+}
+
+/* ==============================================
+   SECTION-CONNECTING TRACE
+   A vertical trunk in the empty left-margin gutter
+   (never crosses real content) with branch stubs
+   reaching into the Skills, Experience, and Projects
+   section tags (U1 -> U2 -> U3), plus a lead from the
+   portrait's "+" terminal. Computed in JS since the
+   sections use different container widths. Solid
+   black on the light sections; the segment/branch
+   inside the dark Projects band is white instead (see
+   the split-path elements in the markup). A small
+   amber pulse rides the path continuously. Hidden
+   below 1300px — not enough true margin to sit in
+   without crowding real content.
+   ============================================== */
+.section-trace-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.section-trace-path {
+  stroke-width: 2;
+}
+
+.section-trace-path--black {
+  stroke: var(--stone-950);
+}
+
+.section-trace-path--white {
+  stroke: var(--stone-50);
+}
+
+.section-trace-dot--black {
+  fill: var(--stone-950);
+}
+
+.section-trace-dot--white {
+  fill: var(--stone-50);
+}
+
+.section-trace-pulse {
+  fill: var(--signal-500);
+  /* Amber glow so the pulse stays visible on both the white page and
+     the dark Projects band. */
+  filter: drop-shadow(0 0 4px var(--signal-400)) drop-shadow(0 0 10px var(--signal-500));
+  /* Hidden until the JS pulse driver places it; fades where its route ends. */
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+/* The portrait doubles as the circuit's power source — clicking it
+   fires a manual pulse (see the pulse driver in main.js). */
+.pulse-clickable {
+  cursor: pointer;
+}
+
+/* Tiny "this is clickable" indicator: a silkscreen-style chip on the
+   frame's lower-left edge with a softly blinking amber dot. Only
+   shown once the pulse driver makes the portrait clickable (so it
+   never appears under prefers-reduced-motion). */
+.pulse-hint {
+  display: none;
+  position: absolute;
+  left: 10px;
+  bottom: -9px;
+  z-index: 2;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 7px;
+  background: var(--page-bg);
+  border: 1px solid var(--stone-300);
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  color: var(--stone-500);
+  pointer-events: none;
+}
+
+.pulse-clickable .pulse-hint {
+  display: inline-flex;
+}
+
+.pulse-clickable:hover .pulse-hint {
+  border-color: var(--stone-500);
+  color: var(--stone-950);
+}
+
+.pulse-hint-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--signal-500);
+  animation: pulse-hint-blink 2.2s ease-in-out infinite;
+}
+
+@keyframes pulse-hint-blink {
+  0%, 100% { opacity: 0.35; }
+  50%      { opacity: 1; box-shadow: 0 0 6px var(--signal-400); }
+}
+
+/* Pulse arrival wave: an amber highlight sweeps through the U-header
+   text left to right, as if the current runs on through the lettering.
+   The class is added by the pulse driver and removed on animationend. */
+.tag-pulse-wave {
+  --wave-base: var(--stone-950);
+  background-image: linear-gradient(90deg,
+    var(--wave-base) 35%, var(--signal-400) 50%, var(--wave-base) 65%);
+  background-size: 220% 100%;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: tag-wave-sweep 0.9s ease-out;
+}
+
+#projects .tag-pulse-wave {
+  --wave-base: var(--stone-50);
+}
+
+@keyframes tag-wave-sweep {
+  from { background-position: 100% 0; }
+  to   { background-position: 0% 0; }
+}
+
+/* Decorative trace network (generated in JS into #traceNetwork):
+   parallel line bundles with 45-degree jogs, ending in filled
+   via-dots or hollow pads. "black" variants sit on the light
+   sections; "white" variants inside the dark Projects band. */
+.trace-net-line {
+  fill: none;
+  stroke-width: 2;
+}
+
+.trace-net-line--black {
+  stroke: var(--stone-950);
+}
+
+.trace-net-line--white {
+  stroke: var(--stone-50);
+}
+
+.trace-net-pad--filled-black {
+  fill: var(--stone-950);
+}
+
+.trace-net-pad--filled-white {
+  fill: var(--stone-50);
+}
+
+.trace-net-pad--hollow-black {
+  fill: var(--page-bg); /* matches .main-content background */
+  stroke: var(--stone-950);
+  stroke-width: 2;
+}
+
+.trace-net-pad--hollow-white {
+  fill: var(--stone-950); /* matches the dark Projects band */
+  stroke: var(--stone-50);
+  stroke-width: 2;
+}
+
+/* ==============================================
+   POWER TOGGLE (dark/light theme)
+   The nav's power button toggles html.dark, which
+   swaps the stone color ramp — a real theme, not a
+   filter, so photos and thumbnails are untouched.
+   ============================================== */
+.panel-buttons {
+  display: flex;
+  gap: 6px;
+  margin-right: 0.9rem;
+  flex-shrink: 0;
+}
+
+.panel-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--stone-300);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--stone-950);
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.panel-btn:hover {
+  border-color: var(--stone-950);
+}
+
+.panel-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Sub-page decorative circuit (resume + project pages): margin-only
+   trace layer built by js/subpage-circuit.js. Painted above the page
+   surface, but its geometry never enters the measured content box. */
+.subpage-circuit {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 2;
+  pointer-events: none;
+  overflow: visible;
+}
+
+@media (max-width: 1300px) {
+  .subpage-circuit {
+    display: none;
+  }
+}
+
+/* Dark theme: NOT a filter inversion — html.dark flips the whole
+   stone ramp (and --page-bg), so every tokenized color swaps
+   light<->dark while photos, thumbnails, and embedded pages are left
+   completely untouched. The dark Projects band flips to a light band,
+   preserving the contrast relationship. */
+html.dark {
+  --page-bg:   #0f0f10;
+  --nav-bg:    rgba(15, 15, 16, 0.85);
+  --stone-950: #fafafa;
+  --stone-900: #f0f0f1;
+  --stone-800: #e4e4e7;
+  --stone-700: #c7c7cc;
+  --stone-600: #a1a1aa;
+  --stone-500: #71717a;
+  --stone-400: #52525b;
+  --stone-300: #3f3f46;
+  --stone-200: #27272a;
+  --stone-100: #1f1f22;
+  --stone-50:  #171717;
+}
+
+/* Added for the duration of a toggle so the theme swap eases across
+   the whole page instead of hard-cutting; removed right after. */
+html.theme-fade,
+html.theme-fade *,
+html.theme-fade *::before,
+html.theme-fade *::after {
+  transition: background-color 0.55s ease, color 0.55s ease,
+              border-color 0.55s ease, fill 0.55s ease,
+              stroke 0.55s ease !important;
+}
+
+@media (max-width: 1300px) {
+  .section-trace-svg {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-trace-pulse {
+    display: none;
+  }
 }
 
 .external-content-container {
@@ -822,8 +1384,8 @@ body {
     padding: 2rem 0;
   }
 
-  .section-header {
-    font-size: 1.7rem;
+  .section-tag {
+    font-size: 0.9rem;
   }
 
   .home-masthead {
@@ -862,8 +1424,8 @@ body {
 .proj-tech-tag {
   padding: 0.25rem 0.65rem;
   background: var(--stone-950);
-  color: white;
-  border-radius: 6px;
+  color: var(--page-bg);
+  border-radius: 3px;
   font-size: 0.72rem;
   font-weight: 500;
   border: 1px solid var(--stone-800);
@@ -882,7 +1444,7 @@ body {
   opacity: 0;
   transition: opacity 0.3s ease;
   z-index: 10;
-  border-radius: 16px 16px 0 0;
+  border-radius: 3px 3px 0 0;
   pointer-events: none;
 }
 
@@ -892,13 +1454,13 @@ body {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  background: rgba(130, 160, 184, 0.14);
-  border: 1px solid rgba(130, 160, 184, 0.4);
-  border-radius: 100px;
+  background: rgba(161, 161, 170, 0.14);
+  border: 1px solid rgba(161, 161, 170, 0.4);
+  border-radius: 3px;
   padding: 0.5rem 1.25rem;
   font-size: 0.88rem;
   font-weight: 700;
-  color: var(--accent-400);
+  color: var(--stone-400);
   letter-spacing: 0.5px;
 }
 
@@ -906,7 +1468,7 @@ body {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--accent-500);
+  background: var(--stone-500);
   animation: wip-pulse 1.5s ease-in-out infinite;
   flex-shrink: 0;
 }
@@ -943,7 +1505,7 @@ body {
   height: 640px;
   perspective: 1000px;
   overflow: hidden;
-  border-radius: 16px;
+  border-radius: 3px;
 }
 
 .wheel-stage {
@@ -959,9 +1521,9 @@ body {
   top: 50%;
   left: 50%;
   translate: -50% -50%;
-  background: #ffffff;
+  background: var(--page-bg);
   border: 1px solid var(--stone-200);
-  border-radius: 16px;
+  border-radius: 3px;
   overflow: visible;
   box-shadow: 0 4px 20px rgba(0,0,0,0.06);
   transform-style: preserve-3d;
@@ -976,7 +1538,7 @@ body {
 }
 
 .wheel-card-inner {
-  border-radius: 16px;
+  border-radius: 3px;
   overflow: hidden;
   width: 100%;
   height: 100%;
@@ -986,10 +1548,10 @@ body {
 }
 
 .wheel-card.is-active {
-  border-color: var(--accent-500);
+  border-color: var(--signal-500);
   box-shadow: 0 24px 60px rgba(0,0,0,0.18),
-              0 0 0 1px rgba(79,112,147,0.15),
-              0 0 55px rgba(79,112,147,0.25);
+              0 0 0 1px rgba(200,132,63,0.15),
+              0 0 55px rgba(200,132,63,0.25);
 }
 
 .wheel-card.is-active .wheel-card-inner::after {
@@ -997,7 +1559,7 @@ body {
   position: absolute;
   bottom: 0; left: 0; right: 0;
   background: linear-gradient(to top, rgba(23,23,23,0.92), transparent);
-  color: white;
+  color: var(--page-bg);
   font-size: 0.75rem;
   font-weight: 700;
   text-align: center;
@@ -1037,8 +1599,8 @@ body {
   display: inline-block;
   padding: 0.25rem 0.75rem;
   background: var(--stone-950);
-  color: white;
-  border-radius: 6px;
+  color: var(--page-bg);
+  border-radius: 3px;
   font-size: 0.68rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -1064,7 +1626,7 @@ body {
   height: 40px;
   border-radius: 50%;
   border: 1px solid var(--stone-200);
-  background: white;
+  background: var(--page-bg);
   color: var(--stone-950);
   cursor: pointer;
   display: flex;
@@ -1084,7 +1646,7 @@ body {
 .proj-arrow:hover {
   background: var(--stone-950);
   border-color: var(--stone-950);
-  color: white;
+  color: var(--page-bg);
   box-shadow: 0 4px 14px rgba(0,0,0,0.2);
 }
 
@@ -1115,7 +1677,7 @@ body {
 .proj-dot.active {
   background: var(--stone-950);
   width: 24px;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 .proj-detail-col {
@@ -1126,7 +1688,7 @@ body {
 .proj-detail-panel {
   position: relative;
   z-index: 8;
-  background: #fff;
+  background: var(--page-bg);
   width: 100%;
   height: 620px;
   overflow: hidden;
@@ -1156,8 +1718,8 @@ body {
   display: inline-block;
   padding: 0.3rem 0.85rem;
   background: var(--stone-950);
-  color: white;
-  border-radius: 6px;
+  color: var(--page-bg);
+  border-radius: 3px;
   font-size: 0.68rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -1227,44 +1789,71 @@ body {
   content: "▸";
   position: absolute;
   left: 0;
-  color: var(--accent-500);
+  color: var(--stone-950);
   font-size: 0.8rem;
   top: 0.15rem;
 }
 
-.proj-detail-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.75rem 1.5rem;
+/* ==============================================
+   PROJECTS SECTION — dark band
+   A full-bleed inverted band (rest of the page stays
+   light) so components read like chips sitting on a
+   dark board rather than paper-white cards.
+   ============================================== */
+#projects.content-section {
   background: var(--stone-950);
-  color: white;
-  text-decoration: none;
-  border-radius: 8px;
-  font-weight: 700;
-  font-size: 0.9rem;
-  width: fit-content;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
-.proj-detail-link:hover {
-  background: var(--accent-600);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+#projects .section-tag {
+  color: var(--stone-50);
 }
 
-.proj-detail-link--disabled {
-  background: var(--stone-200);
+#projects .proj-detail-panel {
+  background: var(--stone-950);
+}
+
+#projects .proj-detail-tag {
+  background: var(--signal-500);
+  color: var(--stone-950);
+}
+
+#projects .proj-detail-tag--wip {
+  background: var(--stone-700);
+  color: var(--page-bg);
+}
+
+#projects .proj-detail-title {
+  color: var(--stone-50);
+}
+
+#projects .proj-detail-desc {
+  color: var(--stone-300);
+}
+
+#projects .proj-detail-section-label {
   color: var(--stone-400);
-  cursor: default;
-  box-shadow: none;
 }
 
-.proj-detail-link--disabled:hover {
-  background: var(--stone-200);
-  transform: none;
-  box-shadow: none;
+#projects .proj-tech-tag {
+  background: var(--stone-800);
+  border-color: var(--stone-700);
+  color: var(--stone-100);
+}
+
+#projects .proj-detail-outcomes li {
+  color: var(--stone-300);
+}
+
+#projects .proj-detail-outcomes li::before {
+  color: var(--stone-400);
+}
+
+#projects .proj-dot {
+  background: var(--stone-700);
+}
+
+#projects .proj-dot.active {
+  background: var(--signal-400);
 }
 
 @media (max-width: 900px) {
@@ -1287,16 +1876,16 @@ body {
 
 body.in-iframe .site-nav,
 body.in-iframe .mobile-menu-toggle,
-body.in-iframe .page-header { display: none !important; }
+body.in-iframe .breadcrumb { display: none !important; }
 
-.page-header { background: var(--stone-950); border-bottom: 3px solid var(--accent-500); padding: 2.5rem 2rem 2rem; position: relative; z-index: 1; }
+.page-header { background: var(--stone-950); border-bottom: 3px solid var(--stone-700); padding: 2.5rem 2rem 2rem; position: relative; z-index: 1; }
 .page-header-inner { max-width: var(--content-max-wide); margin: 0 auto; }
 .breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--stone-500); margin-bottom: 1.25rem; }
 .breadcrumb a { color: var(--stone-400); text-decoration: none; transition: color 0.2s; }
-.breadcrumb a:hover { color: var(--accent-400); }
+.breadcrumb a:hover { color: var(--stone-200); }
 .breadcrumb .sep { color: var(--stone-700); }
-.breadcrumb .current { color: var(--accent-400); }
-.page-header h1 { font-size: 2rem; font-weight: 700; color: white; letter-spacing: -0.5px; margin-bottom: 0.5rem; line-height: 1.2; }
+.breadcrumb .current { color: var(--page-bg); }
+.page-header h1 { font-size: 2rem; font-weight: 700; color: var(--page-bg); letter-spacing: -0.5px; margin-bottom: 0.5rem; line-height: 1.2; }
 .header-meta { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; margin-top: 1rem; }
 .header-meta-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; color: var(--stone-400); font-family: 'JetBrains Mono', monospace; }
 .header-meta-item svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
@@ -1304,13 +1893,13 @@ body.in-iframe .page-header { display: none !important; }
 
 .prototype-badge {
   display: inline-flex; align-items: center; gap: 0.5rem;
-  background: rgba(130,160,184,0.14); border: 1px solid rgba(130,160,184,0.4);
-  border-radius: 100px; padding: 0.35rem 1rem;
+  background: rgba(200,132,63,0.14); border: 1px solid rgba(200,132,63,0.4);
+  border-radius: 3px; padding: 0.35rem 1rem;
   font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; font-weight: 600;
-  color: var(--accent-400); letter-spacing: 0.5px; margin-top: 1rem;
+  color: var(--signal-500); letter-spacing: 0.5px; margin-top: 1rem;
 }
 .prototype-dot {
-  width: 7px; height: 7px; border-radius: 50%; background: var(--accent-500);
+  width: 7px; height: 7px; border-radius: 50%; background: var(--signal-500);
   animation: proto-pulse 1.8s ease-in-out infinite;
 }
 @keyframes proto-pulse {
@@ -1332,30 +1921,30 @@ body.in-iframe .page-header { display: none !important; }
 .content ul li::before { content: "▸"; position: absolute; left: 0; color: var(--stone-400); font-size: 0.8rem; top: 0.18rem; }
 
 .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.875rem; margin: 1.5rem 0; }
-.stat-card { background: var(--stone-950); border-radius: 10px; padding: 1.25rem 1.25rem 1rem; display: flex; flex-direction: column; gap: 0.35rem; }
-.stat-value { font-family: 'JetBrains Mono', monospace; font-size: 1.6rem; font-weight: 600; color: var(--accent-400); line-height: 1; }
+.stat-card { background: var(--stone-950); border-radius: 3px; padding: 1.25rem 1.25rem 1rem; display: flex; flex-direction: column; gap: 0.35rem; }
+.stat-value { font-family: 'JetBrains Mono', monospace; font-size: 1.6rem; font-weight: 600; color: var(--stone-50); line-height: 1; }
 .stat-label { font-size: 0.75rem; color: var(--stone-400); line-height: 1.4; }
 @media (max-width: 768px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
 
 .layer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.875rem; margin: 1.25rem 0; }
-.layer-card { background: var(--stone-950); border-radius: 10px; padding: 1.1rem 1.25rem; }
+.layer-card { background: var(--stone-950); border-radius: 3px; padding: 1.1rem 1.25rem; }
 .layer-card-title { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--stone-300); margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
 .layer-card ul { margin: 0; }
 .layer-card ul li { font-size: 0.85rem; color: var(--stone-300); margin-bottom: 0.4rem; }
 
 .image-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.75rem 0; }
 .image-pair figure { margin: 0; }
-.image-pair img { width: 100%; height: auto; object-fit: contain; border-radius: 10px; display: block; box-shadow: 0 4px 16px rgba(0,0,0,0.08); border: 1px solid var(--stone-200); }
+.image-pair img { width: 100%; height: auto; object-fit: contain; border-radius: 3px; display: block; box-shadow: 0 4px 16px rgba(0,0,0,0.08); border: 1px solid var(--stone-200); }
 .image-pair figcaption { font-size: 0.82rem; color: var(--stone-500); line-height: 1.55; margin-top: 0.6rem; font-style: italic; }
 
 .image-single { margin: 1.75rem 0; }
 .image-single figure { margin: 0; }
-.image-single img { width: 100%; height: auto; object-fit: contain; border-radius: 10px; display: block; box-shadow: 0 4px 16px rgba(0,0,0,0.08); border: 1px solid var(--stone-200); }
+.image-single img { width: 100%; height: auto; object-fit: contain; border-radius: 3px; display: block; box-shadow: 0 4px 16px rgba(0,0,0,0.08); border: 1px solid var(--stone-200); }
 .image-single figcaption { font-size: 0.82rem; color: var(--stone-500); line-height: 1.55; margin-top: 0.6rem; font-style: italic; }
 
 .verify-steps { display: flex; flex-direction: column; gap: 0.6rem; margin: 1.25rem 0; }
-.verify-step { display: flex; align-items: flex-start; gap: 1rem; padding: 0.85rem 1.1rem; background: var(--stone-50); border: 1px solid var(--stone-200); border-radius: 8px; }
-.verify-step-num { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 600; color: var(--stone-700); background: var(--stone-100); border: 1px solid var(--stone-200); border-radius: 4px; padding: 0.15rem 0.5rem; flex-shrink: 0; margin-top: 0.1rem; }
+.verify-step { display: flex; align-items: flex-start; gap: 1rem; padding: 0.85rem 1.1rem; background: var(--stone-50); border: 1px solid var(--stone-200); border-radius: 3px; }
+.verify-step-num { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 600; color: var(--stone-700); background: var(--stone-100); border: 1px solid var(--stone-200); border-radius: 3px; padding: 0.15rem 0.5rem; flex-shrink: 0; margin-top: 0.1rem; }
 .verify-step-body { flex: 1; }
 .verify-step-title { font-size: 0.88rem; font-weight: 600; color: var(--stone-950); margin-bottom: 0.2rem; }
 .verify-step-desc { font-size: 0.83rem; color: var(--stone-500); line-height: 1.5; margin: 0; }
@@ -1368,12 +1957,12 @@ body.in-iframe .page-header { display: none !important; }
 .sensor-table tbody tr:hover { background: var(--stone-50); }
 .sensor-table td { padding: 0.75rem 1rem; color: var(--stone-600); vertical-align: top; }
 .sensor-table td:first-child { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; font-weight: 600; color: var(--stone-950); }
-.sensor-badge { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-.badge-temp { background: var(--stone-950); color: white; }
-.badge-humid { background: var(--accent-100); color: var(--accent-600); border: 1px solid rgba(79,112,147,0.3); }
+.sensor-badge { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+.badge-temp { background: var(--stone-950); color: var(--page-bg); }
+.badge-humid { background: var(--stone-100); color: var(--stone-600); border: 1px solid var(--stone-300); }
 .badge-spare { background: var(--stone-100); color: var(--stone-400); border: 1px dashed var(--stone-300); }
 
-.failure-block { border: 1px solid var(--stone-200); border-left: 4px solid var(--stone-950); border-radius: 0 10px 10px 0; background: var(--stone-50); padding: 1.5rem; margin: 1.25rem 0; }
+.failure-block { border: 1px solid var(--stone-200); border-left: 4px solid var(--stone-950); border-radius: 0 3px 3px 0; background: var(--stone-50); padding: 1.5rem; margin: 1.25rem 0; }
 .failure-block-title { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--stone-950); margin-bottom: 1rem; }
 .failure-row { display: grid; grid-template-columns: 120px 1fr; gap: 0.4rem 1rem; margin-bottom: 0.5rem; align-items: baseline; }
 .failure-key { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 600; color: var(--stone-500); text-transform: uppercase; letter-spacing: 0.5px; }
@@ -1383,28 +1972,28 @@ body.in-iframe .page-header { display: none !important; }
 .failure-with-photo { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; margin: 1.5rem 0; }
 .failure-with-photo .failure-block { margin: 0; }
 .failure-photo figure { margin: 0; }
-.failure-photo img { width: 100%; height: 100%; min-height: 240px; object-fit: cover; border-radius: 10px; display: block; box-shadow: 0 4px 16px rgba(0,0,0,0.08); border: 1px solid var(--stone-200); }
+.failure-photo img { width: 100%; height: 100%; min-height: 240px; object-fit: cover; border-radius: 3px; display: block; box-shadow: 0 4px 16px rgba(0,0,0,0.08); border: 1px solid var(--stone-200); }
 .failure-photo figcaption { font-size: 0.82rem; color: var(--stone-500); margin-top: 0.6rem; font-style: italic; line-height: 1.5; }
 
 .improvement-steps { display: flex; flex-direction: column; gap: 0.6rem; margin: 1.25rem 0; }
-.improvement-step { display: flex; align-items: flex-start; gap: 1rem; padding: 0.85rem 1.1rem; background: var(--stone-50); border: 1px solid var(--stone-200); border-radius: 8px; }
-.improvement-num { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 600; color: var(--stone-700); background: var(--stone-100); border: 1px solid var(--stone-200); border-radius: 4px; padding: 0.15rem 0.5rem; flex-shrink: 0; margin-top: 0.1rem; }
+.improvement-step { display: flex; align-items: flex-start; gap: 1rem; padding: 0.85rem 1.1rem; background: var(--stone-50); border: 1px solid var(--stone-200); border-radius: 3px; }
+.improvement-num { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 600; color: var(--stone-700); background: var(--stone-100); border: 1px solid var(--stone-200); border-radius: 3px; padding: 0.15rem 0.5rem; flex-shrink: 0; margin-top: 0.1rem; }
 .improvement-body { flex: 1; }
 .improvement-title { font-size: 0.88rem; font-weight: 600; color: var(--stone-950); margin-bottom: 0.2rem; }
 .improvement-desc { font-size: 0.83rem; color: var(--stone-500); line-height: 1.5; margin: 0; }
 
 .proof-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.875rem; margin: 1.25rem 0; }
-.proof-category { background: var(--stone-950); border-radius: 10px; overflow: hidden; }
+.proof-category { background: var(--stone-950); border-radius: 3px; overflow: hidden; }
 .proof-category-title { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--stone-300); padding: 0.65rem 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
 .proof-category-items { padding: 0.75rem 1.1rem; display: flex; flex-direction: column; gap: 0.5rem; }
 .proof-category-item { font-size: 0.85rem; color: var(--stone-300); padding-left: 1.1rem; position: relative; line-height: 1.5; }
-.proof-category-item::before { content: "▸"; position: absolute; left: 0; color: var(--accent-400); font-size: 0.7rem; top: 0.18rem; }
+.proof-category-item::before { content: "▸"; position: absolute; left: 0; color: var(--stone-400); font-size: 0.7rem; top: 0.18rem; }
 
-.conf-note { background: var(--stone-100); border-left: 4px solid var(--stone-950); border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin-bottom: 2.5rem; font-size: 0.88rem; color: var(--stone-600); line-height: 1.6; }
+.conf-note { background: var(--stone-100); border-left: 4px solid var(--stone-950); border-radius: 0 3px 3px 0; padding: 1rem 1.25rem; margin-bottom: 2.5rem; font-size: 0.88rem; color: var(--stone-600); line-height: 1.6; }
 
-.invariant-block { background: var(--stone-950); border-radius: 10px; padding: 1.5rem 1.75rem; margin: 1.5rem 0; border-left: 4px solid var(--accent-500); }
-.invariant-label { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent-400); margin-bottom: 0.6rem; }
-.invariant-text { font-size: 1.05rem; color: white; font-weight: 500; line-height: 1.6; font-style: italic; }
+.invariant-block { background: var(--stone-950); border-radius: 3px; padding: 1.5rem 1.75rem; margin: 1.5rem 0; border-left: 4px solid var(--stone-500); }
+.invariant-label { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--stone-300); margin-bottom: 0.6rem; }
+.invariant-text { font-size: 1.05rem; color: var(--page-bg); font-weight: 500; line-height: 1.6; font-style: italic; }
 
 .vlan-table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 0.9rem; }
 .vlan-table thead tr { background: var(--stone-950); }
@@ -1414,9 +2003,9 @@ body.in-iframe .page-header { display: none !important; }
 .vlan-table tbody tr:hover { background: var(--stone-50); }
 .vlan-table td { padding: 0.75rem 1rem; color: var(--stone-600); vertical-align: top; }
 .vlan-table td:first-child { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; font-weight: 600; color: var(--stone-950); }
-.trust-badge { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-.trust-high { background: var(--stone-950); color: white; }
-.trust-med { background: var(--accent-100); color: var(--accent-600); border: 1px solid rgba(79,112,147,0.3); }
+.trust-badge { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+.trust-high { background: var(--stone-950); color: var(--page-bg); }
+.trust-med { background: var(--stone-100); color: var(--stone-600); border: 1px solid var(--stone-300); }
 .trust-low { background: var(--stone-50); color: var(--stone-400); border: 1px solid var(--stone-200); }
 
 .policy-table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 0.88rem; }
@@ -1428,29 +2017,29 @@ body.in-iframe .page-header { display: none !important; }
 .policy-table td:first-child, .policy-table td:nth-child(2) { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
 .policy-allow { color: var(--stone-950); font-weight: 700; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
 .policy-deny { color: var(--stone-400); font-weight: 600; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
-.policy-limited { color: var(--accent-600); font-weight: 700; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
+.policy-limited { color: var(--stone-600); font-weight: 700; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
 
 .port-map { display: flex; flex-direction: column; gap: 0.5rem; margin: 1.25rem 0; }
-.port-row { display: grid; grid-template-columns: 90px 1fr; gap: 1rem; align-items: center; padding: 0.75rem 1rem; background: var(--stone-50); border: 1px solid var(--stone-200); border-radius: 8px; }
-.port-row.management { border-left: 3px solid var(--accent-500); }
+.port-row { display: grid; grid-template-columns: 90px 1fr; gap: 1rem; align-items: center; padding: 0.75rem 1rem; background: var(--stone-50); border: 1px solid var(--stone-200); border-radius: 3px; }
+.port-row.management { border-left: 3px solid var(--stone-600); }
 .port-row.critical { border-left: 3px solid var(--stone-950); }
 .port-row.future { border-left: 3px solid var(--stone-300); opacity: 0.7; }
 .port-id { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 600; color: var(--stone-950); }
 .port-desc { font-size: 0.88rem; color: var(--stone-600); }
 .port-desc strong { color: var(--stone-950); }
 
-.adr-block { border: 1px solid rgba(79,112,147,0.25); border-left: 4px solid var(--accent-500); border-radius: 0 10px 10px 0; background: var(--accent-100); padding: 1.5rem; margin: 1.25rem 0; }
-.adr-block-title { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent-600); margin-bottom: 1rem; }
+.adr-block { border: 1px solid var(--stone-200); border-left: 4px solid var(--stone-950); border-radius: 0 3px 3px 0; background: var(--stone-100); padding: 1.5rem; margin: 1.25rem 0; }
+.adr-block-title { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--stone-950); margin-bottom: 1rem; }
 .adr-block p { color: var(--stone-700); }
 .adr-block ul li { color: var(--stone-700); }
-.adr-block ul li::before { color: var(--accent-500); }
+.adr-block ul li::before { color: var(--stone-700); }
 
-.tradeoff-block { background: var(--stone-950); border-radius: 10px; padding: 1.5rem; margin: 1.25rem 0; }
-.tradeoff-label { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent-400); margin-bottom: 0.75rem; }
-.tradeoff-title { font-size: 1rem; font-weight: 600; color: white; margin-bottom: 0.5rem; }
+.tradeoff-block { background: var(--stone-950); border-radius: 3px; padding: 1.5rem; margin: 1.25rem 0; }
+.tradeoff-label { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--stone-300); margin-bottom: 0.75rem; }
+.tradeoff-title { font-size: 1rem; font-weight: 600; color: var(--page-bg); margin-bottom: 0.5rem; }
 .tradeoff-body { font-size: 0.9rem; color: var(--stone-400); line-height: 1.7; }
 
-.img-placeholder { width: 100%; background: var(--stone-50); border: 2px dashed var(--stone-200); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; color: var(--stone-400); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; padding: 3rem 2rem; text-align: center; }
+.img-placeholder { width: 100%; background: var(--stone-50); border: 2px dashed var(--stone-200); border-radius: 3px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; color: var(--stone-400); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; padding: 3rem 2rem; text-align: center; }
 .img-placeholder svg { width: 32px; height: 32px; fill: var(--stone-300); margin-bottom: 0.25rem; }
 .img-placeholder-label { color: var(--stone-500); font-size: 0.85rem; font-family: 'Space Grotesk', sans-serif; font-weight: 600; }
 .img-placeholder-sub { color: var(--stone-400); font-size: 0.78rem; font-family: 'Space Grotesk', sans-serif; max-width: 420px; line-height: 1.5; }
@@ -1485,7 +2074,7 @@ body.in-iframe .page-header { display: none !important; }
   position: fixed;
   top: 0; left: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--accent-600), var(--accent-400));
+  background: linear-gradient(90deg, var(--stone-900), var(--stone-400));
   width: 0%;
   z-index: 1000;
   transition: width 0.1s ease;
@@ -1493,14 +2082,14 @@ body.in-iframe .page-header { display: none !important; }
 
 .resume-container {
   margin: 0 auto;
-  background: #ffffff;
+  background: var(--page-bg);
 }
 
 .resume-header {
   background: var(--stone-950);
-  color: white;
+  color: var(--page-bg);
   padding: 3rem;
-  border-bottom: 3px solid var(--accent-500);
+  border-bottom: 3px solid var(--stone-700);
   text-align: center;
 }
 
@@ -1508,7 +2097,7 @@ body.in-iframe .page-header { display: none !important; }
   font-size: 2.5rem;
   font-weight: 700;
   letter-spacing: -0.5px;
-  color: white;
+  color: var(--page-bg);
 }
 
 .resume-content {
@@ -1524,9 +2113,9 @@ body.in-iframe .page-header { display: none !important; }
 .experience-item,
 .education-item,
 .project-item {
-  background: white;
+  background: var(--page-bg);
   border: 1px solid var(--stone-200);
-  border-radius: 10px;
+  border-radius: 3px;
   padding: 1.5rem;
   margin-bottom: 1rem;
 }
@@ -1554,7 +2143,7 @@ body.in-iframe .page-header { display: none !important; }
 }
 
 .item-title a {
-  color: var(--accent-500);
+  color: var(--stone-700);
   text-decoration: none;
   transition: all 0.3s ease;
   display: inline-flex;
@@ -1567,7 +2156,7 @@ body.in-iframe .page-header { display: none !important; }
   transform: translateX(-8px);
   transition: all 0.3s ease;
 }
-.item-title a:hover { color: var(--accent-600); }
+.item-title a:hover { color: var(--stone-950); }
 .item-title a:hover::after { opacity: 1; transform: translateX(0); }
 
 .item-date {
@@ -1583,7 +2172,7 @@ body.in-iframe .page-header { display: none !important; }
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--accent-600);
+  color: var(--stone-600);
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 0.3rem;

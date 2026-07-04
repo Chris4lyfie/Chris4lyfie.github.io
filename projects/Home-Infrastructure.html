@@ -9,6 +9,10 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" href="../favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="../css/styles.css">
+  <script>
+    // Apply the saved theme before first paint (shared with the main page).
+    if (localStorage.getItem('siteTheme') === 'dark') document.documentElement.classList.add('dark');
+  </script>
 </head>
 <body>
   <header class="site-nav">
@@ -107,7 +111,7 @@
         <div class="section-eyebrow fade-up">Network Topology</div>
         <div class="image-single fade-up">
           <figure>
-            <img src="../assets/diagrams/home-infra/network-topology.png" alt="Network topology showing router, core switch, wireless AP, and wired endpoints on VLAN 10" style="width:100%; max-width:1000px; height:auto; display:block; margin:0 auto; border-radius:10px; box-shadow:0 4px 16px rgba(0,0,0,0.08); border:1px solid var(--stone-200);" />
+            <img src="../assets/diagrams/home-infra/network-topology.png" alt="Network topology showing router, core switch, wireless AP, and wired endpoints on VLAN 10" style="width:100%; max-width:1000px; height:auto; display:block; margin:0 auto; border-radius:3px; box-shadow:0 4px 16px rgba(0,0,0,0.08); border:1px solid var(--stone-200);" />
             <figcaption>Physical and logical topology showing the single-switch core, router uplink, and device placement across VLANs. The management plane is isolated on a dedicated port and VLAN throughout.</figcaption>
           </figure>
         </div>
@@ -204,7 +208,7 @@
         <!-- TRUST ZONE DIAGRAM -->
         <div class="image-single fade-up">
           <figure>
-            <img src="../assets/diagrams/home-infra/trust-zones.png" alt="Trust zone diagram showing 5 VLANs with directional traffic policy between zones" style="width:100%; max-width:700px; height:auto; display:block; margin:0 auto; border-radius:10px; box-shadow:0 4px 16px rgba(0,0,0,0.08); border:1px solid var(--stone-200);" />
+            <img src="../assets/diagrams/home-infra/trust-zones.png" alt="Trust zone diagram showing 5 VLANs with directional traffic policy between zones" style="width:100%; max-width:700px; height:auto; display:block; margin:0 auto; border-radius:3px; box-shadow:0 4px 16px rgba(0,0,0,0.08); border:1px solid var(--stone-200);" />
             <figcaption>Logical trust model showing zone boundaries and directional traffic policy. Arrows indicate allowed flows; blocked flows have no arrow. Management zone is the only zone that can initiate access to any other.</figcaption>
           </figure>
         </div>
@@ -548,5 +552,6 @@
       }
     });
   </script>
+  <script src="../js/subpage-circuit.js"></script>
 </body>
 </html>
