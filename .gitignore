@@ -1,0 +1,3 @@
+# Local-only backups and preview scratch space — not part of the deployed site
+old/
+test/

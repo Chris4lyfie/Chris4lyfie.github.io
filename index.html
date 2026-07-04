@@ -12,85 +12,29 @@
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
 <body>
-  <button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
-  
-  <!-- Back Button -->
-  <button class="back-button" id="backButton" onclick="goBackToPortfolio()">
-    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-    </svg>
-    Back to Portfolio
-  </button>
 
-  <!-- Download Resume Button -->
-  <a href="./assets/Christian Villanueva Resume (2026).pdf" download="Christian_Villanueva_Resume.pdf" class="download-resume-btn" id="downloadResumeBtn">
-    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
-    </svg>
-    Download PDF
-  </a>
+  <!-- Sticky top nav -->
+  <header class="site-nav">
+    <div class="site-nav-inner" id="siteNavInner">
+      <a href="#home" class="site-nav-brand" id="siteNavBrand" onclick="handleBrandClick(event)">Christian Villanueva</a>
 
-  <div class="layout">
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-content">
-        <div class="profile-section">
-          <h1 class="profile-name">Christian Villanueva</h1>
-          <p class="profile-title">Computer Engineering Student</p>
-          <div class="profile-location">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-            </svg>
-            San Jose, California
-          </div>
-        </div>
+      <nav class="site-nav-links" id="siteNavLinks">
+        <a href="#home" class="nav-link">Home</a>
+        <a href="#experience" class="nav-link">Experience</a>
+        <a href="#projects" class="nav-link">Projects</a>
+        <a href="#" class="nav-link" onclick="loadExternalContent('resume.html'); return false;">Resume</a>
+      </nav>
 
-        <nav>
-          <ul class="nav-menu">
-            <li>
-              <a href="#home" class="nav-link">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-                </svg>
-                Home
-              </a>
-            </li>
-            <li>
-              <a href="#skills" class="nav-link">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M9 13.75c-2.34 0-7 1.17-7 3.5V19h14v-1.75c0-2.33-4.66-3.5-7-3.5zM4.34 17c.84-.58 2.87-1.25 4.66-1.25s3.82.67 4.66 1.25H4.34zM9 12c1.93 0 3.5-1.57 3.5-3.5S10.93 5 9 5 5.5 6.57 5.5 8.5 7.07 12 9 12zm0-5c.83 0 1.5.67 1.5 1.5S9.83 10 9 10s-1.5-.67-1.5-1.5S8.17 7 9 7zm7.04 6.81c1.16.84 1.96 1.96 1.96 3.44V19h4v-1.75c0-2.02-3.5-3.17-5.96-3.44zM15 12c1.93 0 3.5-1.57 3.5-3.5S16.93 5 15 5c-.54 0-1.04.13-1.5.35.63.89 1 1.98 1 3.15s-.37 2.26-1 3.15c.46.22.96.35 1.5.35z"/>
-                </svg>
-                Skills
-              </a>
-            </li>
-            <li>
-              <a href="#experience" class="nav-link">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/>
-                </svg>
-                Experience
-              </a>
-            </li>
-            <li>
-              <a href="#projects" class="nav-link">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
-                </svg>
-                Projects
-              </a>
-            </li>
-            <li>
-              <a href="#" class="nav-link" onclick="loadExternalContent('resume.html'); return false;">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
-                </svg>
-                Resume
-              </a>
-            </li>
-          </ul>
-        </nav>
+      <!-- Back Button (shown in place of nav links while viewing an external page) -->
+      <button class="back-button" id="backButton" onclick="goBackToPortfolio()">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+        </svg>
+        Back to Portfolio
+      </button>
 
-        <div class="social-links">
+      <div class="site-nav-actions">
+        <div class="site-nav-socials">
           <a href="https://www.linkedin.com/in/itiancv/" target="_blank" class="social-icon" title="LinkedIn">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
@@ -117,248 +61,215 @@
             </svg>
           </a>
         </div>
-
-        <div class="sidebar-footer">
-          <p>&copy; 2026 Christian Villanueva</p>
-          <p>All Rights Reserved</p>
-        </div>
+        <!-- Download Resume Button -->
+        <a href="./assets/Christian Villanueva Resume (2026).pdf" download="Christian_Villanueva_Resume.pdf" class="download-resume-btn" id="downloadResumeBtn">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+          </svg>
+          Download PDF
+        </a>
+        <button class="mobile-menu-toggle" onclick="toggleSidebar()" aria-label="Toggle menu">☰</button>
       </div>
-    </aside>
+    </div>
 
-    <!-- Main Content -->
-    <main class="main-content">
-      <!-- Portfolio Sections Container -->
-      <div class="portfolio-sections" id="portfolioSections">
-        <!-- Home Section -->
-        <section id="home" class="content-section">
-        <div class="home-content">
-          <div class="home-text">
-            <h2 class="home-greeting">Hi, I'm Christian!</h2>
-            <p class="home-description">
-              I'm a systems-oriented computer engineering student who thrives on building real, hands-on systems from the ground up. I love the intersection of code and hardware, whether that's configuring lab infrastructure, programming microcontrollers, or designing circuits that respond to software commands. Seeing my work become tangible is what drives me.
+    <!-- Mobile nav panel -->
+    <nav class="site-nav-mobile" id="mobileNav">
+      <a href="#home" class="nav-link">Home</a>
+      <a href="#experience" class="nav-link">Experience</a>
+      <a href="#projects" class="nav-link">Projects</a>
+      <a href="#" class="nav-link" onclick="loadExternalContent('resume.html'); return false;">Resume</a>
+      <div class="site-nav-mobile-socials">
+        <a href="https://www.linkedin.com/in/itiancv/" target="_blank" class="social-icon" title="LinkedIn">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+          </svg>
+        </a>
+        <a href="https://github.com/Chris4lyfie" target="_blank" class="social-icon" title="GitHub">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+          </svg>
+        </a>
+        <a href="mailto:christianmichael.villanueva@sjsu.edu" class="social-icon" title="Email">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+          </svg>
+        </a>
+        <a href="https://www.instagram.com/itiancv/?hl=en" target="_blank" class="social-icon" title="Instagram">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+          </svg>
+        </a>
+        <a href="https://www.youtube.com/chris4lyfie" target="_blank" class="social-icon" title="YouTube">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Portfolio Sections Container -->
+    <div class="portfolio-sections" id="portfolioSections">
+
+      <!-- Home Section (Skills folded in as a compact strip) -->
+      <section id="home" class="content-section">
+        <div class="section-inner section-inner--wide">
+          <div class="home-split">
+            <div class="home-split-main">
+              <div class="home-masthead">
+                <img src="./assets/photos/Christian(New).jpg" alt="Christian Villanueva" class="profile-pic-home">
+                <div class="home-masthead-text">
+                  <h2 class="home-greeting">Hi, I'm Christian!</h2>
+                  <p class="profile-title">Computer Engineering Student</p>
+                  <div class="profile-location">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                    </svg>
+                    San Jose, California
+                  </div>
+                </div>
+              </div>
+              <p class="home-description">
+                I'm a systems-oriented computer engineering student who thrives on building real, hands-on systems from the ground up. I love the intersection of code and hardware, whether that's configuring lab infrastructure, programming microcontrollers, or designing circuits that respond to software commands. Seeing my work become tangible is what drives me.
 
 Right now, I'm focused on developing my fundamentals in embedded systems and expanding my understanding of how software and hardware truly integrate. I'm drawn to environments where I can build and experiment. Trial, error, and success have given me invaluable, hands-on experience that no classroom alone could provide.
 
 I seek a career where I can create infrastructure, configure systems, and work on projects that bridge abstract programming concepts with real-world impact.
-            </p>
-            <div class="home-cta-buttons">
-              <a href="#projects" class="home-cta">
-                View My Projects
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
-                </svg>
-              </a>
-              <a href="#" class="home-cta home-cta-secondary" onclick="loadExternalContent('resume.html'); return false;">
-                View Resume
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
-                </svg>
-              </a>
-            </div>
-          </div>
-          <img src="./assets/photos/Christian(New).jpg" alt="Christian Villanueva" class="profile-pic-home">
-        </div>
-      </section>
-
-      <!-- Skills Section -->
-      <section id="skills" class="content-section">
-        <h2 class="section-header">Skills</h2>
-        <div class="skills-grid">
-          <div class="skill-category">
-            <div class="skill-category-title">Engineering Practices</div>
-            <div class="skill-tags-grid">
-              <div class="skill-tag-bar" style="--skill-level: 85%">
-                <div class="card-header">
-                  <div class="skill-name">Debugging</div>
-                </div>
-                <div class="progress-bar-container">
-                  <div class="progress-bar-fill"></div>
-                </div>
-              </div>
-              <div class="skill-tag-bar" style="--skill-level: 85%">
-                <div class="card-header">
-                  <div class="skill-name">Technical Writing</div>
-                </div>
-                <div class="progress-bar-container">
-                  <div class="progress-bar-fill"></div>
-                </div>
-              </div>
-              <div class="skill-tag-bar" style="--skill-level: 80%">
-                <div class="card-header">
-                  <div class="skill-name">Root Cause Analysis</div>
-                </div>
-                <div class="progress-bar-container">
-                  <div class="progress-bar-fill"></div>
-                </div>
-              </div>
-              <div class="skill-tag-bar" style="--skill-level: 80%">
-                <div class="card-header">
-                  <div class="skill-name">Problem Solving</div>
-                </div>
-                <div class="progress-bar-container">
-                  <div class="progress-bar-fill"></div>
-                </div>
-              </div>
-              <div class="skill-tag-bar" style="--skill-level: 70%">
-                <div class="card-header">
-                  <div class="skill-name">Quality Assurance</div>
-                </div>
-                <div class="progress-bar-container">
-                  <div class="progress-bar-fill"></div>
-                </div>
+              </p>
+              <div class="home-cta-buttons">
+                <a href="#projects" class="home-cta">
+                  View My Projects
+                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                  </svg>
+                </a>
+                <a href="#" class="home-cta home-cta-secondary" onclick="loadExternalContent('resume.html'); return false;">
+                  View Resume
+                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                  </svg>
+                </a>
               </div>
             </div>
-          </div>
 
-          <div class="skill-category">
-            <div class="skill-category-title">Systems & Infrastructure</div>
-            <div class="skill-tags-grid">
-              <div class="skill-tag-bar" style="--skill-level: 80%">
-                <div class="card-header">
-                  <div class="skill-name">Networking</div>
-                </div>
-                <div class="progress-bar-container">
-                  <div class="progress-bar-fill"></div>
-                </div>
-              </div>
-              <div class="skill-tag-bar" style="--skill-level: 75%">
-                <div class="card-header">
-                  <div class="skill-name">System Administration</div>
-                </div>
-                <div class="progress-bar-container">
-                  <div class="progress-bar-fill"></div>
-                </div>
-              </div>
-              <div class="skill-tag-bar" style="--skill-level: 70%">
-                <div class="card-header">
-                  <div class="skill-name">Linux/Unix</div>
-                </div>
-                <div class="progress-bar-container">
-                  <div class="progress-bar-fill"></div>
-                </div>
-              </div>
-              <div class="skill-tag-bar" style="--skill-level: 70%">
-                <div class="card-header">
-                  <div class="skill-name">Infrastructure Design</div>
-                </div>
-                <div class="progress-bar-container">
-                  <div class="progress-bar-fill"></div>
-                </div>
-              </div>
-              <div class="skill-tag-bar" style="--skill-level: 65%">
-                <div class="card-header">
-                  <div class="skill-name">Virtualization</div>
-                </div>
-                <div class="progress-bar-container">
-                  <div class="progress-bar-fill"></div>
-                </div>
-              </div>
-            </div>
-          </div>
+            <!-- Compact Skills strip -->
+            <div class="home-split-skills">
+              <div class="home-skills-strip">
+                <div class="home-skills-strip-label">Skills</div>
+                <div class="home-skills-mini-grid">
+                  <div class="skill-category">
+                    <div class="skill-category-title">Engineering Practices</div>
+                    <div class="skill-rows">
+                      <div class="skill-row" style="--skill-level: 85%">
+                        <div class="skill-row-name">Debugging</div>
+                        <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
+                      </div>
+                      <div class="skill-row" style="--skill-level: 85%">
+                        <div class="skill-row-name">Technical Writing</div>
+                        <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
+                      </div>
+                      <div class="skill-row" style="--skill-level: 80%">
+                        <div class="skill-row-name">Root Cause Analysis</div>
+                        <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
+                      </div>
+                      <div class="skill-row" style="--skill-level: 80%">
+                        <div class="skill-row-name">Problem Solving</div>
+                        <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
+                      </div>
+                      <div class="skill-row" style="--skill-level: 70%">
+                        <div class="skill-row-name">Quality Assurance</div>
+                        <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
+                      </div>
+                    </div>
+                  </div>
 
-          <div class="skill-category">
-            <div class="skill-category-title">Programming & Tools</div>
-            <div class="skill-tags-grid">
-              <div class="skill-tag-bar" style="--skill-level: 85%">
-                <div class="card-header">
-                  <div class="skill-name">Documentation</div>
-                </div>
-                <div class="progress-bar-container">
-                  <div class="progress-bar-fill"></div>
-                </div>
-              </div>
-              <div class="skill-tag-bar" style="--skill-level: 80%">
-                <div class="card-header">
-                  <div class="skill-name">Git</div>
-                </div>
-                <div class="progress-bar-container">
-                  <div class="progress-bar-fill"></div>
-                </div>
-              </div>
-              <div class="skill-tag-bar" style="--skill-level: 60%">
-                <div class="card-header">
-                  <div class="skill-name">Bash/Shell</div>
-                </div>
-                <div class="progress-bar-container">
-                  <div class="progress-bar-fill"></div>
-                </div>
-              </div>
-              <div class="skill-tag-bar" style="--skill-level: 55%">
-                <div class="card-header">
-                  <div class="skill-name">Verilog</div>
-                </div>
-                <div class="progress-bar-container">
-                  <div class="progress-bar-fill"></div>
-                </div>
-              </div>
-              <div class="skill-tag-bar" style="--skill-level: 70%">
-                <div class="card-header">
-                  <div class="skill-name">C/C++</div>
-                </div>
-                <div class="progress-bar-container">
-                  <div class="progress-bar-fill"></div>
-                </div>
-              </div>
-              <div class="skill-tag-bar" style="--skill-level: 30%">
-                <div class="card-header">
-                  <div class="skill-name">Java</div>
-                </div>
-                <div class="progress-bar-container">
-                  <div class="progress-bar-fill"></div>
-                </div>
-              </div>
-              <div class="skill-tag-bar" style="--skill-level: 50%">
-                <div class="card-header">
-                  <div class="skill-name">LTspice</div>
-                </div>
-                <div class="progress-bar-container">
-                  <div class="progress-bar-fill"></div>
-                </div>
-              </div>
-            </div>
-          </div>
+                  <div class="skill-category">
+                    <div class="skill-category-title">Systems &amp; Infrastructure</div>
+                    <div class="skill-rows">
+                      <div class="skill-row" style="--skill-level: 80%">
+                        <div class="skill-row-name">Networking</div>
+                        <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
+                      </div>
+                      <div class="skill-row" style="--skill-level: 75%">
+                        <div class="skill-row-name">System Administration</div>
+                        <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
+                      </div>
+                      <div class="skill-row" style="--skill-level: 70%">
+                        <div class="skill-row-name">Linux/Unix</div>
+                        <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
+                      </div>
+                      <div class="skill-row" style="--skill-level: 70%">
+                        <div class="skill-row-name">Infrastructure Design</div>
+                        <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
+                      </div>
+                      <div class="skill-row" style="--skill-level: 65%">
+                        <div class="skill-row-name">Virtualization</div>
+                        <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
+                      </div>
+                    </div>
+                  </div>
 
-          <div class="skill-category">
-            <div class="skill-category-title">Hardware & Testing</div>
-            <div class="skill-tags-grid">
-              <div class="skill-tag-bar" style="--skill-level: 85%">
-                <div class="card-header">
-                  <div class="skill-name">Fixture Integration</div>
-                </div>
-                <div class="progress-bar-container">
-                  <div class="progress-bar-fill"></div>
-                </div>
-              </div>
-              <div class="skill-tag-bar" style="--skill-level: 75%">
-                <div class="card-header">
-                  <div class="skill-name">Hardware Validation</div>
-                </div>
-                <div class="progress-bar-container">
-                  <div class="progress-bar-fill"></div>
-                </div>
-              </div>
-              <div class="skill-tag-bar" style="--skill-level: 35%">
-                <div class="card-header">
-                  <div class="skill-name">Oscilloscopes</div>
-                </div>
-                <div class="progress-bar-container">
-                  <div class="progress-bar-fill"></div>
-                </div>
-              </div>
-              <div class="skill-tag-bar" style="--skill-level: 75%">
-                <div class="card-header">
-                  <div class="skill-name">Embedded Systems</div>
-                </div>
-                <div class="progress-bar-container">
-                  <div class="progress-bar-fill"></div>
-                </div>
-              </div>
-              <div class="skill-tag-bar" style="--skill-level: 25%">
-                <div class="card-header">
-                  <div class="skill-name">Test Automation</div>
-                </div>
-                <div class="progress-bar-container">
-                  <div class="progress-bar-fill"></div>
+                  <div class="skill-category">
+                    <div class="skill-category-title">Programming &amp; Tools</div>
+                    <div class="skill-rows">
+                      <div class="skill-row" style="--skill-level: 85%">
+                        <div class="skill-row-name">Documentation</div>
+                        <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
+                      </div>
+                      <div class="skill-row" style="--skill-level: 80%">
+                        <div class="skill-row-name">Git</div>
+                        <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
+                      </div>
+                      <div class="skill-row" style="--skill-level: 60%">
+                        <div class="skill-row-name">Bash/Shell</div>
+                        <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
+                      </div>
+                      <div class="skill-row" style="--skill-level: 55%">
+                        <div class="skill-row-name">Verilog</div>
+                        <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
+                      </div>
+                      <div class="skill-row" style="--skill-level: 70%">
+                        <div class="skill-row-name">C/C++</div>
+                        <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
+                      </div>
+                      <div class="skill-row" style="--skill-level: 30%">
+                        <div class="skill-row-name">Java</div>
+                        <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
+                      </div>
+                      <div class="skill-row" style="--skill-level: 50%">
+                        <div class="skill-row-name">LTspice</div>
+                        <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="skill-category">
+                    <div class="skill-category-title">Hardware &amp; Testing</div>
+                    <div class="skill-rows">
+                      <div class="skill-row" style="--skill-level: 85%">
+                        <div class="skill-row-name">Fixture Integration</div>
+                        <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
+                      </div>
+                      <div class="skill-row" style="--skill-level: 75%">
+                        <div class="skill-row-name">Hardware Validation</div>
+                        <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
+                      </div>
+                      <div class="skill-row" style="--skill-level: 35%">
+                        <div class="skill-row-name">Oscilloscopes</div>
+                        <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
+                      </div>
+                      <div class="skill-row" style="--skill-level: 75%">
+                        <div class="skill-row-name">Embedded Systems</div>
+                        <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
+                      </div>
+                      <div class="skill-row" style="--skill-level: 25%">
+                        <div class="skill-row-name">Test Automation</div>
+                        <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -368,97 +279,92 @@ I seek a career where I can create infrastructure, configure systems, and work o
 
       <!-- Experience Section -->
       <section id="experience" class="content-section">
-        <h2 class="section-header">Experience</h2>
-        <div class="timeline-container">
-          <div class="timeline-line-wrapper">
-            <div class="timeline-line"></div>
-            <div class="timeline-endpoint start"></div>
-            <div class="timeline-endpoint end"></div>
-          </div>
-          
-          <div class="timeline-items-wrapper" id="timelineWrapper">
-            <!-- Oldest: 2022 - 2024 (Education) - LEFT -->
-            <div class="timeline-item" data-index="0">
-              <div class="timeline-date-badge">2022 - 2024</div>
-              <div class="timeline-dot"></div>
-              <div class="timeline-content">
-                <div class="timeline-image"></div>
-                <div class="timeline-text-content">
-                  <h3 class="experience-title">Associate of Science</h3>
-                  <div class="experience-company">Mission College, Santa Clara, CA</div>
-                  <p class="experience-description">
-                    Earned an A.S. in Mathematics and A.A. in Liberal Arts. Graduated Magna Cum Laude with Dean's List recognition.
-                  </p>
-                  <div class="experience-skills">
-                    <span class="skill-tag">Mathematics</span>
-                    <span class="skill-tag">Computer Science</span>
-                    <span class="skill-tag">Programming</span>
-                  </div>
+        <div class="section-inner section-inner--wide">
+          <h2 class="section-header">Experience</h2>
+          <div class="doctimeline" id="timelineWrapper">
+
+            <!-- Oldest: 2022 - 2024 (Education) -->
+            <div class="doctimeline-item" data-index="0">
+              <div class="doctimeline-meta">
+                <div class="doctimeline-thumb-frame"><div class="doctimeline-thumb" data-parallax></div></div>
+                <div class="doctimeline-date">2022 - 2024</div>
+                <div class="experience-company">Mission College, Santa Clara, CA</div>
+              </div>
+              <div class="doctimeline-rule"></div>
+              <div class="doctimeline-body">
+                <h3 class="experience-title">Associate of Science</h3>
+                <p class="experience-description">
+                  Earned an A.S. in Mathematics and A.A. in Liberal Arts. Graduated Magna Cum Laude with Dean's List recognition.
+                </p>
+                <div class="experience-skills">
+                  <span class="skill-tag">Mathematics</span>
+                  <span class="skill-tag">Computer Science</span>
+                  <span class="skill-tag">Programming</span>
                 </div>
               </div>
             </div>
 
             <!-- 2022 - 2024 (Work) -->
-            <div class="timeline-item" data-index="1">
-              <div class="timeline-date-badge">2022 - 2024</div>
-              <div class="timeline-dot"></div>
-              <div class="timeline-content">
-                <div class="timeline-image"></div>
-                <div class="timeline-text-content">
-                  <h3 class="experience-title">Information Systems Technical Assistant</h3>
-                  <div class="experience-company">West Valley Mission Community College District, Santa Clara, CA</div>
-                  <p class="experience-description">
-                    Provided IT support across academic and administrative facilities. Handled hardware, cabling, system troubleshooting, and infrastructure maintenance district-wide.
-                  </p>
-                  <div class="experience-skills">
-                    <span class="skill-tag">IT Support</span>
-                    <span class="skill-tag">Systems Administration</span>
-                    <span class="skill-tag">Infrastructure</span>
-                    <span class="skill-tag">Technical Support</span>
-                  </div>
+            <div class="doctimeline-item" data-index="1">
+              <div class="doctimeline-meta">
+                <div class="doctimeline-thumb-frame"><div class="doctimeline-thumb" data-parallax></div></div>
+                <div class="doctimeline-date">2022 - 2024</div>
+                <div class="experience-company">West Valley Mission Community College District, Santa Clara, CA</div>
+              </div>
+              <div class="doctimeline-rule"></div>
+              <div class="doctimeline-body">
+                <h3 class="experience-title">Information Systems Technical Assistant</h3>
+                <p class="experience-description">
+                  Provided IT support across academic and administrative facilities. Handled hardware, cabling, system troubleshooting, and infrastructure maintenance district-wide.
+                </p>
+                <div class="experience-skills">
+                  <span class="skill-tag">IT Support</span>
+                  <span class="skill-tag">Systems Administration</span>
+                  <span class="skill-tag">Infrastructure</span>
+                  <span class="skill-tag">Technical Support</span>
                 </div>
               </div>
             </div>
 
             <!-- 2024 - 2026 -->
-            <div class="timeline-item" data-index="2">
-              <div class="timeline-date-badge">2024 - 2026</div>
-              <div class="timeline-dot"></div>
-              <div class="timeline-content">
-                <div class="timeline-image"></div>
-                <div class="timeline-text-content">
-                  <h3 class="experience-title">Bachelor of Science in Computer Engineering</h3>
-                  <div class="experience-company">San Jose State University, San Jose, CA</div>
-                  <p class="experience-description">
-                    Currently pursuing a B.S. in Computer Engineering. Expected graduation Fall 2026.
-                  </p>
-                  <div class="experience-skills">
-                    <span class="skill-tag">Computer Engineering</span>
-                    <span class="skill-tag">Embedded Systems</span>
-                    <span class="skill-tag">Hardware Systems</span>
-                  </div>
+            <div class="doctimeline-item" data-index="2">
+              <div class="doctimeline-meta">
+                <div class="doctimeline-thumb-frame"><div class="doctimeline-thumb" data-parallax></div></div>
+                <div class="doctimeline-date">2024 - 2026</div>
+                <div class="experience-company">San Jose State University, San Jose, CA</div>
+              </div>
+              <div class="doctimeline-rule"></div>
+              <div class="doctimeline-body">
+                <h3 class="experience-title">Bachelor of Science in Computer Engineering</h3>
+                <p class="experience-description">
+                  Currently pursuing a B.S. in Computer Engineering. Expected graduation Fall 2026.
+                </p>
+                <div class="experience-skills">
+                  <span class="skill-tag">Computer Engineering</span>
+                  <span class="skill-tag">Embedded Systems</span>
+                  <span class="skill-tag">Hardware Systems</span>
                 </div>
               </div>
             </div>
 
-            <!-- Most Recent: 2025 - Present - RIGHT -->
-            <div class="timeline-item" data-index="3">
-              <div class="timeline-date-badge">2025 - Present</div>
-              <div class="timeline-dot"></div>
-              <div class="timeline-content">
-                <div class="timeline-image"></div>
-                <div class="timeline-text-content">
-                  <h3 class="experience-title">Hardware Test Engineering Technician</h3>
-                  <div class="experience-company">QxQ Inc., Fremont, CA</div>
-                  <p class="experience-description">
-                    Builds and integrates custom electrical test fixtures for PCB-level hardware validation. Owns full bring-up, verification, and fault isolation end-to-end.
-                  </p>
-                  <div class="experience-skills">
-                    <span class="skill-tag">Test Automation</span>
-                    <span class="skill-tag">Hardware Validation</span>
-                    <span class="skill-tag">Fixture Integration</span>
-                    <span class="skill-tag">Quality Assurance</span>
-                  </div>
+            <!-- Most Recent: 2025 - Present -->
+            <div class="doctimeline-item" data-index="3">
+              <div class="doctimeline-meta">
+                <div class="doctimeline-thumb-frame"><div class="doctimeline-thumb" data-parallax></div></div>
+                <div class="doctimeline-date">2025 - Present</div>
+                <div class="experience-company">QxQ Inc., Fremont, CA</div>
+              </div>
+              <div class="doctimeline-rule"></div>
+              <div class="doctimeline-body">
+                <h3 class="experience-title">Hardware Test Engineering Technician</h3>
+                <p class="experience-description">
+                  Builds and integrates custom electrical test fixtures for PCB-level hardware validation. Owns full bring-up, verification, and fault isolation end-to-end.
+                </p>
+                <div class="experience-skills">
+                  <span class="skill-tag">Test Automation</span>
+                  <span class="skill-tag">Hardware Validation</span>
+                  <span class="skill-tag">Fixture Integration</span>
+                  <span class="skill-tag">Quality Assurance</span>
                 </div>
               </div>
             </div>
@@ -468,189 +374,196 @@ I seek a career where I can create infrastructure, configure systems, and work o
 
       <!-- Projects Section -->
       <section id="projects" class="content-section">
-        <h2 class="section-header">Projects</h2>
+        <div class="section-inner section-inner--xwide">
+          <h2 class="section-header">Projects</h2>
 
-        <div class="proj-layout">
+          <div class="proj-layout">
 
-          <!-- LEFT: Carousel -->
-          <div class="proj-carousel-col">
-            <div class="wheel-scene" id="wheelScene">
-              <div class="wheel-stage" id="wheelStage">
+            <!-- LEFT: Carousel -->
+            <div class="proj-carousel-col">
+              <div class="wheel-scene" id="wheelScene">
+                <div class="wheel-stage" id="wheelStage">
 
-                <!-- Card 0: Project Argus -->
-                <div class="wheel-card" data-index="0">
-                  <div class="wheel-card-inner">
-                    <div class="wheel-card-image" style="background-image: url('assets/photos/Project%20Argus/Project%20Argus%20UI.png');"></div>
-                    <div class="wheel-card-body">
-                      <span class="proj-tag">Embedded Systems</span>
-                      <h3 class="proj-title">Project Argus — Multi-Sensor Ethernet Monitor</h3>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Card 1: QxQ -->
-                <div class="wheel-card" data-index="1">
-                  <div class="wheel-card-inner">
-                    <div class="wheel-card-image" style="background-image: url('assets/photos/Stock Photos/PCB-Test-Stock-Photo.jpg');"></div>
-                    <div class="wheel-card-body">
-                      <span class="proj-tag">Hardware Integration</span>
-                      <h3 class="proj-title">Hardware Systems Integration &amp; Production Bring-Up</h3>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Card 2: Home Infrastructure -->
-                <div class="wheel-card" data-index="2">
-                  <div class="wheel-card-inner">
-                    <div class="wheel-card-image" style="background-image: url('assets/photos/Stock Photos/Homelab-Stock-Photo.webp');"></div>
-                    <div class="wheel-card-body">
-                      <span class="proj-tag">Infrastructure</span>
-                      <h3 class="proj-title">Home Network Engineering Lab</h3>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Card 3: EnkiNotes — WIP -->
-                <div class="wheel-card wheel-card--wip" data-index="3">
-                  <div class="wheel-card-inner">
-                    <div class="wheel-card-image wheel-card-image--wip"></div>
-                    <div class="proj-wip-overlay">
-                      <div class="proj-wip-badge">
-                        <span class="proj-wip-dot"></span>
-                        In Progress
+                  <!-- Card 0: Project Argus -->
+                  <div class="wheel-card" data-index="0">
+                    <div class="wheel-card-inner">
+                      <div class="wheel-card-image" style="background-image: url('assets/photos/Project%20Argus/Project%20Argus%20UI.png');"></div>
+                      <div class="wheel-card-body">
+                        <span class="proj-tag">Embedded Systems</span>
+                        <h3 class="proj-title">Project Argus — Multi-Sensor Ethernet Monitor</h3>
                       </div>
-                      <p class="proj-wip-sub">Check back soon</p>
-                    </div>
-                    <div class="wheel-card-body">
-                      <span class="proj-tag proj-tag--wip">Web App</span>
-                      <h3 class="proj-title">EnkiNotes</h3>
                     </div>
                   </div>
+
+                  <!-- Card 1: QxQ -->
+                  <div class="wheel-card" data-index="1">
+                    <div class="wheel-card-inner">
+                      <div class="wheel-card-image" style="background-image: url('assets/photos/Stock Photos/PCB-Test-Stock-Photo.jpg');"></div>
+                      <div class="wheel-card-body">
+                        <span class="proj-tag">Hardware Integration</span>
+                        <h3 class="proj-title">Hardware Systems Integration &amp; Production Bring-Up</h3>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Card 2: Home Infrastructure -->
+                  <div class="wheel-card" data-index="2">
+                    <div class="wheel-card-inner">
+                      <div class="wheel-card-image" style="background-image: url('assets/photos/Stock Photos/Homelab-Stock-Photo.webp');"></div>
+                      <div class="wheel-card-body">
+                        <span class="proj-tag">Infrastructure</span>
+                        <h3 class="proj-title">Home Network Engineering Lab</h3>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Card 3: EnkiNotes — WIP -->
+                  <div class="wheel-card wheel-card--wip" data-index="3">
+                    <div class="wheel-card-inner">
+                      <div class="wheel-card-image wheel-card-image--wip"></div>
+                      <div class="proj-wip-overlay">
+                        <div class="proj-wip-badge">
+                          <span class="proj-wip-dot"></span>
+                          In Progress
+                        </div>
+                        <p class="proj-wip-sub">Check back soon</p>
+                      </div>
+                      <div class="wheel-card-body">
+                        <span class="proj-tag proj-tag--wip">Web App</span>
+                        <h3 class="proj-title">EnkiNotes</h3>
+                      </div>
+                    </div>
+                  </div>
+
+                </div><!-- /wheel-stage -->
+
+                <!-- Arrows -->
+                <button class="proj-arrow proj-arrow--prev" id="projPrev" aria-label="Previous project">
+                  <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+                <button class="proj-arrow proj-arrow--next" id="projNext" aria-label="Next project">
+                  <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                </button>
+
+                <!-- Dots -->
+                <div class="proj-dots" id="projDots">
+                  <button class="proj-dot active" data-index="0" aria-label="Project 1"></button>
+                  <button class="proj-dot" data-index="1" aria-label="Project 2"></button>
+                  <button class="proj-dot" data-index="2" aria-label="Project 3"></button>
+                  <button class="proj-dot" data-index="3" aria-label="Project 4"></button>
                 </div>
 
-              </div><!-- /wheel-stage -->
+              </div><!-- /wheel-scene -->
+            </div><!-- /proj-carousel-col -->
 
-              <!-- Arrows -->
-              <button class="proj-arrow proj-arrow--prev" id="projPrev" aria-label="Previous project">
-                <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
-              </button>
-              <button class="proj-arrow proj-arrow--next" id="projNext" aria-label="Next project">
-                <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-              </button>
+            <!-- RIGHT: Detail Panel -->
+            <div class="proj-detail-col">
+              <div class="proj-detail-panel" id="projDetail">
 
-              <!-- Dots -->
-              <div class="proj-dots" id="projDots">
-                <button class="proj-dot active" data-index="0" aria-label="Project 1"></button>
-                <button class="proj-dot" data-index="1" aria-label="Project 2"></button>
-                <button class="proj-dot" data-index="2" aria-label="Project 3"></button>
-                <button class="proj-dot" data-index="3" aria-label="Project 4"></button>
-              </div>
-
-            </div><!-- /wheel-scene -->
-          </div><!-- /proj-carousel-col -->
-
-          <!-- RIGHT: Detail Panel -->
-          <div class="proj-detail-col">
-            <div class="proj-detail-panel" id="projDetail">
-
-              <!-- Project 0 detail: Project Argus -->
-              <div class="proj-detail" data-detail="0">
-                <div class="proj-detail-tag">Embedded Systems · Prototype</div>
-                <h3 class="proj-detail-title">Project Argus — Multi-Sensor Ethernet Monitor</h3>
-                <p class="proj-detail-desc">ESP32-based sensor node monitoring temperature and humidity across a homelab server closet — six sensors, three protocols, and a live Chart.js web dashboard served over Ethernet. Built from scratch to solve a real gap in my infrastructure.</p>
-                <div class="proj-detail-section-label">Tech Stack</div>
-                <div class="proj-detail-tech">
-                  <span class="proj-tech-tag">ESP32</span>
-                  <span class="proj-tech-tag">C++ / PlatformIO</span>
-                  <span class="proj-tech-tag">W5500 Ethernet</span>
-                  <span class="proj-tech-tag">DS18B20</span>
-                  <span class="proj-tech-tag">SHT31-D</span>
-                  <span class="proj-tech-tag">Chart.js</span>
+                <!-- Project 0 detail: Project Argus -->
+                <div class="proj-detail" data-detail="0">
+                  <div class="proj-detail-tag">Embedded Systems · Prototype</div>
+                  <h3 class="proj-detail-title">Project Argus — Multi-Sensor Ethernet Monitor</h3>
+                  <p class="proj-detail-desc">ESP32-based sensor node monitoring temperature and humidity across a homelab server closet — six sensors, three protocols, and a live Chart.js web dashboard served over Ethernet. Built from scratch to solve a real gap in my infrastructure.</p>
+                  <div class="proj-detail-section-label">Tech Stack</div>
+                  <div class="proj-detail-tech">
+                    <span class="proj-tech-tag">ESP32</span>
+                    <span class="proj-tech-tag">C++ / PlatformIO</span>
+                    <span class="proj-tech-tag">W5500 Ethernet</span>
+                    <span class="proj-tech-tag">DS18B20</span>
+                    <span class="proj-tech-tag">SHT31-D</span>
+                    <span class="proj-tech-tag">Chart.js</span>
+                  </div>
+                  <div class="proj-detail-section-label">Key Outcomes</div>
+                  <ul class="proj-detail-outcomes">
+                    <li>Integrated SPI, I2C, and 1-Wire simultaneously on a single MCU</li>
+                    <li>Deployed a live web dashboard with JSON data endpoint — Ethernet only, no WiFi</li>
+                    <li>Wrote custom EthernetServerFixed wrapper to resolve ESP32 core 3.x incompatibility after 2 hours of debugging</li>
+                  </ul>
                 </div>
-                <div class="proj-detail-section-label">Key Outcomes</div>
-                <ul class="proj-detail-outcomes">
-                  <li>Integrated SPI, I2C, and 1-Wire simultaneously on a single MCU</li>
-                  <li>Deployed a live web dashboard with JSON data endpoint — Ethernet only, no WiFi</li>
-                  <li>Wrote custom EthernetServerFixed wrapper to resolve ESP32 core 3.x incompatibility after 2 hours of debugging</li>
-                </ul>
-              </div>
 
-              <!-- Project 1 detail: QxQ -->
-              <div class="proj-detail" data-detail="1">
-                <div class="proj-detail-tag">Hardware Integration</div>
-                <h3 class="proj-detail-title">Hardware Systems Integration &amp; Production Bring-Up</h3>
-                <p class="proj-detail-desc">Full electrical integration of multi-subsystem hardware platforms used in automotive, server, and embedded environments — from schematics to verified, production-ready builds across mixed power domains.</p>
-                <div class="proj-detail-section-label">Tech Stack</div>
-                <div class="proj-detail-tech">
-                  <span class="proj-tech-tag">Electrical Integration</span>
-                  <span class="proj-tech-tag">PCB Bring-Up</span>
-                  <span class="proj-tech-tag">Failure Analysis</span>
-                  <span class="proj-tech-tag">Schematics</span>
-                  <span class="proj-tech-tag">Mixed Power Domains</span>
+                <!-- Project 1 detail: QxQ -->
+                <div class="proj-detail" data-detail="1">
+                  <div class="proj-detail-tag">Hardware Integration</div>
+                  <h3 class="proj-detail-title">Hardware Systems Integration &amp; Production Bring-Up</h3>
+                  <p class="proj-detail-desc">Full electrical integration of multi-subsystem hardware platforms used in automotive, server, and embedded environments — from schematics to verified, production-ready builds across mixed power domains.</p>
+                  <div class="proj-detail-section-label">Tech Stack</div>
+                  <div class="proj-detail-tech">
+                    <span class="proj-tech-tag">Electrical Integration</span>
+                    <span class="proj-tech-tag">PCB Bring-Up</span>
+                    <span class="proj-tech-tag">Failure Analysis</span>
+                    <span class="proj-tech-tag">Schematics</span>
+                    <span class="proj-tech-tag">Mixed Power Domains</span>
+                  </div>
+                  <div class="proj-detail-section-label">Key Outcomes</div>
+                  <ul class="proj-detail-outcomes">
+                    <li>~0.5% wiring fault rate across 600–800+ termination builds</li>
+                    <li>Became default assignee for highest-density, highest-value fixtures</li>
+                    <li>Trained two technicians and drove team-wide reduction in miswiring</li>
+                  </ul>
                 </div>
-                <div class="proj-detail-section-label">Key Outcomes</div>
-                <ul class="proj-detail-outcomes">
-                  <li>~0.5% wiring fault rate across 600–800+ termination builds</li>
-                  <li>Became default assignee for highest-density, highest-value fixtures</li>
-                  <li>Trained two technicians and drove team-wide reduction in miswiring</li>
-                </ul>
-              </div>
 
-              <!-- Project 2 detail: Home Infrastructure -->
-              <div class="proj-detail" data-detail="2">
-                <div class="proj-detail-tag">Infrastructure</div>
-                <h3 class="proj-detail-title">Home Network Engineering Lab</h3>
-                <p class="proj-detail-desc">Fully segmented home network built around clear trust boundaries and a preserved recovery path — spanning routing, managed switching, VLAN isolation, firewall policy, and distributed services across independent physical hosts.</p>
-                <div class="proj-detail-section-label">Tech Stack</div>
-                <div class="proj-detail-tech">
-                  <span class="proj-tech-tag">VLANs</span>
-                  <span class="proj-tech-tag">Firewall Policy</span>
-                  <span class="proj-tech-tag">Linux</span>
-                  <span class="proj-tech-tag">Pi-hole</span>
-                  <span class="proj-tech-tag">Networking</span>
-                  <span class="proj-tech-tag">TP-Link / Netgear</span>
+                <!-- Project 2 detail: Home Infrastructure -->
+                <div class="proj-detail" data-detail="2">
+                  <div class="proj-detail-tag">Infrastructure</div>
+                  <h3 class="proj-detail-title">Home Network Engineering Lab</h3>
+                  <p class="proj-detail-desc">Fully segmented home network built around clear trust boundaries and a preserved recovery path — spanning routing, managed switching, VLAN isolation, firewall policy, and distributed services across independent physical hosts.</p>
+                  <div class="proj-detail-section-label">Tech Stack</div>
+                  <div class="proj-detail-tech">
+                    <span class="proj-tech-tag">VLANs</span>
+                    <span class="proj-tech-tag">Firewall Policy</span>
+                    <span class="proj-tech-tag">Linux</span>
+                    <span class="proj-tech-tag">Pi-hole</span>
+                    <span class="proj-tech-tag">Networking</span>
+                    <span class="proj-tech-tag">TP-Link / Netgear</span>
+                  </div>
+                  <div class="proj-detail-section-label">Key Outcomes</div>
+                  <ul class="proj-detail-outcomes">
+                    <li>Designed multi-zone network with explicit allowlisted cross-VLAN policy — nothing implicitly reachable across trust boundaries</li>
+                    <li>Diagnosed and recovered from full network lockout via multi-hop access and manual reconfiguration</li>
+                    <li>Distributed services across independent physical hosts to eliminate cascading failure dependencies</li>
+                  </ul>
                 </div>
-                <div class="proj-detail-section-label">Key Outcomes</div>
-                <ul class="proj-detail-outcomes">
-                  <li>Designed multi-zone network with explicit allowlisted cross-VLAN policy — nothing implicitly reachable across trust boundaries</li>
-                  <li>Diagnosed and recovered from full network lockout via multi-hop access and manual reconfiguration</li>
-                  <li>Distributed services across independent physical hosts to eliminate cascading failure dependencies</li>
-                </ul>
-              </div>
 
-              <!-- Project 3 detail (WIP) -->
-              <div class="proj-detail" data-detail="3">
-                <div class="proj-detail-tag proj-detail-tag--wip">Web App · In Progress</div>
-                <h3 class="proj-detail-title">EnkiNotes</h3>
-                <p class="proj-detail-desc">A note-taking web application currently in active development. Details will be published here once the project reaches a shareable milestone.</p>
-                <div class="proj-detail-section-label">Tech Stack</div>
-                <div class="proj-detail-tech">
-                  <span class="proj-tech-tag">Web Development</span>
-                  <span class="proj-tech-tag">GitHub Pages</span>
+                <!-- Project 3 detail (WIP) -->
+                <div class="proj-detail" data-detail="3">
+                  <div class="proj-detail-tag proj-detail-tag--wip">Web App · In Progress</div>
+                  <h3 class="proj-detail-title">EnkiNotes</h3>
+                  <p class="proj-detail-desc">A note-taking web application currently in active development. Details will be published here once the project reaches a shareable milestone.</p>
+                  <div class="proj-detail-section-label">Tech Stack</div>
+                  <div class="proj-detail-tech">
+                    <span class="proj-tech-tag">Web Development</span>
+                    <span class="proj-tech-tag">GitHub Pages</span>
+                  </div>
+                  <div class="proj-detail-section-label">Key Outcomes</div>
+                  <ul class="proj-detail-outcomes">
+                    <li>Currently in active development — check back soon</li>
+                  </ul>
+
                 </div>
-                <div class="proj-detail-section-label">Key Outcomes</div>
-                <ul class="proj-detail-outcomes">
-                  <li>Currently in active development — check back soon</li>
-                </ul>
 
-              </div>
+              </div><!-- /proj-detail-panel -->
+            </div><!-- /proj-detail-col -->
 
-            </div><!-- /proj-detail-panel -->
-          </div><!-- /proj-detail-col -->
-
-        </div><!-- /proj-layout -->
-
+          </div><!-- /proj-layout -->
+        </div>
       </section>
 
-      </div>
-      <!-- End Portfolio Sections -->
+      <!-- Footer -->
+      <footer class="site-footer">
+        <div class="site-footer-inner">
+          <p class="site-footer-copy">&copy; 2026 Christian Villanueva — All Rights Reserved</p>
+        </div>
+      </footer>
 
-      <!-- External Content Container -->
-      <div class="external-content-container" id="externalContent">
-        <iframe class="external-content-frame" id="contentFrame" src=""></iframe>
-      </div>
-    </main>
-  </div><!-- /.layout -->
+    </div>
+    <!-- End Portfolio Sections -->
+
+    <!-- External Content Container -->
+    <div class="external-content-container" id="externalContent">
+      <iframe class="external-content-frame" id="contentFrame" src=""></iframe>
+    </div>
+  </main>
 
   <script src="js/main.js"></script>
 </body>

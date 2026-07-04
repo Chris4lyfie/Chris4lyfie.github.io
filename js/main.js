@@ -2,8 +2,45 @@
 // PORTFOLIO — main.js
 // Handles: iframe content loading, navigation state,
 //          sidebar toggle, timeline animation, skill bar
-//          animation, and the project coverflow carousel.
+//          animation, image parallax, and the project coverflow
+//          carousel.
 // =============================================================
+
+
+// =============================================================
+// IMAGE PARALLAX
+// Subtle scroll-linked drift on timeline photos, updated from a
+// single rAF-throttled scroll handler.
+// =============================================================
+
+const parallaxImages  = Array.from(document.querySelectorAll('[data-parallax]'));
+let   scrollFxTicking = false;
+
+function updateScrollFx() {
+  // Drift each photo within its fixed-size frame based on
+  // how far its center is from the viewport center. The frame is 30% taller
+  // than its box (see .doctimeline-thumb CSS) so this never reveals empty edges.
+  const viewportCenter = window.innerHeight / 2;
+  parallaxImages.forEach(img => {
+    const rect = img.parentElement.getBoundingClientRect();
+    if (rect.bottom < 0 || rect.top > window.innerHeight) return; // skip offscreen images
+    const elCenter = rect.top + rect.height / 2;
+    const delta = (elCenter - viewportCenter) * 0.08;
+    const clamped = Math.max(-22, Math.min(22, delta));
+    img.style.transform = `translateY(${clamped}px)`;
+  });
+
+  scrollFxTicking = false;
+}
+
+window.addEventListener('scroll', () => {
+  if (!scrollFxTicking) {
+    requestAnimationFrame(updateScrollFx);
+    scrollFxTicking = true;
+  }
+});
+window.addEventListener('load', updateScrollFx);
+updateScrollFx();
 
 
 // =============================================================
@@ -38,8 +75,7 @@ function loadExternalContent(url) {
 
   if (url.includes('resume.html')) {
     // Resume view: highlight Resume nav link, show download button
-    const resumeLink = document.querySelector('a[onclick*="resume.html"]');
-    if (resumeLink) resumeLink.classList.add('active');
+    document.querySelectorAll('a[onclick*="resume.html"]').forEach(link => link.classList.add('active'));
 
     backButton.innerHTML = `
       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -52,8 +88,7 @@ function loadExternalContent(url) {
 
   } else if (url.includes('projects/')) {
     // Project page view: highlight Projects nav link, hide download button
-    const projectsLink = document.querySelector('a[href="#projects"]');
-    if (projectsLink) projectsLink.classList.add('active');
+    document.querySelectorAll('a[href="#projects"]').forEach(link => link.classList.add('active'));
 
     backButton.innerHTML = `
       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -67,9 +102,9 @@ function loadExternalContent(url) {
 
   window.scrollTo(0, 0);
 
-  // Close sidebar on mobile when navigating
+  // Close mobile nav when navigating
   if (window.innerWidth <= 768) {
-    document.getElementById('sidebar').classList.remove('active');
+    document.getElementById('mobileNav').classList.remove('active');
   }
 }
 
@@ -108,9 +143,20 @@ function goBackToPortfolio() {
   }, 100);
 }
 
-/** Toggle the mobile sidebar open/closed. */
+/** Toggle the mobile nav panel open/closed. */
 function toggleSidebar() {
-  document.getElementById('sidebar').classList.toggle('active');
+  document.getElementById('mobileNav').classList.toggle('active');
+}
+
+/**
+ * Brand link in the top nav: acts as "return to portfolio + scroll home"
+ * while an external page is open, otherwise behaves as a normal #home anchor.
+ */
+function handleBrandClick(event) {
+  if (document.getElementById('externalContent').classList.contains('active')) {
+    event.preventDefault();
+    goBackToPortfolio();
+  }
 }
 
 
@@ -154,28 +200,29 @@ window.addEventListener('scroll', () => {
   checkTimelineItems();
 });
 
-// Close sidebar when clicking outside of it on mobile
+// Close mobile nav when clicking outside of it
 document.addEventListener('click', (e) => {
-  const sidebar = document.getElementById('sidebar');
-  const toggle  = document.querySelector('.mobile-menu-toggle');
+  const mobileNav = document.getElementById('mobileNav');
+  const toggle    = document.querySelector('.mobile-menu-toggle');
 
   if (
     window.innerWidth <= 768 &&
-    !sidebar.contains(e.target) &&
+    mobileNav &&
+    !mobileNav.contains(e.target) &&
     !toggle.contains(e.target) &&
-    sidebar.classList.contains('active')
+    mobileNav.classList.contains('active')
   ) {
-    sidebar.classList.remove('active');
+    mobileNav.classList.remove('active');
   }
 });
 
-// Close sidebar and handle back-navigation when clicking nav links on mobile
+// Close mobile nav and handle back-navigation when clicking nav links
 navLinks.forEach(link => {
   link.addEventListener('click', (e) => {
     // Inline onclick links (Resume, home CTA) are handled by their own handler
     if (link.getAttribute('onclick') && link.getAttribute('onclick').includes('loadExternalContent')) {
       if (window.innerWidth <= 768) {
-        document.getElementById('sidebar').classList.remove('active');
+        document.getElementById('mobileNav').classList.remove('active');
       }
       return;
     }
@@ -195,7 +242,7 @@ navLinks.forEach(link => {
     }
 
     if (window.innerWidth <= 768) {
-      document.getElementById('sidebar').classList.remove('active');
+      document.getElementById('mobileNav').classList.remove('active');
     }
   });
 });
@@ -203,89 +250,19 @@ navLinks.forEach(link => {
 
 // =============================================================
 // EXPERIENCE TIMELINE
-// Animates timeline items and the connecting line segments
-// as they scroll into view.
+// Two-column document-style list: each row fades in and its rule
+// lights up (via the .visible class) as it scrolls into view.
 // =============================================================
 
-const timelineItems       = document.querySelectorAll('.timeline-item');
-const timelineLineWrapper = document.querySelector('.timeline-line-wrapper');
-const startEndpoint       = document.querySelector('.timeline-endpoint.start');
-const endEndpoint         = document.querySelector('.timeline-endpoint.end');
+const timelineItems = document.querySelectorAll('.doctimeline-item');
 
-/**
- * Build animated line segments between each timeline dot.
- * Called once on load (and on resize) after the layout is known.
- */
-function createTimelineSegments() {
-  if (!timelineLineWrapper || timelineItems.length === 0) return;
-
-  const wrapperRect = timelineLineWrapper.getBoundingClientRect();
-
-  // Helper: get the horizontal center of an element relative to the wrapper
-  const centerX = el => {
-    const r = el.getBoundingClientRect();
-    return r.left - wrapperRect.left + r.width / 2;
-  };
-
-  const startPos = centerX(startEndpoint);
-  const endPos   = centerX(endEndpoint);
-
-  // Collect dot positions
-  const dots = Array.from(timelineItems).map(item => ({
-    left: centerX(item.querySelector('.timeline-dot'))
-  }));
-
-  // Helper: create and append one segment div
-  const addSegment = (key, left, maxWidth) => {
-    const seg = document.createElement('div');
-    seg.className = `timeline-segment timeline-segment-${key}`;
-    seg.setAttribute('data-segment', key);
-    seg.style.left     = left + 'px';
-    seg.style.maxWidth = maxWidth + 'px';
-    timelineLineWrapper.appendChild(seg);
-  };
-
-  // Segment from the start endpoint to the first dot
-  if (dots.length > 0) {
-    addSegment('start', startPos, dots[0].left - startPos);
-  }
-
-  // Segments between consecutive dots
-  for (let i = 0; i < dots.length - 1; i++) {
-    addSegment(i, dots[i].left, dots[i + 1].left - dots[i].left);
-  }
-
-  // Segment from the last dot to the end endpoint
-  if (dots.length > 0) {
-    addSegment('end', dots[dots.length - 1].left, endPos - dots[dots.length - 1].left);
-  }
-}
-
-/**
- * Trigger the visible animation on timeline items as they
- * scroll into the viewport, and extend the connecting line segments.
- */
+/** Mark timeline items visible as they scroll into the viewport. */
 function checkTimelineItems() {
-  timelineItems.forEach((item, index) => {
+  timelineItems.forEach(item => {
+    if (item.classList.contains('visible')) return;
     const rect = item.getBoundingClientRect();
-
-    if (rect.top < window.innerHeight * 0.5) {
-      setTimeout(() => {
-        item.classList.add('visible');
-
-        // Animate the line segment leading up to this dot
-        const segKey = index === 0 ? 'start' : index - 1;
-        const seg    = document.querySelector(`.timeline-segment-${segKey}`);
-        if (seg) seg.style.width = seg.style.maxWidth;
-
-        // After the last item, extend the trailing end segment
-        if (index === timelineItems.length - 1) {
-          setTimeout(() => {
-            const endSeg = document.querySelector('.timeline-segment-end');
-            if (endSeg) endSeg.style.width = endSeg.style.maxWidth;
-          }, 500);
-        }
-      }, index * 500);
+    if (rect.top < window.innerHeight * 0.75) {
+      item.classList.add('visible');
     }
   });
 }
@@ -320,7 +297,7 @@ checkSections();
 const skillObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
-      entry.target.querySelectorAll('.skill-tag-bar').forEach((bar, index) => {
+      entry.target.querySelectorAll('.skill-row').forEach((bar, index) => {
         setTimeout(() => bar.classList.add('animated'), index * 100);
       });
       skillObserver.unobserve(entry.target);
@@ -333,8 +310,12 @@ document.querySelectorAll('.skill-category').forEach(cat => skillObserver.observ
 
 // =============================================================
 // PROJECT COVERFLOW CAROUSEL
-// 3-card coverflow with auto-advance, dot navigation,
-// and a synced detail panel on the right.
+// Flanking cards are visible peeking beside the active one (bold
+// 3D depth + rotation), auto-advance, dot navigation, and a synced
+// detail panel on the right. The scene clips at its own column
+// edge (see .wheel-scene overflow:hidden in CSS), so a flanking
+// card can never bleed into the detail panel — the carousel column
+// is also given more relative width (see .proj-layout) for room.
 // =============================================================
 (function () {
   const stage = document.getElementById('wheelStage');
@@ -350,11 +331,12 @@ document.querySelectorAll('.skill-category').forEach(cat => skillObserver.observ
   const TOTAL      = cards.length;
   const AUTO_DELAY = 3500; // ms between auto-advances
 
-  // Coverflow perspective constants
-  const FLANK_Z       = -200;  // translateZ for non-active cards (px)
-  const FLANK_ROT     = 40;    // rotateY for non-active cards (deg)
-  const FLANK_SCALE   = 0.80;  // scale for non-active cards
-  const FLANK_OPACITY = 0.5;   // opacity for non-active cards
+  // Coverflow depth constants — bolder than a subtle carousel on purpose
+  const FLANK_Z       = -260;  // translateZ for non-active cards (px)
+  const FLANK_ROT     = 52;    // rotateY for non-active cards (deg)
+  const FLANK_SCALE   = 0.8;   // scale for non-active cards
+  const FLANK_OPACITY = 0.62;  // opacity for non-active cards — visible, not washed out
+  const BACK_OPACITY  = 0;     // cards further back are fully hidden
 
   let current   = 0;
   let autoTimer = null;
@@ -390,7 +372,7 @@ document.querySelectorAll('.skill-category').forEach(cat => skillObserver.observ
       } else {
         // Back card — hidden behind the active card
         tx = 0; tz = FLANK_Z * 2; ry = 0;
-        scale = 0.6; opacity = 0; zIndex = 1;
+        scale = 0.6; opacity = BACK_OPACITY; zIndex = 1;
         card.classList.remove('is-active');
       }
 
@@ -447,7 +429,7 @@ document.querySelectorAll('.skill-category').forEach(cat => skillObserver.observ
   cards.forEach((card, i) => {
     card.addEventListener('click', () => {
       if (i !== current) {
-        // Non-active card clicked: bring it to center
+        // Flanking card clicked: bring it to center
         goTo(i); stopAuto(); startAuto();
       } else {
         // Active card clicked: navigate to project page if available
@@ -461,7 +443,7 @@ document.querySelectorAll('.skill-category').forEach(cat => skillObserver.observ
   scene.addEventListener('mouseenter', stopAuto);
   scene.addEventListener('mouseleave', startAuto);
 
-  // Initialize once fonts/images are loaded so cardH() is accurate
+  // Initialize once fonts/images are loaded so flankX() is accurate
   window.addEventListener('load', () => {
     goTo(0);
     startAuto();
@@ -472,10 +454,7 @@ document.querySelectorAll('.skill-category').forEach(cat => skillObserver.observ
   });
 
   // Also initialize the timeline alongside the carousel
-  window.addEventListener('load', () => {
-    createTimelineSegments();
-    checkTimelineItems();
-  });
+  window.addEventListener('load', checkTimelineItems);
   window.addEventListener('scroll', checkTimelineItems);
 })();
 

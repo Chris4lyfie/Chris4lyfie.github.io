@@ -8,238 +8,25 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="css/styles.css">
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-
-    :root {
-      --stone-800: #292524; --stone-700: #44403c; --stone-500: #78716c;
-      --stone-400: #a8a29e; --stone-200: #e7e5e4; --stone-50: #fafaf9;
-      --amber-500: #f59e0b; --amber-400: #fbbf24; --amber-300: #fde68a;
-      --amber-dark: #d97706;
-    }
-
-    body {
-      font-family: 'Space Grotesk', -apple-system, sans-serif;
-      line-height: 1.7;
-      color: var(--stone-800);
-      background: var(--stone-50);
-      overflow: hidden;
-    }
-
-    ::selection { background: var(--amber-400); color: var(--stone-800); }
-
-    .container {
-      margin: 0 auto;
-      background: #ffffff;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-
-    /* Header */
-    header {
-      background: var(--stone-800);
-      color: white;
-      padding: 3rem;
-      border-bottom: 4px solid var(--amber-500);
-      text-align: center;
-    }
-
-    h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      color: white;
-    }
-
-    /* Content */
-    .content {
-      padding: 3rem;
-    }
-
-    /* Section eyebrow — matches QxQ style */
-    .section-eyebrow {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.68rem;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--amber-500);
-      margin: 3rem 0 1.25rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .section-eyebrow::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(90deg, var(--amber-300), transparent);
-    }
-    .content > section:first-child .section-eyebrow {
-      margin-top: 0;
-    }
-
-    p {
-      margin-bottom: 1.2rem;
-      color: #57534e;
-      font-size: 1rem;
-      line-height: 1.8;
-    }
-
-    strong { color: var(--stone-800); font-weight: 600; }
-
-    ul { margin: 0.75rem 0 0; list-style: none; }
-    ul li {
-      position: relative;
-      padding-left: 1.5rem;
-      margin-bottom: 0.6rem;
-      color: #57534e;
-      font-size: 0.95rem;
-      line-height: 1.7;
-    }
-    ul li::before {
-      content: "▸";
-      position: absolute;
-      left: 0;
-      color: var(--amber-500);
-      font-size: 0.8rem;
-      top: 0.2rem;
-    }
-
-    /* Light cards for items */
-    .experience-item,
-    .education-item,
-    .project-item {
-      background: white;
-      border: 1px solid var(--stone-200);
-      border-radius: 10px;
-      padding: 1.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .experience-item:last-child,
-    .education-item:last-child,
-    .project-item:last-child {
-      margin-bottom: 0;
-    }
-
-    .item-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 0.4rem;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-    }
-
-    .item-title {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--stone-800);
-      flex: 1;
-    }
-
-    .item-title a {
-      color: var(--amber-500);
-      text-decoration: none;
-      transition: all 0.3s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .item-title a::after {
-      content: '→';
-      opacity: 0;
-      transform: translateX(-8px);
-      transition: all 0.3s ease;
-    }
-    .item-title a:hover { color: var(--amber-dark); }
-    .item-title a:hover::after { opacity: 1; transform: translateX(0); }
-
-    .item-date {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      color: var(--stone-500);
-      font-weight: 500;
-      white-space: nowrap;
-      padding-top: 0.15rem;
-    }
-
-    .item-company {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--amber-dark);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 0.3rem;
-    }
-
-    .item-location {
-      font-size: 0.85rem;
-      color: var(--stone-500);
-      margin-bottom: 0.5rem;
-    }
-
-    .coursework {
-      font-size: 0.88rem;
-      color: #57534e;
-      margin-top: 0.5rem;
-      line-height: 1.6;
-    }
-    .coursework strong { color: var(--stone-800); }
-
-    .honors {
-      font-size: 0.88rem;
-      color: #57534e;
-      font-style: italic;
-      margin-top: 0.25rem;
-    }
-    .honors strong { color: var(--stone-800); }
-
-    /* Project items with linked titles */
-    .project-item > p {
-      color: #57534e;
-      font-size: 0.9rem;
-      margin: 0.5rem 0 0;
-      line-height: 1.7;
-    }
-
-    /* Mobile */
-    @media (max-width: 768px) {
-      header { padding: 2.5rem 1.5rem; }
-      h1 { font-size: 2rem; }
-      .content { padding: 2rem 1.5rem; }
-      .item-header { flex-direction: column; }
-      .item-date { white-space: normal; }
-    }
-
-    /* Scroll Progress */
-    .progress-bar {
-      position: fixed;
-      top: 0; left: 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--amber-500), var(--amber-400));
-      width: 0%;
-      z-index: 1000;
-      transition: width 0.1s ease;
-    }
+    body { overflow: hidden; }
   </style>
 </head>
 <body>
-  <div class="progress-bar" id="progressBar"></div>
+  <div class="resume-progress-bar" id="progressBar"></div>
 
-  <div class="container">
-    <header>
+  <div class="resume-container">
+    <header class="resume-header">
       <h1>Christian Villanueva</h1>
     </header>
 
-    <div class="content">
-      
+    <div class="resume-content">
+
       <!-- Education -->
       <section>
         <div class="section-eyebrow">Education</div>
-        
+
         <div class="education-item">
           <div class="item-header">
             <div class="item-title">Bachelor of Science in Computer Engineering</div>
@@ -266,7 +53,7 @@
       <!-- Professional Experience -->
       <section>
         <div class="section-eyebrow">Experience</div>
-        
+
         <div class="experience-item">
           <div class="item-header">
             <div class="item-title">Hardware Test Engineering Technician (Reliability & Test Fixtures)</div>
@@ -323,7 +110,7 @@
       <!-- Projects -->
       <section>
         <div class="section-eyebrow">Projects</div>
-        
+
         <div class="project-item">
           <div class="item-header">
             <div class="item-title"><a href="projects/Project-Argus.html">Project Argus — Multi-Sensor Ethernet Monitor</a></div>
