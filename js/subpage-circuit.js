@@ -123,6 +123,10 @@
 
     if (window.innerWidth < 1300) return;
 
+    // Collapse the SVG before measuring, so a previous (taller) build
+    // can never inflate the document height it is then sized to.
+    svg.setAttribute('height', 0);
+    svg.style.height = '0px';
     var docH = document.documentElement.scrollHeight;
     var rect = contentEl.getBoundingClientRect();
     var contentLeft = Math.round(rect.left + window.scrollX) + 20;

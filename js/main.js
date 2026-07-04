@@ -907,6 +907,10 @@ function loadExternalContent(url) {
   backButton.classList.add('active');
   mainContent.classList.add('viewing-external');
 
+  // Reset any height set for the previous page — the subpage's
+  // min-height:100vh tracks the frame, so a stale tall frame would
+  // ratchet every following page to the tallest one ever viewed.
+  contentFrame.style.height = '';
   contentFrame.src = url;
 
   // Clear existing active nav state

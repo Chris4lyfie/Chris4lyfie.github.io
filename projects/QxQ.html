@@ -265,7 +265,19 @@
     if (inIframe) {
       document.body.classList.add('in-iframe');
       function reportHeight() {
-        window.parent.postMessage({ type: 'iframeHeight', height: document.documentElement.scrollHeight }, '*');
+        // Measure the real content bottom from in-flow body children.
+        // body's min-height:100vh and the absolute circuit SVG both
+        // track the iframe's current height, so reporting them back
+        // would ratchet the frame taller on every page switch.
+        var h = 0;
+        var kids = document.body.children;
+        for (var i = 0; i < kids.length; i++) {
+          var cs = getComputedStyle(kids[i]);
+          if (cs.position === 'fixed' || cs.position === 'absolute') continue;
+          var bottom = kids[i].getBoundingClientRect().bottom + window.scrollY;
+          if (bottom > h) h = bottom;
+        }
+        window.parent.postMessage({ type: 'iframeHeight', height: Math.ceil(h) }, '*');
       }
       window.addEventListener('load', reportHeight);
       window.addEventListener('resize', reportHeight);
