@@ -134,7 +134,7 @@
               <li>Netgear GS308E v4</li>
               <li>Single managed switch</li>
               <li>Carries all VLANs to wired endpoints</li>
-              <li>100 ft Cat7 trunk to router</li>
+              <li>Cat6 trunk to router in a separate room</li>
             </ul>
           </div>
           <div class="layer-card">
@@ -143,16 +143,16 @@
               <li>TP-Link EAP660 HD</li>
               <li>SSID-to-VLAN mapping</li>
               <li>Serves Management, Home, IoT, Guest SSIDs</li>
-              <li>Wired uplink to core switch</li>
+              <li>Multi-VLAN trunk directly to the router</li>
             </ul>
           </div>
           <div class="layer-card">
             <div class="layer-card-title">Compute / Services</div>
             <ul>
-              <li>TrueNAS — primary workload host</li>
+              <li>TrueNAS — storage and all app workloads</li>
               <li>Raspberry Pi 3 — Pi-hole DNS</li>
               <li>Raspberry Pi 3 B+ — Nginx Proxy Manager</li>
-              <li>"Prometheus" node — reserved, future use</li>
+              <li>Proxmox host — powered down to save power</li>
             </ul>
           </div>
         </div>
@@ -278,15 +278,16 @@
 
         <!-- SERVICE PLATFORM -->
         <div class="section-eyebrow fade-up">Service Platform</div>
-        <p class="fade-up">Services are distributed across independent physical devices. This prevents a single workload event from collapsing all infrastructure functions — a lesson learned by observing how collocated services create cascading dependencies.</p>
+        <p class="fade-up">Infrastructure services and application workloads live on separate hardware. DNS and the reverse proxy each run on their own low-power device, and every app runs on the TrueNAS host. A heavy workload or a storage problem can take apps down, but it can't take the network's name resolution or routing with it.</p>
         <div class="layer-grid fade-up">
           <div class="layer-card">
             <div class="layer-card-title">TrueNAS — Primary Host</div>
             <ul>
               <li>Plex media server</li>
               <li>Automated arr stack (Sonarr, Radarr, Prowlarr)</li>
-              <li>qBittorrent + Gluetun (PIA VPN tunnel)</li>
-              <li>Tailscale overlay node (remote access)</li>
+              <li>qBittorrent behind Gluetun with a VPN kill switch</li>
+              <li>Gitea + PostgreSQL — private Git server</li>
+              <li>Minecraft server, Tailscale remote access</li>
             </ul>
           </div>
           <div class="layer-card">
@@ -295,7 +296,7 @@
               <li>Dedicated Raspberry Pi 3 v1.2</li>
               <li>Resides on VLAN 10 (Management)</li>
               <li>Serves all zones via explicit firewall rules</li>
-              <li>Kept separate from heavy workloads intentionally</li>
+              <li>Local <code>.home</code> hostnames point at the reverse proxy</li>
             </ul>
           </div>
           <div class="layer-card">
@@ -308,74 +309,105 @@
             </ul>
           </div>
           <div class="layer-card">
-            <div class="layer-card-title">Prometheus Node (Future)</div>
+            <div class="layer-card-title">Prometheus — Proxmox Host (Parked)</div>
             <ul>
-              <li>Reserved for AI/ML or lab workloads</li>
-              <li>Zone placement pending (DMZ vs Management)</li>
-              <li>IPMI management port already provisioned</li>
-              <li>10G switch ports reserved</li>
+              <li>Supermicro board, Xeon D-2141I, 256 GB ECC</li>
+              <li>Ran Ubuntu and Debian VMs, including a DMZ game server</li>
+              <li>Powered down; workloads moved to TrueNAS</li>
+              <li>IPMI stays reachable for remote power-on</li>
             </ul>
           </div>
         </div>
         <p class="fade-up">Pi-hole is kept on a dedicated low-power device because DNS is infrastructure-critical — if it fails, all zones lose internet resolution with no automatic fallback. Keeping it independent means a TrueNAS restart or storage event doesn't take DNS down with it. This is an intentional fail-closed design: there is no silent bypass to a public resolver.</p>
+        <p class="fade-up">Every internal service gets a readable hostname. Pi-hole answers every <code>.home</code> name with the reverse proxy's address, and the proxy forwards each one to the right host and port. Services can move between hosts without anyone's bookmarks breaking.</p>
 
-        <!-- PHYSICAL PORT MAP -->
-        <div class="section-eyebrow fade-up">Physical Port Map</div>
-        <p class="fade-up">Both the router and switch have a dedicated management-only port that is never touched during changes. This is the same discipline applied at both devices — the recovery path exists regardless of which one you're working on.</p>
-
-        <p class="fade-up" style="font-family:'JetBrains Mono',monospace; font-size:0.72rem; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:var(--stone-500); margin-bottom:0.5rem;">TP-Link ER605v2 — Router</p>
-        <div class="port-map fade-up">
-          <div class="port-row critical">
-            <div class="port-id">Port 1</div>
-            <div class="port-desc"><strong>WAN</strong> — Internet uplink.</div>
-          </div>
-          <div class="port-row management">
-            <div class="port-id">Port 2</div>
-            <div class="port-desc"><strong>Reserved management-only (VLAN 10)</strong> — Never modified during changes. Guaranteed access to the router even if trunk or VLAN configuration breaks other paths.</div>
-          </div>
-          <div class="port-row">
-            <div class="port-id">Port 3</div>
-            <div class="port-desc"><strong>Wireless Access Point</strong> — TP-Link EAP660HD. SSID-to-VLAN mapping for Management, Home, IoT, and Guest.</div>
-          </div>
-          <div class="port-row critical">
-            <div class="port-id">Port 4</div>
-            <div class="port-desc"><strong>Trunk to core switch</strong> — 100 ft Cat7 run to separate room. Treated as critical infrastructure; changes require immediate post-change verification.</div>
-          </div>
-          <div class="port-row">
-            <div class="port-id">Port 5</div>
-            <div class="port-desc"><strong>Desktop workstation</strong> — VLAN 10. Primary management workstation used to administer all infrastructure devices.</div>
-          </div>
+        <!-- CONSOLIDATION DECISION -->
+        <div class="section-eyebrow fade-up">Compute Consolidation Decision</div>
+        <div class="adr-block fade-up">
+          <div class="adr-block-title">Architecture Decision Record — Park the Hypervisor, Consolidate on TrueNAS</div>
+          <p><strong>Context:</strong> The lab ran two always-on servers: the TrueNAS storage host and a dedicated Proxmox hypervisor. Proxmox hosted a Docker VM and a game server, but none of these workloads needed a second machine. TrueNAS was already running the media stack, with spare CPU and RAM.</p>
+          <p><strong>Decision:</strong> Move every workload onto TrueNAS as native apps or Docker Compose stacks and power the hypervisor down. The cost of running both machines 24/7 wasn't justified by what the second one was doing.</p>
+          <ul>
+            <li><strong>Lower power bill</strong> — one always-on server instead of two</li>
+            <li><strong>One app platform</strong> — every service is managed, updated, and backed up the same way</li>
+            <li><strong>Hardware stays ready</strong> — Proxmox is installed and IPMI is reachable, so it can be powered on remotely when a workload needs it</li>
+          </ul>
+          <p><strong>Tradeoff accepted:</strong> TrueNAS is now a single point of failure for every app. That's acceptable because the critical network services — DNS, the reverse proxy, and routing — run on separate hardware, and the app data is snapshotted and replicated (see below).</p>
         </div>
 
-        <p class="fade-up" style="font-family:'JetBrains Mono',monospace; font-size:0.72rem; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:var(--stone-500); margin-bottom:0.5rem; margin-top:1.5rem;">Netgear GS308E v4 — Core Switch</p>
-        <div class="port-map fade-up">
-          <div class="port-row critical">
-            <div class="port-id">Port 1</div>
-            <div class="port-desc"><strong>Trunk to router</strong> — 100 ft Cat7 uplink. All VLANs carried on this trunk.</div>
+        <!-- STORAGE -->
+        <div class="section-eyebrow fade-up">Storage &amp; Data Protection</div>
+        <p class="fade-up">Storage on TrueNAS is split by what the data is and how bad it would be to lose it. Small, valuable data sits on mirrored SSDs. Bulk media sits on a large single drive that can be rebuilt if it's lost.</p>
+        <table class="vlan-table fade-up">
+          <thead>
+            <tr>
+              <th>Pool</th>
+              <th>Layout</th>
+              <th>Holds</th>
+              <th>Protection</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>App data</td>
+              <td>2 × 512 GB SSD mirror</td>
+              <td>Config and databases for every app</td>
+              <td>Survives one drive failure; snapshotted and replicated nightly</td>
+            </tr>
+            <tr>
+              <td>Backup A</td>
+              <td>8 TB HDD</td>
+              <td>Replicated copy of the app data pool</td>
+              <td>Nightly ZFS replication</td>
+            </tr>
+            <tr>
+              <td>Backup B</td>
+              <td>8 TB HDD</td>
+              <td>Second replicated copy of the app data pool</td>
+              <td>Nightly ZFS replication; scrubbed weekly</td>
+            </tr>
+            <tr>
+              <td>Media</td>
+              <td>14 TB HDD</td>
+              <td>Media library and downloads</td>
+              <td>Short-retention snapshots — replaceable data</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="layer-grid fade-up">
+          <div class="layer-card">
+            <div class="layer-card-title">Snapshots by Change Rate</div>
+            <ul>
+              <li>Whole app pool: daily, kept 3 days</li>
+              <li>Game server and arr configs: hourly for a day, plus dailies</li>
+              <li>Media: daily, kept 2 days</li>
+              <li>Download client excluded by design</li>
+            </ul>
           </div>
-          <div class="port-row management">
-            <div class="port-id">Port 2</div>
-            <div class="port-desc"><strong>Reserved management-only (VLAN 10)</strong> — Never modified during changes. This port is the recovery path if a trunk or VLAN misconfiguration locks out all other access.</div>
+          <div class="layer-card">
+            <div class="layer-card-title">Integrity Checks</div>
+            <ul>
+              <li>Monthly scrub on every pool</li>
+              <li>SMART short tests three times a week</li>
+              <li>SMART long test monthly, the day after scrubs</li>
+              <li>Scrubs and long tests run on separate days</li>
+            </ul>
           </div>
-          <div class="port-row">
-            <div class="port-id">Port 3</div>
-            <div class="port-desc"><strong>Pi-hole</strong> — VLAN 10. DNS infrastructure host.</div>
-          </div>
-          <div class="port-row">
-            <div class="port-id">Port 4</div>
-            <div class="port-desc"><strong>Nginx Proxy Manager</strong> — VLAN 10. Reverse proxy host.</div>
-          </div>
-          <div class="port-row">
-            <div class="port-id">Port 5</div>
-            <div class="port-desc"><strong>TrueNAS</strong> — VLAN 10. Primary workload and storage host.</div>
-          </div>
-          <div class="port-row future">
-            <div class="port-id">Ports 6–8</div>
-            <div class="port-desc"><strong>"Prometheus" node (future use)</strong> — 10G links + IPMI management port. Reserved, not currently active.</div>
+          <div class="layer-card">
+            <div class="layer-card-title">Isolation</div>
+            <ul>
+              <li>Containers run as a dedicated service user</li>
+              <li>App data (API keys, credentials) is never shared over SMB</li>
+              <li>Only the media library is exposed on the network</li>
+              <li>Torrent traffic can only leave through the VPN</li>
+            </ul>
           </div>
         </div>
+        <p class="fade-up">The known gap is offsite backup. Both replicated copies live in the same machine as the original, so a fire or power surge could take out all three. That's the next storage item to fix.</p>
 
-
+        <!-- RECOVERY PORTS -->
+        <div class="section-eyebrow fade-up">Recovery Path</div>
+        <p class="fade-up">Both the router and the switch keep one port reserved for management access that is never touched during changes. If a trunk or VLAN change goes wrong, there is always a known-good cable to plug into. A spare switch is also kept on hand for an emergency flat-network rebuild.</p>
 
         <!-- ARCHITECTURAL SIMPLIFICATION -->
         <div class="section-eyebrow fade-up">Architectural Simplification Decision</div>
@@ -434,6 +466,28 @@
           <div class="failure-insight">This incident directly motivated the single-switch consolidation. Multi-switch topologies multiply the number of places this class of mistake can occur. Reducing to one switch with one documented port map was the architectural response.</div>
         </div>
 
+        <div class="failure-block fade-up">
+          <div class="failure-block-title">Incident 4 — Storage Mirror Ran Degraded for Two Months · Aug–Oct 2026</div>
+          <div class="failure-row"><span class="failure-key">Failure Mode</span><span class="failure-val">An SSD in the app-data mirror logged a burst of 35 uncorrectable read errors. ZFS faulted it and the pool kept running on the remaining drive.</span></div>
+          <div class="failure-row"><span class="failure-key">Symptom</span><span class="failure-val">None. Every app kept working, so nothing prompted a check.</span></div>
+          <div class="failure-row"><span class="failure-key">Detection</span><span class="failure-val">The first run of a new monitoring check flagged the degraded pool, roughly two months after the fault.</span></div>
+          <div class="failure-row"><span class="failure-key">Diagnosis</span><span class="failure-val">It was the second SSD to fail in the same drive bay. Reseating power brought it back, but a scrub found new read and checksum errors right away. SATA CRC errors stayed at zero, which pointed at power to that bay rather than the data cable.</span></div>
+          <div class="failure-row"><span class="failure-key">Recovery</span><span class="failure-val">Installed a new SSD in a different bay with a new SATA cable, a different port, and direct PSU power. The resilver copied 75.6 GiB in 5.5 minutes with zero errors.</span></div>
+          <div class="failure-row"><span class="failure-key">Permanent Change</span><span class="failure-val">Pool and disk health are now checked every minute, with alerts sent to me as Discord messages. The old bay is retired. The other mirror SSD is the same model and age, so it's scheduled for replacement with a different brand.</span></div>
+          <div class="failure-insight">A mirror only protects you if you know when one side has failed. For two months the pool was one drive failure away from losing every app's data, and nothing looked wrong. Redundancy without monitoring just delays when you find out.</div>
+        </div>
+
+        <div class="failure-block fade-up">
+          <div class="failure-block-title">Incident 5 — Locked Out of the DNS Host · Oct 2026</div>
+          <div class="failure-row"><span class="failure-key">Failure Mode</span><span class="failure-val">Lost the login credentials for the Raspberry Pi running Pi-hole</span></div>
+          <div class="failure-row"><span class="failure-key">Constraint</span><span class="failure-val">Re-imaging would wipe the DNS settings, blocklists, and local hostname records the rest of the network depends on</span></div>
+          <div class="failure-row"><span class="failure-key">Recovery</span><span class="failure-val">Pulled the SD card and added a one-shot script to the boot partition, launched through the kernel command line. On the next boot it reset the password, enabled SSH, restored the original boot line, and deleted itself. The Pi came back with its config untouched.</span></div>
+          <div class="failure-row"><span class="failure-key">Snags</span><span class="failure-val">Windows hid a <code>.txt</code> extension on the script, Windows line endings broke bash, and the boot command line had to stay a single line with no trailing newline</span></div>
+          <div class="failure-row"><span class="failure-key">Follow-Up</span><span class="failure-val">Updated Pi-hole and the OS, then traced a separate <code>.home</code> lookup failure on my laptop to the VPN client claiming all DNS queries. Pi-hole itself was fine.</span></div>
+          <div class="failure-row"><span class="failure-key">Permanent Change</span><span class="failure-val">The whole procedure is written up as a runbook. Key-based SSH login is next, so a password is no longer the only way in.</span></div>
+          <div class="failure-insight">While the Pi was off, every device that relies on it lost name resolution. That's why the recovery had to be fast and non-destructive: rebuilding DNS from scratch would have turned a forgotten password into an outage for the whole network.</div>
+        </div>
+
         <!-- DESIGN PRINCIPLES -->
         <div class="section-eyebrow fade-up">Design Principles Applied</div>
         <div class="proof-categories fade-up">
@@ -476,6 +530,7 @@
               <div class="proof-category-item">Clear L3 policy / L2 distribution layer separation</div>
               <div class="proof-category-item">Intentional service placement and dependency isolation</div>
               <div class="proof-category-item">Explicit recovery-path engineering</div>
+              <div class="proof-category-item">Storage protection tiered by data value</div>
             </div>
           </div>
           <div class="proof-category">
@@ -493,6 +548,7 @@
               <div class="proof-category-item">Topology simplification as a reliability strategy</div>
               <div class="proof-category-item">DNS and management treated as critical dependencies</div>
               <div class="proof-category-item">Tradeoff decisions grounded in outage evidence</div>
+              <div class="proof-category-item">Power cost weighed against capacity</div>
               <div class="proof-category-item">Infrastructure modeled as a dependency graph</div>
             </div>
           </div>
@@ -501,7 +557,29 @@
         <!-- HOW I'D SCALE THIS -->
         <div class="section-eyebrow fade-up">How I Would Scale This</div>
         <p class="fade-up">The single switch was the right call for this environment, but at larger scale I'd add a second one — the redundancy is worth the added complexity when other people are depending on the network staying up. The segmentation model and the single L3 policy point would stay the same; that part scales fine.</p>
-        <p class="fade-up">The first thing I'd add in a real work environment is monitoring and alerting. Right now I find out something broke when I notice it. That's fine at home, not fine anywhere else. Beyond that, the change discipline I follow in my head — change one thing at a time, verify before moving on — would need to become actual documentation and automated checks. You can't rely on everyone just knowing the rules.</p>
+        <p class="fade-up">The first thing I'd add in a real work environment is full monitoring and alerting. I've started on that at home: storage and app health are now watched around the clock (see below). Incident 4 is why — a degraded mirror went unnoticed for two months. The network gear still isn't monitored, so a failure there is only found when someone notices. Beyond that, the change discipline I follow in my head — change one thing at a time, verify before moving on — would need to become actual documentation and automated checks. You can't rely on everyone just knowing the rules.</p>
+
+        <!-- IN PROGRESS: INK -->
+        <div class="section-eyebrow fade-up">In Progress — Ink</div>
+        <p class="fade-up">Ink is a personal assistant I'm building on top of the lab, and it's becoming the lab's monitoring layer. It runs as a Discord bot in a custom app on TrueNAS, with a small CPU-only embedding model alongside it for long-term memory. For chat it uses a larger language model on my desktop's RTX 4090. The desktop sleeps when idle, so Ink wakes it with Wake-on-LAN when it's needed, and it shuts itself down again about ten minutes after the last reply.</p>
+        <div class="layer-grid fade-up">
+          <div class="layer-card">
+            <div class="layer-card-title">Working Now</div>
+            <ul>
+              <li>TrueNAS checked every minute through a read-only API account</li>
+              <li>Alerts for pool and disk faults, stopped apps, storage thresholds, and updates</li>
+              <li>Live lab status and a generated inventory on request</li>
+            </ul>
+          </div>
+          <div class="layer-card">
+            <div class="layer-card-title">Planned</div>
+            <ul>
+              <li>Extend monitoring to Pi-hole, the Pis, Proxmox, and network gear</li>
+              <li>Use it in place of a separate Grafana / Uptime Kuma stack</li>
+              <li>Home Assistant integration for the IoT side</li>
+            </ul>
+          </div>
+        </div>
 
         <!-- NEXT IMPROVEMENTS -->
         <div class="section-eyebrow fade-up">Next Engineering Improvements</div>
@@ -518,7 +596,7 @@
             <span class="improvement-num">02</span>
             <div class="improvement-body">
               <div class="improvement-title">Formalized Post-Change Verification Checklist</div>
-              <p class="improvement-desc">All three incidents above could have been detected faster with a structured post-change verification pass. The checklist will cover: management VLAN reachability, DNS resolution from each zone, inter-VLAN deny rules, and wireless SSID-to-VLAN mapping. Firmware updates are included as change events requiring the full checklist.</p>
+              <p class="improvement-desc">The three network incidents above could have been detected faster with a structured post-change verification pass. The checklist will cover: management VLAN reachability, DNS resolution from each zone, inter-VLAN deny rules, and wireless SSID-to-VLAN mapping. Firmware updates are included as change events requiring the full checklist.</p>
             </div>
           </div>
           <div class="improvement-step">
@@ -526,6 +604,13 @@
             <div class="improvement-body">
               <div class="improvement-title">Decouple Remote Access from TrueNAS</div>
               <p class="improvement-desc">The Tailscale overlay node currently runs on TrueNAS. A TrueNAS restart or storage event removes remote access entirely. Moving the overlay node to a lightweight independent host — a dedicated Pi or the Nginx device — creates a separate failure domain for remote access and removes the hard dependency on the primary storage host.</p>
+            </div>
+          </div>
+          <div class="improvement-step">
+            <span class="improvement-num">04</span>
+            <div class="improvement-body">
+              <div class="improvement-title">Offsite Backup</div>
+              <p class="improvement-desc">App data is replicated to two other pools every night, but all three copies sit in the same machine. An offsite or cloud copy of the app data would protect against losing the whole server to a fire, theft, or power surge.</p>
             </div>
           </div>
         </div>

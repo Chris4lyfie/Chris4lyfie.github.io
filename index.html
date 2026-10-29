@@ -583,21 +583,21 @@ I seek a career where I can create infrastructure, configure systems, and work o
                 <div class="proj-detail" data-detail="2">
                   <div class="proj-detail-tag">Infrastructure</div>
                   <h3 class="proj-detail-title">Home Network Engineering Lab</h3>
-                  <p class="proj-detail-desc">Fully segmented home network built around clear trust boundaries and a preserved recovery path — spanning routing, managed switching, VLAN isolation, firewall policy, and distributed services across independent physical hosts.</p>
+                  <p class="proj-detail-desc">Segmented home network and self-hosted service platform built around clear trust boundaries and a preserved recovery path. It spans routing, managed switching, VLAN isolation, firewall policy, ZFS storage with snapshots and replication, and containerized services on TrueNAS.</p>
                   <div class="proj-detail-section-label">Tech Stack</div>
                   <div class="proj-detail-tech">
-                    <span class="proj-tech-tag">VLANs</span>
-                    <span class="proj-tech-tag">Firewall Policy</span>
-                    <span class="proj-tech-tag">Linux</span>
-                    <span class="proj-tech-tag">Pi-hole</span>
-                    <span class="proj-tech-tag">Networking</span>
-                    <span class="proj-tech-tag">TP-Link / Netgear</span>
+                    <span class="proj-tech-tag">VLANs &amp; Firewall Policy</span>
+                    <span class="proj-tech-tag">TrueNAS SCALE / ZFS</span>
+                    <span class="proj-tech-tag">Docker Compose</span>
+                    <span class="proj-tech-tag">Proxmox / IPMI</span>
+                    <span class="proj-tech-tag">Pi-hole / Nginx Proxy Manager</span>
+                    <span class="proj-tech-tag">Tailscale</span>
                   </div>
                   <div class="proj-detail-section-label">Key Outcomes</div>
                   <ul class="proj-detail-outcomes">
-                    <li>Designed multi-zone network with explicit allowlisted cross-VLAN policy — nothing implicitly reachable across trust boundaries</li>
-                    <li>Diagnosed and recovered from full network lockout via multi-hop access and manual reconfiguration</li>
-                    <li>Distributed services across independent physical hosts to eliminate cascading failure dependencies</li>
+                    <li>Designed a five-zone network with allowlisted cross-VLAN policy; other zones can reach the management zone only for DNS and Plex</li>
+                    <li>Diagnosed a degraded SSD mirror to a failing drive-bay power feed and rebuilt it with zero errors; added per-minute pool and disk monitoring</li>
+                    <li>Consolidated all workloads onto TrueNAS and parked the Proxmox host to cut power costs, with nightly snapshots replicated to two backup pools</li>
                   </ul>
                 </div>
 
