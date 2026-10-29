@@ -949,6 +949,9 @@ body {
 .doctimeline-item[data-index="3"] .doctimeline-thumb {
   background-image: url('../assets/photos/Experience/Test-Engineering.png');
 }
+.doctimeline-item[data-index="4"] .doctimeline-thumb {
+  background-image: url('../assets/photos/Experience/Test-Engineering.png');
+}
 
 .doctimeline-date {
   font-family: 'JetBrains Mono', monospace;
@@ -1963,11 +1966,20 @@ body.in-iframe .breadcrumb { display: none !important; }
 .badge-spare { background: var(--stone-100); color: var(--stone-400); border: 1px dashed var(--stone-300); }
 
 .failure-block { border: 1px solid var(--stone-200); border-left: 4px solid var(--stone-950); border-radius: 0 3px 3px 0; background: var(--stone-50); padding: 1.5rem; margin: 1.25rem 0; }
-.failure-block-title { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--stone-950); margin-bottom: 1rem; }
+.failure-block-title { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--page-bg); background: var(--stone-950); padding: 0.3rem 0.7rem; border-radius: 3px; margin-bottom: 1.1rem; }
 .failure-row { display: grid; grid-template-columns: 120px 1fr; gap: 0.4rem 1rem; margin-bottom: 0.5rem; align-items: baseline; }
 .failure-key { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 600; color: var(--stone-500); text-transform: uppercase; letter-spacing: 0.5px; }
 .failure-val { font-size: 0.9rem; color: var(--stone-800); line-height: 1.5; }
 .failure-insight { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--stone-200); font-size: 0.88rem; color: var(--stone-600); line-height: 1.6; }
+
+/* Extra breathing room when two case-study blocks stack directly —
+   otherwise they read as one continuous block (user-reported). */
+.failure-block + .failure-block,
+.failure-block + .failure-with-photo,
+.failure-with-photo + .failure-block,
+.failure-with-photo + .failure-with-photo {
+  margin-top: 2.75rem;
+}
 
 .failure-with-photo { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; margin: 1.5rem 0; }
 .failure-with-photo .failure-block { margin: 0; }
@@ -2108,6 +2120,13 @@ body.in-iframe .breadcrumb { display: none !important; }
 
 .resume-content > section:first-child .section-eyebrow {
   margin-top: 0;
+}
+
+.resume-summary {
+  font-size: 0.95rem;
+  color: var(--stone-600);
+  line-height: 1.7;
+  margin: 0 0 0.5rem;
 }
 
 .experience-item,

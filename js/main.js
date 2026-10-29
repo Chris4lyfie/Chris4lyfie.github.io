@@ -1265,8 +1265,7 @@ document.querySelectorAll('.skill-category').forEach(cat => skillObserver.observ
   const PROJECT_URLS = [
     'projects/Project-Argus.html',
     'projects/QxQ.html',
-    'projects/Home-Infrastructure.html',
-    null  // EnkiNotes — in progress
+    'projects/Home-Infrastructure.html'
   ];
 
   cards.forEach((card, i) => {

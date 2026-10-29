@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hardware Systems Integration & Production Bring-Up | Christian Villanueva</title>
+  <title>Functional Test Fixture Engineer | Christian Villanueva</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -61,7 +61,7 @@
           <span class="sep">/</span>
           <span class="current">QxQ Inc.</span>
         </div>
-        <h1>Hardware Systems Integration &amp; Production Bring-Up</h1>
+        <h1>Functional Test Fixture Engineer</h1>
         <div class="header-meta">
           <div class="header-meta-item">
             <svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg>
@@ -88,7 +88,7 @@
 
         <div class="section-eyebrow fade-up">At a Glance</div>
         <div class="stat-grid fade-up">
-          <div class="stat-card"><div class="stat-value">30+</div><div class="stat-label">Fixtures shipped</div></div>
+          <div class="stat-card"><div class="stat-value">50+</div><div class="stat-label">Fixtures shipped</div></div>
           <div class="stat-card"><div class="stat-value">~0.5%</div><div class="stat-label">Wiring fault rate on 600–700+ termination builds</div></div>
           <div class="stat-card"><div class="stat-value">$7k–$21k</div><div class="stat-label">Per-fixture value</div></div>
           <div class="stat-card"><div class="stat-value">1–2 wk</div><div class="stat-label">Delivery turnaround</div></div>
@@ -97,7 +97,7 @@
         </div>
 
         <div class="section-eyebrow fade-up">Overview</div>
-        <p class="fade-up">At QxQ, I own the full electrical integration of multi-subsystem hardware platforms used in automotive, server, and embedded environments. Each build involves converting customer schematics and wiring diagrams into a complete, verified system. These systems cover everything from power distribution and relay switching, to control interfaces and DUT connectivity. Builds range in complexity from 50 to 800 individual terminations across mixed power domains, using wires ranging from 10 AWG for high-current conductors, to 30 AWG signal wiring.</p>
+        <p class="fade-up">At QxQ, I own the full electrical integration of multi-subsystem hardware platforms used in automotive, robotics, networking, utility-metering, and embedded environments. Each build involves converting customer schematics and wiring diagrams into a complete, verified system. These systems cover everything from power distribution and relay switching, to control interfaces and DUT connectivity. Builds range in complexity from 50 to 800 individual terminations across mixed power domains, using wires ranging from 10 AWG for high-current conductors, to 30 AWG signal wiring.</p>
         <p class="fade-up">The core challenge is primarily risk control. These fixtures operate at voltage and current levels that can permanently damage components on the first power cycle if something is misrouted. I developed a verification workflow that systematically intercepts electrical and mechanical faults before power-on. Over time, I became the default assignee for the largest and highest-density builds, proving my reliability when it comes to execution and integration.</p>
 
         <div class="section-eyebrow fade-up">Reference Diagrams</div>
@@ -188,7 +188,24 @@
         </div>
 
         <div class="section-eyebrow fade-up">Failure Analysis</div>
-        <p class="fade-up">When something doesn't work during bring-up, I try to isolate it myself before pulling in an engineer. Most of the time I can track it down. The fan issue below is a good example of how that process actually plays out.</p>
+        <p class="fade-up">When something doesn't work during bring-up, I try to isolate it myself before pulling in an engineer. Most of the time I can track it down. The examples below show how that process actually plays out.</p>
+
+        <div class="failure-block fade-up">
+          <div class="failure-block-title">Case Study — SPI Communication Timeouts to Motor Controller</div>
+          <div class="failure-row"><span class="failure-key">Symptom</span><span class="failure-val">DUT would briefly establish SPI communication with the motor, then drop a second later — intermittent, not a hard failure</span></div>
+          <div class="failure-row"><span class="failure-key">Hypothesis</span><span class="failure-val">Faulty motor assembly</span></div>
+          <div class="failure-row"><span class="failure-key">Step 1</span><span class="failure-val">Swapped motor assemblies, no change</span></div>
+          <div class="failure-row"><span class="failure-key">Step 2</span><span class="failure-val">Re-wired to different ground nodes to rule out a grounding/circuit issue, no change</span></div>
+          <div class="failure-row"><span class="failure-key">Step 3</span><span class="failure-val">Tapped power from different 5V (DUT) and 20V (motor) sources to rule out a noisy or faulty rail, no change</span></div>
+          <div class="failure-row"><span class="failure-key">Step 4</span><span class="failure-val">Swapped DUTs, including a known-good unit, no change</span></div>
+          <div class="failure-row"><span class="failure-key">Step 5</span><span class="failure-val">Tested across all three fixture slots to rule out slot-specific wiring, no change</span></div>
+          <div class="failure-row"><span class="failure-key">Step 6</span><span class="failure-val">Tried different Bed of Nails probe styles to rule out poor contact at board test points, no change</span></div>
+          <div class="failure-row"><span class="failure-key">Step 7</span><span class="failure-val">Worked with the customer to verify the Bed of Nails-to-breakout-board connections were terminating to the correct GPIOs, confirmed correct</span></div>
+          <div class="failure-row"><span class="failure-key">Root Cause</span><span class="failure-val">Parasitic capacitance along the long signal chain (breakout board &rarr; header &rarr; transfer pin &rarr; Bed of Nails probe &rarr; DUT) was degrading SPI timing margins</span></div>
+          <div class="failure-row"><span class="failure-key">Fix</span><span class="failure-val">Re-routed the fixture to minimize intermediary connections in the signal path</span></div>
+          <div class="failure-insight">Elimination testing across the motor, power sources, DUT, fixture slot, and probe contact ruled out every obvious suspect — the fault was in the physical topology of the signal path itself, not any single component. It changed how I approach SPI bring-up: check the connection chain before assuming a part is bad. The customer confirmed the fix resolved the issue.</div>
+        </div>
+
         <div class="failure-with-photo fade-up">
           <div class="failure-block">
             <div class="failure-block-title">Case Study — Non-Functional Cooling Fans</div>
@@ -221,7 +238,7 @@
         <div class="section-eyebrow fade-up">Process and Team Impact</div>
         <ul class="fade-up">
           <li>Trained two other integrators to around 80-90% of my production speed through hands-on instruction</li>
-          <li>Reduced miswiring frequency across the team by introducing structured verification passes</li>
+          <li>Proposed and implemented a point-to-point continuity validation standard — checking for open circuits and shorts between closely-spaced test points — now required as part of team-wide sign-off, including a customer-facing inspection checklist</li>
           <li>Started flagging mechanical clearance risks during integration, which prevented a few rework situations before they happened</li>
           <li>Got comfortable working with incomplete documentation and learned when to build on my best interpretation versus when to stop and clarify with an engineer</li>
           <li>Became the default owner for the highest-density fixture builds as a result of consistent delivery quality</li>

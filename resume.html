@@ -27,51 +27,32 @@
 
     <div class="resume-content">
 
-      <!-- Education -->
+      <p class="resume-summary">Functional Test Fixture Engineer completing a B.S. in Computer Engineering in December 2026, with a background spanning production hardware validation, embedded systems, and Linux infrastructure. Focused on integrating electrical hardware, embedded devices and software into functional, testable systems.</p>
+
+      <!-- Experience -->
       <section>
-        <div class="section-eyebrow">U1 // Education</div>
-
-        <div class="education-item">
-          <div class="item-header">
-            <div class="item-title">Bachelor of Science in Computer Engineering</div>
-            <div class="item-date">Expected Fall 2026</div>
-          </div>
-          <div class="item-company">San Jose State University</div>
-          <div class="item-location">San Jose, CA</div>
-          <p class="coursework">
-            <strong>Relevant coursework:</strong> Data Structures & Algorithms (C++), Digital Design I & II (Verilog), Assembly Language Programming, Operating Systems (C), Advanced Algorithm Design, Circuit Analysis, Electronics for Computing Systems, Microprocessor Design.
-          </p>
-        </div>
-
-        <div class="education-item">
-          <div class="item-header">
-            <div class="item-title">A.S. Mathematics | A.A. Liberal Arts</div>
-            <div class="item-date">Graduated 2024</div>
-          </div>
-          <div class="item-company">Mission College</div>
-          <div class="item-location">Santa Clara, CA</div>
-          <p class="honors"><strong>Honors:</strong> Magna Cum Laude, Dean's List</p>
-        </div>
-      </section>
-
-      <!-- Professional Experience -->
-      <section>
-        <div class="section-eyebrow">U2 // Experience</div>
+        <div class="section-eyebrow">U1 // Experience</div>
 
         <div class="experience-item">
           <div class="item-header">
-            <div class="item-title">Hardware Test Engineering Technician (Reliability & Test Fixtures)</div>
+            <div class="item-title"><a href="projects/QxQ.html">Functional Test Fixture Engineer</a></div>
             <div class="item-date">May 2025 - Present</div>
           </div>
           <div class="item-company">QxQ Inc.</div>
-          <div class="item-location">Fremont, CA</div>
+          <div class="item-location">Fremont, CA &middot; Promoted from Test Fixture Technician, May 2026</div>
           <ul>
-            <li>Built and integrated custom electrical test fixtures used to validate PCB-level subassemblies for automotive, server, and embedded hardware systems.</li>
-            <li>Assembled and wired scalable test stations supporting functional testing and firmware flashing via automated test scripts.</li>
-            <li>Performed electrical bring-up and fault isolation using schematics, continuity testing, probing, and signal verification.</li>
-            <li>Collaborated with electrical and test engineers to iterate fixture designs, implement hardware changes, and improve test reliability and repeatability.</li>
+            <li>Built, wired, brought up, and validated 50+ functional test fixtures from customer schematics for server, automotive, networking and robotics hardware across 5-48 V power domains.</li>
+            <li>Directed development and deployment of a production tool used by three team members, reducing CSV-to-XLS/DRL processing time by approximately 94% while incorporating DFT-based probe sizing.</li>
+            <li>Established required pre-shipment validation using continuity checks and customer checklists to catch miswires, loose connectors, missing grounds and incorrect terminations.</li>
+            <li>Trained two technicians to independently assemble and verify fixtures, taking on lead responsibility for fixture production and technical escalations.</li>
+            <li>Collaborated on-site with client engineers to isolate fixture interconnect faults and resolve communication issues involving SPI and I&sup2;C.</li>
           </ul>
         </div>
+      </section>
+
+      <!-- Previous Experience -->
+      <section>
+        <div class="section-eyebrow">U2 // Previous Experience</div>
 
         <div class="experience-item">
           <div class="item-header">
@@ -111,48 +92,86 @@
         </div>
       </section>
 
-      <!-- Projects -->
+      <!-- Technical Projects -->
       <section>
-        <div class="section-eyebrow">U3 // Projects</div>
+        <div class="section-eyebrow">U3 // Technical Projects</div>
 
         <div class="project-item">
           <div class="item-header">
-            <div class="item-title"><a href="projects/Project-Argus.html">Project Argus — Multi-Sensor Ethernet Monitor</a></div>
+            <div class="item-title"><a href="projects/Home-Infrastructure.html">Server Infrastructure and Application Deployment</a></div>
+            <div class="item-date">May 2025 - Present</div>
+          </div>
+          <div class="item-company">Personal Home Lab</div>
+          <ul>
+            <li>Selected components and built a TrueNAS SCALE Linux server; manage ZFS datasets and deploy containers using Docker Compose.</li>
+            <li>Configured Pi-hole DNS, Nginx Proxy Manager, and Tailscale for reverse proxy routing and remote administration.</li>
+            <li>Operated Ubuntu and Debian virtual machines on a Supermicro-based Proxmox host; used IPMI/BMC for remote power control and hardware monitoring.</li>
+            <li>Designed and implemented a segmented home network infrastructure using VLANs, DHCP reservations, and firewall rules to isolate management, IoT, and guest traffic.</li>
+          </ul>
+        </div>
+
+        <div class="project-item">
+          <div class="item-header">
+            <div class="item-title">Project L.U.C.I.A: LiDAR Utility Controlled Imaging Assistant</div>
+            <div class="item-date">Jan 2026 - Present</div>
+          </div>
+          <div class="item-company">SJSU Computer Engineering Capstone, Team of 4</div>
+          <ul>
+            <li>Architected an autonomous mapping platform using Raspberry Pi, ROS 2 and LiDAR, defining hardware integration and web-based monitoring and control.</li>
+            <li>Led integration of SLAM and autonomous navigation; validated a functional prototype that explores indoor environments while generating a live map.</li>
+            <li>Coordinated integration of NVIDIA Jetson and a ZED 2i stereo camera to add object recognition alongside LiDAR-based mapping.</li>
+          </ul>
+        </div>
+
+        <div class="project-item">
+          <div class="item-header">
+            <div class="item-title"><a href="projects/Project-Argus.html">Project Argus: Multi-Sensor Ethernet Monitor</a></div>
             <div class="item-date">May 2026 - Present</div>
           </div>
           <ul>
-            <li>Designed and built an ESP32-based sensor node integrating SPI (W5500 Ethernet), I2C (SHT31-D), and 1-Wire (5× DS18B20) protocols simultaneously to monitor temperature and humidity across a homelab server closet.</li>
-            <li>Selected all components, designed the circuit from scratch, and assembled the hardware including 12V-to-3.3V power regulation via a buck converter module.</li>
-            <li>Developed firmware in C++ using PlatformIO and the Arduino framework with timer-based non-blocking sensor polling and a custom EthernetServer wrapper to resolve an ESP32 core 3.x compatibility issue.</li>
-            <li>Deployed live on the homelab network at a static IP on a managed VLAN, serving a real-time Chart.js dashboard and a JSON data endpoint over Ethernet.</li>
+            <li>Developed PlatformIO/C++ firmware to initialize and read five DS18B20 temperature probes and an SHT31-D temperature/humidity sensor on an ESP32 using 1-Wire and I&sup2;C.</li>
+            <li>Integrated W5500 Ethernet hardware and basic initialization; performed staged sensor bring-up and verified the buck converter&rsquo;s 3.3 V output.</li>
           </ul>
         </div>
+      </section>
 
-        <div class="project-item">
+      <!-- Education -->
+      <section>
+        <div class="section-eyebrow">U4 // Education</div>
+
+        <div class="education-item">
           <div class="item-header">
-            <div class="item-title"><a href="projects/QxQ.html">Hardware Systems Integration &amp; Production Bring-Up</a></div>
-            <div class="item-date">May 2025 - Present</div>
+            <div class="item-title">Bachelor of Science in Computer Engineering</div>
+            <div class="item-date">Expected December 2026</div>
           </div>
-          <ul>
-            <li>Built and integrated custom electrical test fixtures used to validate PCB-level subassemblies for automotive, server, and embedded hardware systems.</li>
-            <li>Assembled and wired scalable test stations supporting functional testing and firmware flashing via automated test scripts.</li>
-            <li>Performed electrical bring-up and fault isolation using schematics, continuity testing, probing, and signal verification.</li>
-            <li>Collaborated with electrical and test engineers to iterate fixture designs, implement hardware changes, and improve test reliability and repeatability.</li>
-          </ul>
+          <div class="item-company">San Jose State University</div>
+          <div class="item-location">San Jose, CA</div>
+          <p class="coursework">
+            <strong>Relevant coursework:</strong> Circuit Analysis, Electronics for Computing Systems, Power Electronics, RF Circuit Design, Microprocessor Design, Digital Design I &amp; II (Verilog), Operating Systems (C), Embedded Systems (C), CPU Design (Verilog)
+          </p>
         </div>
 
-        <div class="project-item">
+        <div class="education-item">
           <div class="item-header">
-            <div class="item-title"><a href="projects/Home-Infrastructure.html">Home Network Engineering Lab</a></div>
-            <div class="item-date">Jul 2025 - Present</div>
+            <div class="item-title">A.S. Mathematics | A.A. Liberal Arts</div>
+            <div class="item-date">Graduated 2024</div>
           </div>
-          <ul>
-            <li>Designed, built, and currently manage a fully segmented home network supporting routers, managed and unmanaged switches, wireless access points, IoT devices, and Linux hosts.</li>
-            <li>Implemented VLANs to separate personal systems, home office, IoT devices, guest access, and a DMZ; assigned static IPs via MAC reservations to ensure predictable connectivity.</li>
-            <li>Developed firewall rules to isolate untrusted and internet-facing devices, preventing compromise of internal systems.</li>
-            <li>Diagnosed and recovered from misconfigurations that caused loss of network access, requiring multi-hop access and manual reconfiguration of routing, VLANs, and firewall rules.</li>
-            <li>Monitored network performance, bandwidth usage, and device behavior; throttled non-critical traffic to prioritize infrastructure and compute workloads.</li>
-          </ul>
+          <div class="item-company">Mission College</div>
+          <div class="item-location">Santa Clara, CA</div>
+          <p class="honors"><strong>Honors:</strong> Magna Cum Laude, Dean's List</p>
+        </div>
+      </section>
+
+      <!-- Technical Skills -->
+      <section>
+        <div class="section-eyebrow">U5 // Technical Skills</div>
+
+        <div class="education-item">
+          <p class="coursework"><strong>Test &amp; Validation:</strong> Electrical test fixture integration/bring-up, DUT interfacing, continuity &amp; signal verification, fault isolation/root-cause analysis, DMM &amp; bench PSU diagnostics, crimping, soldering</p>
+          <p class="coursework"><strong>Protocols:</strong> SPI, I&sup2;C, Ethernet, 1-Wire</p>
+          <p class="coursework"><strong>Programming &amp; Tools:</strong> C, C++, Verilog, Git, PlatformIO, Vivado, ROS 2</p>
+          <p class="coursework"><strong>Systems and Networking:</strong> Linux CLI, TrueNAS SCALE, ZFS, Docker Compose, Proxmox, IPMI/BMC, VLANs, DHCP, DNS, firewall configuration</p>
+          <p class="coursework"><strong>Academic Lab Equipment:</strong> Oscilloscopes, function generators</p>
         </div>
       </section>
 
