@@ -73,6 +73,7 @@
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var trunkPath = null;
   var pulses = [];
+  var entryPos = null; // where the entry via sits in the current build
 
   function el(name, attrs) {
     var node = document.createElementNS(NS, name);
@@ -120,6 +121,7 @@
     while (svg.firstChild) svg.removeChild(svg.firstChild);
     trunkPath = null;
     pulses = [];
+    entryPos = null;
 
     if (window.innerWidth < 1300) return;
 
@@ -129,14 +131,23 @@
     svg.style.height = '0px';
     var docH = document.documentElement.scrollHeight;
     var rect = contentEl.getBoundingClientRect();
-    var contentLeft = Math.round(rect.left + window.scrollX) + 20;
+    // Left edge of the actual text: the content box has inner padding,
+    // so on laptop widths there is still a usable margin beside it.
+    var padL = parseFloat(getComputedStyle(contentEl).paddingLeft) || 0;
+    var contentLeft = Math.round(rect.left + window.scrollX + padL);
+    if (contentLeft < 56) return; // no real margin to draw in
     var trunkX = Math.max(16, Math.round(contentLeft / 2));
-    if (contentLeft < 90) return; // no real margin to draw in
+
+    // The HOME flag goes beside the entry via when it fits, otherwise
+    // above it (the trunk then starts a little lower to make room).
+    var flagW = Math.round(20 + 4 * 6.1);
+    var flagSide = trunkX - 12 - flagW >= 8 ? 'left'
+      : (trunkX + 12 + flagW <= contentLeft - 40 ? 'right' : 'above');
 
     var startY = 28;
     if (headerEl) {
       var hr = headerEl.getBoundingClientRect();
-      startY = Math.round(hr.bottom + window.scrollY) + 30;
+      startY = Math.round(hr.bottom + window.scrollY) + 30 + (flagSide === 'above' ? 18 : 0);
     }
     var endY = docH - 60;
     if (endY - startY < 260) return;
@@ -175,6 +186,7 @@
     trunkPath = line(d);
     svg.appendChild(trunkPath);
     svg.appendChild(dot(trunkX, endY, false, 4.2)); // terminal via
+    entryVia(trunkX, startY, flagSide, flagW);
 
     // Vertical gutter trees departing the trunk, alternating sides.
     for (var k = 0; k < taps.length; k++) {
@@ -212,6 +224,50 @@
     }
   }
 
+  /**
+   * Entry via: the signal arrives here from the home page, whose
+   * off-page vias lead to this page. A flag pointing at the via says
+   * where it came from. Not clickable.
+   */
+  function entryVia(x, y, side, w) {
+    var g = el('g', { 'class': 'offpage offpage--entry' });
+    g.appendChild(el('circle', { cx: x, cy: y, r: 6, 'class': 'trace-via trace-via--link' }));
+    var d, tx, ty = y + 3.4, anchor = 'start';
+    if (side === 'left') {            // left of the via, tip pointing at it
+      var fx = x - 12 - w;
+      d = 'M ' + fx + ' ' + (y - 7.5) + ' H ' + (fx + w - 8) + ' L ' + (fx + w) + ' ' + y +
+          ' L ' + (fx + w - 8) + ' ' + (y + 7.5) + ' H ' + fx + ' Z';
+      tx = fx + 6;
+    } else if (side === 'right') {    // right of the via, tip pointing back at it
+      var rx = x + 12;
+      d = 'M ' + (rx + w) + ' ' + (y - 7.5) + ' H ' + (rx + 8) + ' L ' + rx + ' ' + y +
+          ' L ' + (rx + 8) + ' ' + (y + 7.5) + ' H ' + (rx + w) + ' Z';
+      tx = rx + 12;
+    } else {                          // above the via, tip pointing down at it
+      var ax = Math.round(x - w / 2), top = y - 30;
+      d = 'M ' + ax + ' ' + top + ' H ' + (ax + w) + ' V ' + (top + 15) + ' H ' + (x + 7) +
+          ' L ' + x + ' ' + (top + 22) + ' L ' + (x - 7) + ' ' + (top + 15) + ' H ' + ax + ' Z';
+      tx = x; ty = top + 11; anchor = 'middle';
+    }
+    g.appendChild(el('path', { d: d, 'class': 'offpage-flag' }));
+    var t = el('text', { x: tx, y: ty, 'text-anchor': anchor, 'class': 'offpage-label' });
+    t.textContent = 'HOME';
+    g.appendChild(t);
+    svg.appendChild(g);
+    entryPos = { x: x, y: y };
+  }
+
+  /** Arrival ripple at the entry via — once, after the page settles. */
+  function arrive() {
+    if (reduceMotion || !entryPos) return;
+    [0, 160].forEach(function (delay) {
+      var ring = el('circle', { cx: entryPos.x, cy: entryPos.y, r: 6, 'class': 'trace-ripple' });
+      ring.style.animationDelay = delay + 'ms';
+      ring.addEventListener('animationend', function () { ring.remove(); });
+      svg.appendChild(ring);
+    });
+  }
+
   function tick(ts) {
     if (trunkPath && pulses.length) {
       var len = trunkPath.getTotalLength();
@@ -239,7 +295,10 @@
     }).observe(document.body);
   }
 
-  window.addEventListener('load', build);
+  window.addEventListener('load', function () {
+    build();
+    setTimeout(arrive, 350);
+  });
   build();
   if (!reduceMotion) requestAnimationFrame(tick);
 })();

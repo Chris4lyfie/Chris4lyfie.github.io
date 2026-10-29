@@ -174,14 +174,15 @@
 //    from the portrait's "+" terminal crosses the page at a fixed
 //    Y inside Home's top padding — above all content.
 //
-// 2. A decorative trace network in the left margin gutter only:
-//    hand-authored clusters of lines entering from the left page
-//    edge, Y-merging into the trunk through 45-degree diagonals,
-//    with filled-dot / hollow-pad terminals. Every junction in
-//    the whole layer is a Y (45-degree fork) — no perpendicular
-//    T connectors and no 90-degree corners anywhere. Placement
-//    is deterministic (seeded PRNG) so it doesn't reshuffle on
-//    every resize.
+// 2. Decorative wiring (v7, "two-layer board"), only in the two
+//    gaps between sections. Top-layer traces are solid; bottom-
+//    layer traces are drawn faint and pass under the trunk and
+//    the top layer; vias mark layer changes. Traces that lead to
+//    another page end in an off-page via + flag naming that page
+//    (clickable); hovering the page's real link sends a pulse
+//    that drops through the via. Only 45-degree direction
+//    changes, Y-splits where traces leave the trunk, and nothing
+//    crosses content.
 //
 // All measurement uses offsetLeft/offsetTop chains, NOT
 // getBoundingClientRect: the sections animate in with a
@@ -313,29 +314,6 @@
     return { d: `M ${x0} ${y} H ${x1}`, lines };
   }
 
-  /** Vertical twin of treeBus — twigs run south, parallel to the bus. */
-  function treeBusV(x, y0, y1, specs) {
-    const lines = [];
-    let lastY = y0;
-    const lastEnd = { '-1': -Infinity, '1': -Infinity };
-    for (const t of specs || []) {
-      const ty  = Math.round(y0 + (y1 - y0) * t.at);
-      const len = Math.round(t.len);
-      if (ty < lastY + 8 || ty + FORK > y1 - 10 || len < 22) continue;
-      if (ty < lastEnd[t.side] + 14) continue; // same-side lane still occupied
-      lastY = ty + FORK;
-      lastEnd[t.side] = ty + FORK + len;
-      const ax  = x + t.side * FORK;
-      const sub = treeBusV(ax, ty + FORK, ty + FORK + len, t.nest);
-      lines.push({
-        d: `M ${x} ${ty} L ${ax} ${ty + FORK} ${sub.d}`,
-        ex: ax, ey: ty + FORK + len, hollow: !!t.hollow,
-      });
-      sub.lines.forEach(l => lines.push(l));
-    }
-    return { d: `M ${x} ${y0} V ${y1}`, lines };
-  }
-
   function updateSectionTrace(secs) {
     const battery = document.getElementById('batteryPositive');
     const u1 = document.querySelector('#home .home-skills-strip-label');
@@ -356,32 +334,11 @@
     const homeSec = secs.find(s => s.id === 'home');
     const crossY  = homeSec.top + 26;
     const c       = 10; // 45-degree corner size
-    const W       = container.clientWidth;
-    const pf      = document.querySelector('.profile-pic-frame');
-    const contentTop = Math.min(pf ? absPos(pf).y : p1.y, p1.y - 20) - 16;
-
-    // The top band tree departs the PORTRAIT'S OWN LEAD, immediately
-    // after the portrait (user request) — a Y-split on the lead's
-    // vertical run, fanning right into the whitespace above the
-    // masthead. Its Y sits in the content-free band between the
-    // crossing and the top of the content.
-    const fkA = (contentTop - crossY > 96 && W - 70 - (p0.x + FORK) > 220)
-      ? Math.round(crossY + (contentTop - crossY) * 0.55)
-      : null;
-
-    // Portrait lead — up from the "+" terminal (through the fkA
-    // Y-split when present), across the page at a fixed Y inside
-    // Home's top padding (above all content), then a 45-degree corner
-    // down into the trunk. The crossing Y is absolute, not a
-    // midpoint, so it can never land at content height.
+    // Portrait lead — up from the "+" terminal, across the page at a
+    // fixed Y inside Home's top padding (above all content), then a
+    // 45-degree corner down into the trunk. The crossing Y is
+    // absolute, not a midpoint, so it can never land at content height.
     const leadPieces = [`M ${p0.x} ${p0.y}`];
-    if (fkA !== null) {
-      leadPieces.push(
-        `V ${fkA + FORK}`,
-        `L ${p0.x + FORK} ${fkA}`, // Y-split apex — the tree bus departs east
-        `L ${p0.x} ${fkA - FORK}`,
-      );
-    }
     leadPieces.push(
       `V ${crossY + c}`,
       `L ${p0.x - c} ${crossY}`,
@@ -429,95 +386,60 @@
       cursorY = fy + FORK;
     };
 
-    // Decorative fork Ys (v6 wiring): band clusters in the whitespace
-    // bands between the tiles plus tall gutter trees beside Home and
-    // Experience that fill most of the free vertical space (the top
-    // tree lives on the portrait lead — see fkA above). Registered in
-    // top-to-bottom order; each is only forked off the trunk if its
-    // cluster has real room, so the trunk never carries a stub fork
-    // with no arm. Arms are drawn by buildNetwork from decoForks.
+    // Decorative wiring (v7) lives only in the two gaps between
+    // sections: each gap gets a trunk Y-split whose arm is drawn by
+    // buildNetwork (the Y-split itself is part of the main trace).
+    const armX0 = trunkX + FORK;          // every trunk arm starts at its fork's apex
+    const fkB   = homeSec.bottom - 24;    // Home -> Experience gap
+    const fkC   = projectsTop - 36;       // Experience -> Projects gap
+
+    // Wide gutters (>= 90px between trunk and content) also get one
+    // top-layer gutter tree per section. Its root leaves the trunk at
+    // 45 degrees (the trunk runs straight through) on a straight piece.
     const expSec = secs.find(s => s.id === 'experience');
-    const armX0  = trunkX + FORK; // every trunk arm starts at its fork's apex
-
-    const fkB = homeSec.bottom - 24;
-    const fkC = projectsTop - 36;
-    const fkD = fkB - p1.y > 320 ? p1.y + 90 : null;   // Home gutter — spans down to the fkB band
-    const fkE = fkC - p2.y > 380 ? p2.y + 110 : null;  // Experience gutter — spans down to the fkC band
-
-    // Twig specs for the U-branch buses — the tag connections are part
-    // of the tree too: one clean departing twig when the branch is
-    // long enough, a second only on genuinely long runs (treeBus
-    // drops any twig that can't fit).
-    const twigLines = [];
-    const branchTwigs = (len, flip) => {
-      const specs = [];
-      if (len >= 150) specs.push({ at: 0.40, side: flip ? 1 : -1, len: len * 0.30 });
-      if (len >= 260) specs.push({ at: 0.68, side: flip ? -1 : 1, len: len * 0.18, hollow: true });
-      return specs;
-    };
-
-    if (fkA !== null) {
-      // Lead-attached tree: bus starts at the Y-split apex on the
-      // portrait lead (drawn with leadIn) and fans right.
-      decoForks.push({ kind: 'band', y: fkA, x0: p0.x + FORK, limit: W - 70, variant: 'A', busRing: true });
-    }
+    const fkD = homeSec.contentLeft - trunkX >= 90 && fkB - p1.y > 360 ? p1.y + 90 : null;
+    const fkE = expSec.contentLeft - trunkX >= 90 && fkC - p2.y > 420 ? p2.y + 110 : null;
 
     runTo(p1.y - FORK);
-    const len1  = p1.x - 6 - armX0;
-    const tree1 = treeBus(armX0, p1.y, p1.x - 6, branchTwigs(len1, false));
+    const tree1 = treeBus(armX0, p1.y, p1.x - 6, []);
     const routeU1 = `${chain.join(' ')} L ${armX0} ${p1.y} ${tree1.d}`;
     tapAt(p1.y, tree1.d);
-    tree1.lines.forEach(l => twigLines.push({ ...l, dark: false }));
 
-    // Gutter trees sit on BOTH sides of the trunk for variety: the
-    // Home one hangs in the left margin when there's room (falls back
-    // to the right), the Experience one prefers the right gutter.
     if (fkD !== null) {
-      const dirD = trunkX >= 56 ? -1 : (homeSec.contentLeft - 24 - armX0 > 96 ? 1 : 0);
-      if (dirD !== 0) {
-        runTo(fkD);
-        decoForks.push({ kind: 'gutter', y: fkD, dir: dirD, stemLen: fkB - 70 - fkD });
-      }
+      runTo(fkD);
+      decoForks.push({ kind: 'gutterTree', y: fkD, stemEnd: fkB - 80, contentLeft: homeSec.contentLeft });
+      dir = -1; // the next run jogs away from the tree's root
     }
 
     runTo(fkB - FORK);
     tapAt(fkB, null);
-    decoForks.push({ kind: 'band', y: fkB, limit: W - 70, variant: 'B', busRing: false });
+    decoForks.push({ kind: 'resume', y: fkB });
 
     runTo(p2.y - FORK);
-    const len2  = p2.x - 6 - armX0;
-    const tree2 = treeBus(armX0, p2.y, p2.x - 6, branchTwigs(len2, true));
+    const tree2 = treeBus(armX0, p2.y, p2.x - 6, []);
     const routeU2 = `${chain.join(' ')} L ${armX0} ${p2.y} ${tree2.d}`;
     tapAt(p2.y, tree2.d);
-    tree2.lines.forEach(l => twigLines.push({ ...l, dark: false }));
 
     if (fkE !== null) {
-      const dirE = expSec.contentLeft - 24 - armX0 > 96 ? 1 : (trunkX >= 56 ? -1 : 0);
-      if (dirE !== 0) {
-        runTo(fkE);
-        decoForks.push({ kind: 'gutter', y: fkE, dir: dirE, stemLen: fkC - 70 - fkE });
-      }
+      runTo(fkE);
+      decoForks.push({ kind: 'gutterTree', y: fkE, stemEnd: fkC - 130, contentLeft: expSec.contentLeft });
+      dir = -1;
     }
 
     runTo(fkC - FORK);
     tapAt(fkC, null);
-    decoForks.push({ kind: 'band', y: fkC, limit: W - 70, variant: 'C', busRing: true });
+    decoForks.push({ kind: 'projects', y: fkC });
 
     runTo(projectsTop);
 
     // U3 finish: straight drop inside the dark band, then a terminal
     // 45-degree bend into the branch — the trunk ends here, so this is
-    // a corner, not a fork, and stays exempt from the split rule. The
-    // branch bus is a tree limb like U1/U2's (white twigs, drawn by
-    // buildNetwork from twigLines).
+    // a corner, not a fork, and stays exempt from the split rule.
     const bend   = 10;
     const runEnd = p3.y - bend;
     runs.push({ x: trunkX, y1: projectsTop, y2: runEnd });
-    const len3  = p3.x - 6 - (trunkX + bend);
-    const tree3 = treeBus(trunkX + bend, p3.y, p3.x - 6,
-      len3 < 90 ? [] : [{ at: 0.45, side: 1, len: len3 * 0.3 }]);
+    const tree3 = treeBus(trunkX + bend, p3.y, p3.x - 6, []);
     const trunkBelow = `M ${trunkX} ${projectsTop} V ${runEnd} L ${trunkX + bend} ${p3.y} ${tree3.d}`;
-    tree3.lines.forEach(l => twigLines.push({ ...l, dark: true }));
     chain.push(trunkBelow);
 
     blackPath.setAttribute('d', black.join(' '));
@@ -538,10 +460,13 @@
     refU1.setAttribute('d', routeU1);
     refU2.setAttribute('d', routeU2);
 
-    return { decoForks, twigLines };
+    return {
+      decoForks,
+      geo: { crossY, fkB, fkC, homeCL: homeSec.contentLeft, expCL: expSec.contentLeft },
+    };
   }
 
-  // ---- Decorative network (v6) --------------------------------------
+  // ---- Decorative network (v7: two-layer board) ----------------------
 
   function svgEl(name, attrs) {
     const node = document.createElementNS(SVG_NS, name);
@@ -560,84 +485,156 @@
       : svgEl('circle', { cx: x, cy: y, r: r || DOT_R, class: `trace-net-pad--filled-${tone}` });
   }
 
-  // Tree terminals get the reference image's fatter dots.
-  const TREE_DOT  = 4.2;
-  const TREE_RING = 4.6;
+  const TREE_DOT = 4.2; // terminal pad radius
 
-  /**
-   * Twig specs per band-cluster variant, given the bus length L —
-   * hand-tuned to echo the reference image's staircase fans (nested
-   * twigs step the same direction; opposite-side singles for balance).
-   * Sides are chosen so nothing pokes past the whitespace band each
-   * cluster lives in.
-   */
-  function bandTreeSpecs(variant, L) {
-    if (variant === 'A') return [
-      { at: 0.26, side: -1, len: L * 0.50, nest: [{ at: 0.25, side: -1, len: L * 0.30 }] },
-      { at: 0.60, side: 1,  len: L * 0.30, hollow: true },
-    ];
-    if (variant === 'B') return [
-      { at: 0.20, side: 1,  len: L * 0.42, nest: [{ at: 0.30, side: 1, len: L * 0.22 }] },
-      { at: 0.50, side: -1, len: L * 0.34 },
-      { at: 0.72, side: 1,  len: L * 0.20, hollow: true },
-    ];
-    return [ // 'C' — sits just above the dark boundary; nested fan goes down (still light)
-      { at: 0.24, side: 1,  len: L * 0.42, nest: [{ at: 0.30, side: 1, len: L * 0.20 }] },
-      { at: 0.56, side: -1, len: L * 0.30, hollow: true },
-    ];
+  // Pages the off-page vias lead to (order matches the carousel).
+  const LINK_PAGES = {
+    resume:  { label: 'RESUME',  url: 'resume.html' },
+    argus:   { label: 'ARGUS',   url: 'projects/Project-Argus.html' },
+    qxq:     { label: 'QXQ',     url: 'projects/QxQ.html' },
+    homelab: { label: 'HOMELAB', url: 'projects/Home-Infrastructure.html' },
+  };
+  const LINK_VIA_R = 6;
+  let linkRoutes = {}; // key -> { path, x, y, group }; rebuilt with the wiring
+
+  const flagWidth = (label) => Math.round(20 + label.length * 6.1);
+
+  /** Bottom-layer trace: faint, drawn first so it passes UNDER the top layer. */
+  function bottomLine(d) {
+    return svgEl('path', { d, class: 'trace-net-line trace-net-line--bottom' });
+  }
+
+  /** Via: copper ring with an open center, where a trace changes layers. */
+  function layerVia(x, y, r) {
+    return svgEl('circle', { cx: x, cy: y, r: r || 4.2, class: 'trace-via' });
   }
 
   /**
-   * Band cluster: a trace tree fanning into the whitespace band. The
-   * root trace departs the trunk on a 45-degree diagonal (the trunk
-   * runs straight through — reference-style junction, no notch, no
-   * junction dot) and the twigs run long and parallel with fat
-   * terminal dots, like the reference image.
+   * Off-page connector: a via plus a schematic off-page flag naming
+   * the page the trace leads to. Clicking opens that page (a mouse
+   * extra; the buttons and cards stay the main way in); hovering it
+   * sends a pulse. `routeD` is the invisible path a hover pulse rides,
+   * from the trunk's Y-split apex to the via.
    */
-  function drawBandTree(frag, fk, x0) {
-    const L  = Math.round((fk.limit - x0) * 0.8);
-    const x1 = x0 + L;
-    const bus = treeBus(x0, fk.y, x1, bandTreeSpecs(fk.variant, L));
-    // Bus starts at the trunk tap's apex — the Y-split junction
-    // itself is drawn with the main trace (tapAt).
-    frag.appendChild(netLine(bus.d, false));
-    frag.appendChild(netPad(x1, fk.y, fk.busRing, false, fk.busRing ? TREE_RING : TREE_DOT));
-    for (const tw of bus.lines) {
-      frag.appendChild(netLine(tw.d, false));
-      frag.appendChild(netPad(tw.ex, tw.ey, tw.hollow, false, tw.hollow ? TREE_RING : TREE_DOT));
-    }
+  function offPage(frag, key, x, y, routeD) {
+    const page = LINK_PAGES[key];
+    const w  = flagWidth(page.label);
+    const fx = x + LINK_VIA_R + 6;
+    const g  = svgEl('g', { class: 'offpage', 'data-link': key });
+    g.appendChild(svgEl('circle', { cx: x, cy: y, r: LINK_VIA_R, class: 'trace-via trace-via--link' }));
+    g.appendChild(svgEl('path', {
+      d: `M ${fx} ${y - 7.5} H ${fx + w - 8} L ${fx + w} ${y} L ${fx + w - 8} ${y + 7.5} H ${fx} Z`,
+      class: 'offpage-flag',
+    }));
+    const label = svgEl('text', { x: fx + 6, y: y + 3.4, class: 'offpage-label' });
+    label.textContent = page.label;
+    g.appendChild(label);
+    g.addEventListener('click', () => loadExternalContent(page.url));
+    g.addEventListener('mouseenter', () => sendLinkPulse(key));
+    const route = svgEl('path', { d: routeD, class: 'trace-route' });
+    frag.appendChild(route);
+    frag.appendChild(g);
+    linkRoutes[key] = { path: route, x, y, group: g };
   }
 
   /**
-   * Gutter cluster: a VERTICAL tree, now as substantial as the
-   * horizontal band trees. The root trace departs the trunk at 45
-   * degrees (to `fk.dir`: -1 = into the left margin, +1 = right
-   * gutter) and runs straight down parallel to it; two twigs
-   * staircase further outward, also vertical, ending in fat dots —
-   * the reference image rotated a quarter turn.
+   * Home -> Experience gap. Top layer: the trunk's Y-split feeds the
+   * RESUME link, which ends just right of the View Resume button.
+   * Bottom layer: a faint three-lane bus enters from the page edge
+   * (passing under the trunk), bends down with concentric 45-degree
+   * corners under the RESUME trace, then each lane surfaces through
+   * a via and finishes on the top layer in a pad.
    */
-  function drawGutterTree(frag, fk) {
-    const dir   = fk.dir;
-    const stem  = fk.stemLen;
-    const rootX = trunkX + dir * FORK;
-    const vTop  = fk.y + FORK;
-    const vBot  = fk.y + stem;
-    // Twig spans are sized/spaced so same-side runs can never touch
-    // (treeBusV enforces it as a hard guarantee regardless).
-    const specs = stem > 120
-      ? [
-          { at: 0.16, side: dir, len: Math.min(stem * 0.34, 420), hollow: true,
-            nest: stem > 200 ? [{ at: 0.30, side: dir, len: Math.min(stem * 0.18, 200) }] : undefined },
-          { at: 0.62, side: dir, len: Math.min(stem * 0.26, 340) },
-        ]
-      : stem > 70 ? [{ at: 0.30, side: dir, len: stem * 0.45, hollow: true }] : [];
-    const vbus = treeBusV(rootX, vTop, vBot, specs);
-    frag.appendChild(netLine(`M ${trunkX} ${fk.y} L ${rootX} ${vTop} ${vbus.d}`, false));
-    frag.appendChild(netPad(rootX, vBot, false, false, TREE_DOT));
-    for (const tw of vbus.lines) {
-      frag.appendChild(netLine(tw.d, false));
-      frag.appendChild(netPad(tw.ex, tw.ey, tw.hollow, false, tw.hollow ? TREE_RING : TREE_DOT));
+  function drawResumeBand(frag, fk, home) {
+    const x0 = trunkX + FORK, y = fk.y;
+    const W = container.clientWidth;
+    const flagW = flagWidth(LINK_PAGES.resume.label);
+    const btn = document.querySelector('.home-cta-secondary');
+    const cta = document.querySelector('.home-cta-buttons');
+    const skills = document.querySelector('.home-split-skills');
+
+    let rx = btn ? Math.round(absPos(btn).x + btn.offsetWidth + 22) : Math.round(W * 0.69);
+    rx = Math.min(rx, W - 24 - LINK_VIA_R - 6 - flagW);
+
+    // The first run stays left of the buttons and below the Skills
+    // column; if the layout leaves no room, the bus runs straight in.
+    const ctaX = cta ? absPos(cta).x : W;
+    const skillsBottom = skills ? absPos(skills).y + skills.offsetHeight : 0;
+    const bendX = Math.min(ctaX - 70, Math.max(x0 + 110, Math.round(W * 0.28)));
+    const canBend = bendX >= x0 + 110 && y - 50 > skillsBottom + 10;
+    // Concentric 45-degree chamfers keep the lane spacing constant
+    // through every bend: each lane further inside cuts (2 - sqrt 2) * pitch less.
+    const PITCH = home ? home.p : 10;
+    const K  = (2 - Math.SQRT2) * PITCH;
+    const d1 = [24, 24 - K, 24 - 2 * K];   // bend-1 chamfers (lane 0 is the outside)
+    const e2 = [24 - 2 * K, 24 - K, 24];   // bend-2 chamfers (lane 2 is the outside)
+    const c3 = [20, 20 - K, 20 - 2 * K];   // gutter turn (leftmost gutter lane is the outside)
+
+    for (let i = 0; i < 3; i++) {
+      const y2 = y + 22 + i * PITCH;
+      const vx = bendX + 120 + (2 - i) * 80;     // lowest lane surfaces first
+      const px = Math.min(vx + 280, rx - 40);    // its pad on the top layer
+      const y1 = y - 42 + i * PITCH;
+      // Where the lane comes from: down the Home gutter (lane k = 2 - i;
+      // the leftmost gutter lane ends up lowest after the turn east),
+      // or in from the page edge when there is no gutter bus.
+      const k  = 2 - i;
+      const yTurn = canBend ? y1 : y2;
+      const head = home
+        ? `M ${home.xs[k]} ${home.yStart[k]} V ${yTurn - c3[k]} L ${home.xs[k] + c3[k]} ${yTurn}`
+        : `M 0 ${yTurn}`;
+      let d;
+      if (canBend) {
+        const xv = bendX + (2 - i) * PITCH;
+        d = `${head} H ${xv - d1[i]} L ${xv} ${y1 + d1[i]} V ${y2 - e2[i]} ` +
+            `L ${xv + e2[i]} ${y2} H ${vx - 4.2}`;
+      } else {
+        d = `${head} H ${vx - 4.2}`;
+      }
+      frag.appendChild(bottomLine(d));
+      if (home) frag.appendChild(layerVia(home.xs[k], home.yStart[k], 3.8));
+      frag.appendChild(layerVia(vx, y2));
+      if (px - 4.2 > vx + 4.2) {
+        frag.appendChild(netLine(`M ${vx + 4.2} ${y2} H ${px - 4.2}`, false));
+        frag.appendChild(netPad(px, y2, false, false, TREE_DOT));
+      }
     }
+
+    frag.appendChild(netLine(`M ${x0} ${y} H ${rx - LINK_VIA_R}`, false));
+    offPage(frag, 'resume', rx, y, `M ${x0} ${y} H ${rx}`);
+  }
+
+  /**
+   * Experience -> Projects gap. Top layer: one trace per project page
+   * (ARGUS, QXQ, HOMELAB in carousel order) — the bus feeds QXQ, the
+   * other two depart it at 45 degrees into lanes above and below.
+   * Bottom layer: two faint jumpers pass under the links, each
+   * surfacing through a via into a short top-layer stub and pad.
+   */
+  function drawProjectsBand(frag, fk) {
+    const x0 = trunkX + FORK, y = fk.y;
+    const W = container.clientWidth;
+    const L = 16; // lane offset of the up/down legs (45 degrees)
+    const upX   = Math.max(x0 + 24, Math.round(W * 0.139));
+    const downX = Math.max(upX + 60, Math.round(W * 0.229));
+    const ax = Math.round(W * 0.333), qx = Math.round(W * 0.528), hx = Math.round(W * 0.722);
+
+    const jumpers = [[Math.round(W * 0.43), 76], [Math.round(W * 0.625), -56]];
+    for (const [jx] of jumpers) frag.appendChild(bottomLine(`M ${jx} ${y - 30} V ${y + 24}`));
+    for (const [jx, stub] of jumpers) {
+      const dir = Math.sign(stub);
+      frag.appendChild(layerVia(jx, y - 30, 3.8));
+      frag.appendChild(layerVia(jx, y + 24, 3.8));
+      frag.appendChild(netLine(`M ${jx + dir * 3.8} ${y - 30} H ${jx + stub - dir * 4.2}`, false));
+      frag.appendChild(netPad(jx + stub, y - 30, false, false, TREE_DOT));
+    }
+
+    frag.appendChild(netLine(`M ${x0} ${y} H ${qx - LINK_VIA_R}`, false));
+    frag.appendChild(netLine(`M ${upX} ${y} L ${upX + L} ${y - L} H ${ax - LINK_VIA_R}`, false));
+    frag.appendChild(netLine(`M ${downX} ${y} L ${downX + L} ${y + L} H ${hx - LINK_VIA_R}`, false));
+    offPage(frag, 'argus',   ax, y - L, `M ${x0} ${y} H ${upX} L ${upX + L} ${y - L} H ${ax}`);
+    offPage(frag, 'qxq',     qx, y,     `M ${x0} ${y} H ${qx}`);
+    offPage(frag, 'homelab', hx, y + L, `M ${x0} ${y} H ${downX} L ${downX + L} ${y + L} H ${hx}`);
   }
 
   /**
@@ -657,34 +654,140 @@
     frag.appendChild(netLine(`M ${cx - 2} ${top + 20} H ${cx + 2}`, false));
   }
 
+  // ---- Vertical wiring beside the trunk -------------------------------
+
   /**
-   * v6 decorative wiring — sparse trace trees contained inside the
-   * page: band trees fanning through the whitespace between the
-   * tiles, gutter trees with vertical buses beside Home/Experience,
-   * the twig lines belonging to the U1/U2/U3 branch buses, and the
-   * ground symbol under the portrait's negative terminal. Every
-   * cluster grows out of a rotated symmetric Y-fork on the trunk (the
-   * fork itself is drawn with the main trace; arms start at its apex).
+   * Lane positions for a faint bus in the gutter between the trunk and
+   * a section's content: clear of the trunk's jogs on the left and at
+   * least 16px from the content on the right. Null when it can't fit.
+   */
+  function gutterBus(contentLeft, maxLanes) {
+    const G = contentLeft - trunkX;
+    if (G < 44) return null;
+    const p  = G >= 90 ? 10 : 8;
+    const x0 = trunkX + jogAmp + 14;
+    let n = Math.min(maxLanes, G >= 170 ? 4 : 3);
+    while (n >= 2 && x0 + (n - 1) * p > contentLeft - 16) n--;
+    if (n < 2) return null;
+    return { p, xs: Array.from({ length: n }, (_, k) => x0 + k * p) };
+  }
+
+  /**
+   * Experience gutter: a faint bus that surfaces from staggered vias
+   * just below the Home gap, passes under the U2 branch and runs down
+   * beside the timeline. Its outer lane takes a break halfway (down
+   * through one via, back up through the next); lanes end in vias.
+   */
+  function drawExperienceBus(frag, bus, g) {
+    const n = bus.xs.length;
+    const yTop = g.fkB + 60, yBot = g.fkC - 90;
+    if (yBot - yTop < 240) return;
+    const vias = [];
+    bus.xs.forEach((x, k) => {
+      const y0 = yTop + (k % 2) * 10;
+      const y1 = yBot - (n - 1 - k) * 14;
+      if (k === n - 1 && n >= 3) {
+        const a = Math.round(y0 + (y1 - y0) * 0.42);
+        const b = Math.round(y0 + (y1 - y0) * 0.56);
+        frag.appendChild(bottomLine(`M ${x} ${y0} V ${a}`));
+        frag.appendChild(bottomLine(`M ${x} ${b} V ${y1}`));
+        vias.push([x, a], [x, b]);
+      } else {
+        frag.appendChild(bottomLine(`M ${x} ${y0} V ${y1}`));
+      }
+      vias.push([x, y0], [x, y1]);
+    });
+    for (const [x, y] of vias) frag.appendChild(layerVia(x, y, 3.8));
+  }
+
+  /**
+   * Far-left margin (very wide screens only): a faint pair running down
+   * through Home and Experience with two held 45-degree jogs.
+   */
+  function drawMarginPair(frag, g) {
+    const room = trunkX - jogAmp;          // free strip left of the trunk's jogs
+    if (room < 52) return;
+    const m = Math.round(room / 2) - 5;
+    const yA = g.crossY + 40, yB = g.fkC - 60;
+    const span = yB - yA;
+    if (span < 400) return;
+    const j1 = Math.round(yA + span * 0.32), j2 = Math.round(yA + span * 0.68);
+    [m - 5, m + 5].forEach((x, k) => {
+      const a = yA + k * 10, b = yB - k * 10;
+      frag.appendChild(bottomLine(`M ${x} ${a} V ${j1} L ${x + 10} ${j1 + 10} V ${j2} L ${x} ${j2 + 10} V ${b}`));
+      frag.appendChild(layerVia(x, a, 3.8));
+      frag.appendChild(layerVia(x, b, 3.8));
+    });
+  }
+
+  /**
+   * Gutter tree (wide gutters): a top-layer root leaves the trunk at 45
+   * degrees and runs straight down beside it; two twigs cross OVER the
+   * faint gutter bus at 45 degrees into lanes beyond it. The first
+   * twig dives through a via and carries on, faint, on the bottom
+   * layer; the second ends in a pad. Twig runs never share a lane.
+   */
+  function drawGutterTree(frag, fk, bus) {
+    const rootX = trunkX + FORK;
+    const stem  = fk.stemEnd - fk.y;
+    if (stem < 160) return;
+    frag.appendChild(netLine(`M ${trunkX} ${fk.y} L ${rootX} ${fk.y + FORK} V ${fk.stemEnd}`, false));
+    frag.appendChild(netPad(rootX, fk.stemEnd, false, false, TREE_DOT));
+
+    const base  = (bus ? bus.xs[bus.xs.length - 1] : rootX) + 18;
+    const lanes = [base, base + 14];
+    const ty = [Math.round(fk.y + stem * 0.16), Math.round(fk.y + stem * 0.58)];
+    // twig 1 must leave lane 0 before twig 2's diagonal sweeps across it
+    const cross2 = ty[1] + (lanes[0] - rootX);
+    const twigs = [
+      { lx: lanes[0], ty: ty[0], end: Math.min(ty[0] + (lanes[0] - rootX) + Math.min(stem * 0.34, 380), cross2 - 18), dive: true },
+      { lx: lanes[1], ty: ty[1], end: Math.min(ty[1] + (lanes[1] - rootX) + Math.min(stem * 0.26, 300), fk.stemEnd - 10), dive: false },
+    ];
+    for (const t of twigs) {
+      if (t.lx + 10 > fk.contentLeft - 14) continue;
+      const y1 = t.ty + (t.lx - rootX);   // after the 45-degree run
+      if (t.end - y1 < 30) continue;
+      frag.appendChild(netLine(`M ${rootX} ${t.ty} L ${t.lx} ${y1} V ${t.end}`, false));
+      if (t.dive) {
+        const tail = Math.min(70, fk.stemEnd - t.end);
+        if (tail > 24) {
+          frag.appendChild(bottomLine(`M ${t.lx} ${t.end} V ${t.end + tail}`));
+          frag.appendChild(layerVia(t.lx, t.end + tail, 3.8));
+        }
+        frag.appendChild(layerVia(t.lx, t.end));
+      } else {
+        frag.appendChild(netPad(t.lx, t.end, false, false, TREE_DOT));
+      }
+    }
+  }
+
+  /**
+   * v7 decorative wiring: faint buses beside the trunk, the two gap
+   * bands, gutter trees on wide screens, and the portrait's ground
+   * symbol. Bottom-layer pieces go in first so every top-layer trace
+   * (including the trunk, drawn after this group) passes over them.
    */
   function buildNetwork(net) {
     netGroup.replaceChildren();
+    linkRoutes = {};
     const frag = document.createDocumentFragment();
-    const x0 = trunkX + FORK; // every fork's apex X
+    const g = net.geo;
 
+    const homeBus = gutterBus(g.homeCL, 3); // feeds band B, which has 3 lanes
+    const expBus  = gutterBus(g.expCL, 4);
+    const home = homeBus && homeBus.xs.length === 3
+      ? { ...homeBus, yStart: homeBus.xs.map((_, k) => g.crossY + 20 + (k % 2) * 10) }
+      : null;
+
+    drawMarginPair(frag, g);
+    if (expBus) drawExperienceBus(frag, expBus, g);
     for (const fk of net.decoForks) {
-      // Band trees usually root on the trunk; the fkA tree roots on
-      // the portrait lead instead and carries its own x0.
-      if (fk.kind === 'band') drawBandTree(frag, fk, fk.x0 || x0);
-      else drawGutterTree(frag, fk);
+      if (fk.kind === 'resume') drawResumeBand(frag, fk, home);
+      else if (fk.kind === 'projects') drawProjectsBand(frag, fk);
     }
-
-    // Twigs departing the U1/U2/U3 branch buses (the buses themselves
-    // are part of the main trace paths).
-    for (const tw of net.twigLines) {
-      frag.appendChild(netLine(tw.d, tw.dark));
-      frag.appendChild(netPad(tw.ex, tw.ey, tw.hollow, tw.dark, tw.hollow ? TREE_RING : TREE_DOT));
+    for (const fk of net.decoForks) {
+      if (fk.kind === 'gutterTree') drawGutterTree(frag, fk, fk.y < g.fkB ? homeBus : expBus);
     }
-
     buildGround(frag);
     netGroup.appendChild(frag);
   }
@@ -784,7 +887,69 @@
         });
       }
     }
+
+    // Hover pulses heading for an off-page via
+    for (let i = linkPulses.length - 1; i >= 0; i--) {
+      const lp = linkPulses[i];
+      const alive = lp.r.path.isConnected;
+      const dist = ((now - lp.t0) / 1000) * LINK_SPEED;
+      if (!alive || dist >= lp.len) {
+        lp.c.remove();
+        linkPulses.splice(i, 1);
+        if (alive) dropThrough(lp.r);
+        continue;
+      }
+      const pt = lp.r.path.getPointAtLength(dist);
+      lp.c.setAttribute('cx', pt.x);
+      lp.c.setAttribute('cy', pt.y);
+      lp.c.style.opacity = '1';
+    }
     requestAnimationFrame(pulseTick);
+  }
+
+  // ---- Link pulses -------------------------------------------------
+  // Hovering a link to another page (View Resume, a project card, or
+  // the off-page flag itself) sends one quick pulse from the trunk's
+  // Y-split along that page's trace; it drops through the via with a
+  // flash and a ripple, as if the signal continued on the next page.
+
+  const LINK_SPEED = 620; // px per second — snappier than the trunk trains
+  const linkPulses = [];
+  const lastLinkPulse = {};
+
+  function sendLinkPulse(key) {
+    if (reduceMotion) return;
+    const r = linkRoutes[key];
+    if (!r || !r.path.isConnected) return;
+    const now = performance.now();
+    if (now - (lastLinkPulse[key] || 0) < 700) return; // one per hover
+    lastLinkPulse[key] = now;
+    const len = r.path.getTotalLength();
+    if (!len) return;
+    const c = document.createElementNS(SVG_NS, 'circle');
+    c.setAttribute('r', 6);
+    c.setAttribute('class', 'section-trace-pulse');
+    pulseLayer.appendChild(c);
+    linkPulses.push({ r, len, t0: now, c });
+  }
+
+  function dropThrough(r) {
+    const via = r.group.querySelector('.trace-via--link');
+    if (via) {
+      via.classList.remove('is-hit');
+      void via.getBoundingClientRect(); // restart the flash
+      via.classList.add('is-hit');
+    }
+    for (const delay of [0, 160]) {
+      const ring = document.createElementNS(SVG_NS, 'circle');
+      ring.setAttribute('cx', r.x);
+      ring.setAttribute('cy', r.y);
+      ring.setAttribute('r', LINK_VIA_R);
+      ring.setAttribute('class', 'trace-ripple');
+      ring.style.animationDelay = delay + 'ms';
+      ring.addEventListener('animationend', () => ring.remove(), { once: true });
+      pulseLayer.appendChild(ring);
+    }
   }
 
   // ---- Rebuild wiring ----------------------------------------------
@@ -792,6 +957,7 @@
   function rebuildAll() {
     if (window.innerWidth < 1300) { // matches CSS hide breakpoint
       netGroup.replaceChildren();
+      linkRoutes = {};
       return;
     }
     const secs = measureSections();
@@ -843,6 +1009,16 @@
     portraitFrame.title = 'Send a pulse through the circuit';
     portraitFrame.addEventListener('click', () => spawnPulse(performance.now()));
   }
+
+  // Real links to other pages send a pulse to their off-page via.
+  document.querySelectorAll('a[onclick*="resume.html"]').forEach((a) => {
+    a.addEventListener('mouseenter', () => sendLinkPulse('resume'));
+  });
+  const CARD_LINKS = ['argus', 'qxq', 'homelab']; // carousel order
+  document.querySelectorAll('.wheel-card').forEach((card) => {
+    const key = CARD_LINKS[Number(card.dataset.index)];
+    if (key) card.addEventListener('mouseenter', () => sendLinkPulse(key));
+  });
 })();
 
 
@@ -1370,4 +1546,19 @@ window.addEventListener('message', (e) => {
       location.reload();
     });
   }
+})();
+
+
+// =============================================================
+// FOOTER TITLE BLOCK — REV
+// Shows the page's last-modified month (GitHub Pages sends it
+// with each deploy), so the revision updates itself. Keeps the
+// hardcoded fallback if the date can't be read.
+// =============================================================
+(function setTitleBlockRev() {
+  const el = document.getElementById('titleBlockRev');
+  if (!el) return;
+  const d = new Date(document.lastModified);
+  if (isNaN(d)) return;
+  el.textContent = d.getFullYear() + '.' + String(d.getMonth() + 1).padStart(2, '0');
 })();
